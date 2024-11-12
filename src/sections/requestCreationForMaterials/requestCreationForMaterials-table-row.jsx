@@ -12,7 +12,9 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import EditRequestCreationForMaterialsForm from 'src/layouts/editModals/editrequestCreationForMaterials';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-
+import Swal from 'sweetalert2'
+import axiosInstance from 'src/configs/axiosInstance';
+import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 
@@ -34,6 +36,48 @@ export function RequestCreationForMaterialsTableRow({setUpdate, row, selected, o
     setOpenPopover(null);
   }, []);
 
+  const handleDelete = async()=>{
+        try {
+    
+          const requestCreationId = row._id;
+          const result = await axiosInstance.delete(`/removeRequestCreationForMaterials?requestCreationId=${requestCreationId}`);
+          if (result) {
+            toast.success(result.data.message)
+        
+          }
+        } catch (err) {
+          toast.success(err.response.data.message)
+          console.error(
+            'Error occured in removing request creation materials in client side',
+            err.message
+          )
+        }
+      }
+    
+      const confirmDelete = ()=>{
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+          backdrop: false
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleDelete();
+            setUpdate(prev=>!prev);
+          }
+        });
+      }
+    
+      const handleMenuCloseAndConfirmDelete = () => {
+        handleClosePopover(); // Close the popover or menu first
+        setTimeout(() => {
+          confirmDelete();
+        }, 0); // Optional delay to ensure the popover is fully closed
+      };
   return (
     <>
       <TableRow>
@@ -84,7 +128,7 @@ export function RequestCreationForMaterialsTableRow({setUpdate, row, selected, o
         >
         <EditRequestCreationForMaterialsForm setUpdate={setUpdate} requestMaterialsData={requestMaterialsData}/>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 
           </MenuItem>

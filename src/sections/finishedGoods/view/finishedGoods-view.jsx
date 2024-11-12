@@ -114,6 +114,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <FinishedGoodsTableRow
+                    setUpdate={setUpdate}
                       key={index}
                       row={row}
                       selected={table.selected.includes(row.id)}

@@ -114,6 +114,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <MaterialAssignmentTableRow
+                    setUpdate={setUpdate}
                       key={index}
                       row={row}
                       selected={table.selected.includes(row.id)}

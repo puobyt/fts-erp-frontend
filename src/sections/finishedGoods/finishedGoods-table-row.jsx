@@ -9,17 +9,25 @@ import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
-
+import EditFinishedGoodsForm from 'src/layouts/editModals/editFinishedGoods';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-
+import Swal from 'sweetalert2'
+import axiosInstance from 'src/configs/axiosInstance';
+import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 
  
-export function FinishedGoodsTableRow({ row, selected, onSelectRow }) {
+export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
-
+  const finishedGoodsData = {
+    finishedGoodsId:row._id,
+    finishedGoodsName:row.finishedGoodsName,
+    batchNumber:row.batchNumber,
+    productionDate:row.productionDate,
+    quantityProduced:row.quantityProduced
+  }
   const handleOpenPopover = useCallback((event) => {
     setOpenPopover(event.currentTarget);
   }, []);
@@ -27,7 +35,46 @@ export function FinishedGoodsTableRow({ row, selected, onSelectRow }) {
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
   }, []);
+  const handleDelete = async()=>{
+    try {
+      const finishedGoodsId = row._id;
+      const result = await axiosInstance.delete(`/removeFinishedGoods?finishedGoodsId=${finishedGoodsId}`);
+      if (result) {
+        toast.success(result.data.message)
+      }
+    } catch (err) {
+      toast.success(err.response.data.message)
+      console.error(
+        'Error occured in removing Finished Goods in client side',
+        err.message
+      )
+    }
+  }
 
+  const confirmDelete = ()=>{
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      backdrop: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete();
+        setUpdate(prev=>!prev);
+      }
+    });
+  }
+
+  const handleMenuCloseAndConfirmDelete = () => {
+    handleClosePopover(); // Close the popover or menu first
+    setTimeout(() => {
+      confirmDelete();
+    }, 0); // Optional delay to ensure the popover is fully closed
+  };
   return (
     <>
       <TableRow>
@@ -42,7 +89,7 @@ export function FinishedGoodsTableRow({ row, selected, onSelectRow }) {
         </TableCell> */}
         <TableCell>  {row.finishedGoodsName}</TableCell>
         <TableCell>{row.batchNumber}</TableCell>
-        <TableCell>{row.productionDate}</TableCell>
+        <TableCell>{new Date(row.productionDate).toLocaleDateString()}</TableCell>
         <TableCell>{row.quantityProduced}</TableCell>
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>
@@ -74,12 +121,9 @@ export function FinishedGoodsTableRow({ row, selected, onSelectRow }) {
             },
           }}
         >
-          <MenuItem onClick={handleClosePopover}>
-            <Iconify icon="solar:pen-bold" />
-            Edit
-          </MenuItem>
+       <EditFinishedGoodsForm setUpdate={setUpdate} finishedGoodsData={finishedGoodsData}/>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 
           </MenuItem>

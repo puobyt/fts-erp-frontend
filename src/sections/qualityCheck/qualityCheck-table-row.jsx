@@ -12,7 +12,9 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import EditQualityCheckForm from 'src/layouts/editModals/editQualityCheck';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-
+import Swal from 'sweetalert2'
+import axiosInstance from 'src/configs/axiosInstance';
+import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 
@@ -37,6 +39,48 @@ export function QualityCheckTableRow({setUpdate,row, selected, onSelectRow }) {
     setOpenPopover(null);
   }, []);
 
+  const handleDelete = async()=>{
+      try {
+  
+        const qualityCheckId = row._id;
+        const result = await axiosInstance.delete(`/removeQualityCheck?qualityCheckId=${qualityCheckId}`);
+        if (result) {
+          toast.success(result.data.message)
+      
+        }
+      } catch (err) {
+        toast.success(err.response.data.message)
+        console.error(
+          'Error occured in removing quality check in client side',
+          err.message
+        )
+      }
+    }
+  
+    const confirmDelete = ()=>{
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+        backdrop: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleDelete();
+          setUpdate(prev=>!prev);
+        }
+      });
+    }
+  
+    const handleMenuCloseAndConfirmDelete = () => {
+      handleClosePopover(); // Close the popover or menu first
+      setTimeout(() => {
+        confirmDelete();
+      }, 0); // Optional delay to ensure the popover is fully closed
+    };
   return (
     <>
       <TableRow>
@@ -90,7 +134,7 @@ export function QualityCheckTableRow({setUpdate,row, selected, onSelectRow }) {
         >
           <EditQualityCheckForm setUpdate={setUpdate} qualityCheckData={qualityCheckData}/>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 
           </MenuItem>

@@ -12,7 +12,9 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import EditCurrentStockForm from 'src/layouts/editModals/editCurrentStock';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-
+import Swal from 'sweetalert2'
+import axiosInstance from 'src/configs/axiosInstance';
+import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 
@@ -34,7 +36,48 @@ export function CurrentStockTableRow({purchaseOrderData,setUpdate, row, selected
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
   }, []);
+  const handleDelete = async()=>{
+    try {
 
+      const currentStockId = row._id;
+      const result = await axiosInstance.delete(`/removeCurrentStock?currentStockId=${currentStockId}`);
+      if (result) {
+        toast.success(result.data.message)
+    
+      }
+    } catch (err) {
+      toast.success(err.response.data.message)
+      console.error(
+        'Error occured in removing current Stock in client side',
+        err.message
+      )
+    }
+  }
+
+  const confirmDelete = ()=>{
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      backdrop: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete();
+        setUpdate(prev=>!prev);
+      }
+    });
+  }
+
+  const handleMenuCloseAndConfirmDelete = () => {
+    handleClosePopover(); // Close the popover or menu first
+    setTimeout(() => {
+      confirmDelete();
+    }, 0); // Optional delay to ensure the popover is fully closed
+  };
   return (
     <>
       <TableRow>
@@ -89,7 +132,7 @@ export function CurrentStockTableRow({purchaseOrderData,setUpdate, row, selected
         >
          <EditCurrentStockForm purchaseOrderData={purchaseOrderData} setUpdate = {setUpdate} currentStockData={currentStockData}/>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 
           </MenuItem>
