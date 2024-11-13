@@ -18,6 +18,7 @@ import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 export function BillOfMaterialsTableRow ({
+  productNames,
   setUpdate,
   row,
   selected,
@@ -128,6 +129,7 @@ export function BillOfMaterialsTableRow ({
           <EditBillOfMaterialsForm
             setUpdate={setUpdate}
             billOfMaterialsData={billOfMaterialsData}
+            productNames={productNames}
           />
 
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>

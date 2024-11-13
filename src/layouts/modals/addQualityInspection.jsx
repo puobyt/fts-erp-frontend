@@ -10,7 +10,7 @@ import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import '../../global.css'
-import { TextField, Container, Grid, Paper } from '@mui/material';
+import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -23,7 +23,7 @@ const style = {
   p: 4,
 };
 
-export default function QualityInspectionForm({setUpdate}) {
+export default function QualityInspectionForm({setUpdate,productNames}) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -132,30 +132,57 @@ try{
               />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Product Name"
-                name="productName"
-                value={formData.productName}
-                onChange={handleChange}
-                error={!!errors.productName}
-                helperText={errors.productName}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
+            <TextField
+                    fullWidth
+                    select
+                    label='Product Name'
+                    name='productName'
+                    value={formData.productName}
+                    onChange={handleChange}
+                    error={!!errors.productName}
+                    helperText={errors.productName}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {productNames.map((productName, index) => (
+                      <MenuItem key={index} value={productName}>
+                        {productName}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Inspection Results"
-                name="inspectionResults"
-                value={formData.inspectionResults}
-                onChange={handleChange}
-                error={!!errors.inspectionResults}
-                helperText={errors.inspectionResults}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
+            <TextField
+                    fullWidth
+                    select
+                    label='Inspection Results'
+                    name='inspectionResults'
+                    value={formData.inspectionResults}
+                    onChange={handleChange}
+                    error={!!errors.inspectionResults}
+                    helperText={errors.inspectionResults}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    <MenuItem value='Accepted' sx={{ color: 'green' }}>
+                      Accepted
+                    </MenuItem>
+
+                    <MenuItem sx={{ color: 'red' }} value='Rejected'>
+                      Rejected
+                    </MenuItem>
+                    <MenuItem sx={{ color: 'purple' }} value='Quarantine'>
+                      Quarantine
+                    </MenuItem>
+                  </TextField>
             </Grid>
           </Grid>
           <Button

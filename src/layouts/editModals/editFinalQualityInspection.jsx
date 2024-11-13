@@ -10,7 +10,7 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import '../../global.css'
-import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -137,7 +137,7 @@ export default function EditQualityInspectionForm ({
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-              <Grid item xs={6}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Authorization Password'
@@ -180,6 +180,7 @@ export default function EditQualityInspectionForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Inspection Results'
                     name='inspectionResults'
                     value={formData.inspectionResults}
@@ -188,7 +189,18 @@ export default function EditQualityInspectionForm ({
                     helperText={errors.inspectionResults}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    <MenuItem value='Accepted' sx={{ color: 'green' }}>
+                      Accepted
+                    </MenuItem>
+
+                    <MenuItem sx={{ color: 'red' }} value='Rejected'>
+                      Rejected
+                    </MenuItem>
+                    <MenuItem sx={{ color: 'purple' }} value='Quarantine'>
+                      Quarantine
+                    </MenuItem>
+                  </TextField>
                 </Grid>
               </Grid>
               <Button

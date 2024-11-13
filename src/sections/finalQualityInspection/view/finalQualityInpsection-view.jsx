@@ -30,12 +30,15 @@ export function FinalQualityInspectionView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [qualityInspections,setQualityInspections] = useState([]);
+  const [productNames,setProductNames] = useState([]);
 const fetchQualityInspection = async ()=>{
 try{
 const result = await axiosInstance.get('/qualityInpsection');
+
 if(result.data.data){
   console.log(result.data);
   setQualityInspections(result.data.data);
+  setProductNames(result.data.productNames);
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -69,7 +72,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <QualityInspectionForm setUpdate={setUpdate}/>
+        <QualityInspectionForm setUpdate={setUpdate} productNames={productNames}/>
     
       </Box>
 
@@ -112,6 +115,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <FinalQualityInpsectionTableRow
+                    productNames={productNames}
                     setUpdate={setUpdate}
                       key={index}
                       row={row}

@@ -8,9 +8,10 @@ import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
-import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -23,7 +24,8 @@ const style = {
   p: 4
 }
 
-export default function QualityCheckForm ({ setUpdate }) {
+export default function QualityCheckForm ({ setUpdate, batches }) {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -89,6 +91,21 @@ export default function QualityCheckForm ({ setUpdate }) {
       )
     }
   }
+
+  const handleBatchChange = event => {
+    const selectedBatch = event.target.value
+    const isSelectedBatch = batches.find(
+      batch => selectedBatch === batch.batchNumber
+    )
+
+    if (isSelectedBatch) {
+      setFormData({
+        ...formData,
+        productName: isSelectedBatch.productName,
+        batchNumber: isSelectedBatch.batchNumber
+      })
+    }
+  }
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
@@ -139,15 +156,30 @@ export default function QualityCheckForm ({ setUpdate }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Batch Number'
                     name='batchNumber'
                     value={formData.batchNumber}
-                    onChange={handleChange}
+                    onChange={handleBatchChange}
                     error={!!errors.batchNumber}
                     helperText={errors.batchNumber}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch.batchNumber}>
+                        {batch.batchNumber}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -205,9 +237,16 @@ export default function QualityCheckForm ({ setUpdate }) {
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
-                    <MenuItem value='Accepted'>Accepted</MenuItem>
-                    <MenuItem value='Rejected'>Rejected</MenuItem>
-                    <MenuItem value='Quarantine'>Quarantine</MenuItem>
+                    <MenuItem value='Accepted' sx={{ color: 'green' }}>
+                      Accepted
+                    </MenuItem>
+
+                    <MenuItem sx={{ color: 'red' }} value='Rejected'>
+                      Rejected
+                    </MenuItem>
+                    <MenuItem sx={{ color: 'purple' }} value='Quarantine'>
+                      Quarantine
+                    </MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={6}>

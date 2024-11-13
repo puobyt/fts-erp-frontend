@@ -10,7 +10,7 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import '../../global.css'
-import { TextField, Container, Grid, Paper } from '@mui/material'
+import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -23,7 +23,7 @@ const style = {
   p: 4
 }
 
-export default function BillOfMaterialsForm ({ setUpdate }) {
+export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -138,8 +138,9 @@ export default function BillOfMaterialsForm ({ setUpdate }) {
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
+                <TextField
                     fullWidth
+                    select
                     label='Product Name'
                     name='productName'
                     value={formData.productName}
@@ -148,7 +149,21 @@ export default function BillOfMaterialsForm ({ setUpdate }) {
                     helperText={errors.productName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {productNames.map((productName, index) => (
+                      <MenuItem key={index} value={productName}>
+                        {productName}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

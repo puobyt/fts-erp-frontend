@@ -1,85 +1,91 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react'
 
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Popover from '@mui/material/Popover';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import MenuList from '@mui/material/MenuList';
-import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
+import Box from '@mui/material/Box'
+import Avatar from '@mui/material/Avatar'
+import Popover from '@mui/material/Popover'
+import TableRow from '@mui/material/TableRow'
+import Checkbox from '@mui/material/Checkbox'
+import MenuList from '@mui/material/MenuList'
+import TableCell from '@mui/material/TableCell'
+import IconButton from '@mui/material/IconButton'
+import MenuItem, { menuItemClasses } from '@mui/material/MenuItem'
 
-import { Label } from 'src/components/label';
-import { Iconify } from 'src/components/iconify';
-import EditQualityInspectionForm from 'src/layouts/editModals/editFinalQualityInspection';
+import { Label } from 'src/components/label'
+import { Iconify } from 'src/components/iconify'
+import EditQualityInspectionForm from 'src/layouts/editModals/editFinalQualityInspection'
 import Swal from 'sweetalert2'
-import axiosInstance from 'src/configs/axiosInstance';
+import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
-
- 
-export function FinalQualityInpsectionTableRow({setUpdate, row, selected, onSelectRow }) {
-  const [openPopover, setOpenPopover] = useState(null);
+export function FinalQualityInpsectionTableRow ({
+  productNames,
+  setUpdate,
+  row,
+  selected,
+  onSelectRow
+}) {
+  const [openPopover, setOpenPopover] = useState(null)
   const qualityInspectionData = {
-    qualityInspectionId:row._id,
-    inspectionNumber:row.inspectionNumber,
-    productName:row.productName,
-    inspectionResults:row.inspectionResults
+    qualityInspectionId: row._id,
+    inspectionNumber: row.inspectionNumber,
+    productName: row.productName,
+    inspectionResults: row.inspectionResults
   }
-  const handleOpenPopover = useCallback((event) => {
-    setOpenPopover(event.currentTarget);
-  }, []);
+  const handleOpenPopover = useCallback(event => {
+    setOpenPopover(event.currentTarget)
+  }, [])
 
   const handleClosePopover = useCallback(() => {
-    setOpenPopover(null);
-  }, []);
+    setOpenPopover(null)
+  }, [])
 
-  const handleDelete = async()=>{
-        try {
-          const qualityInspectionId = row._id;
-          const result = await axiosInstance.delete(`/removeFinalQualityInspection?qualityInspectionId=${qualityInspectionId}`);
-          if (result) {
-            toast.success(result.data.message)
-          }
-        } catch (err) {
-          toast.success(err.response.data.message)
-          console.error(
-            'Error occured in removing Final Quality Inspection in client side',
-            err.message
-          )
-        }
+  const handleDelete = async () => {
+    try {
+      const qualityInspectionId = row._id
+      const result = await axiosInstance.delete(
+        `/removeFinalQualityInspection?qualityInspectionId=${qualityInspectionId}`
+      )
+      if (result) {
+        toast.success(result.data.message)
       }
-    
-      const confirmDelete = ()=>{
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!",
-          backdrop: false
-        }).then((result) => {
-          if (result.isConfirmed) {
-            handleDelete();
-            setUpdate(prev=>!prev);
-          }
-        });
+    } catch (err) {
+      toast.success(err.response.data.message)
+      console.error(
+        'Error occured in removing Final Quality Inspection in client side',
+        err.message
+      )
+    }
+  }
+
+  const confirmDelete = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      backdrop: false
+    }).then(result => {
+      if (result.isConfirmed) {
+        handleDelete()
+        setUpdate(prev => !prev)
       }
-    
-      const handleMenuCloseAndConfirmDelete = () => {
-        handleClosePopover(); // Close the popover or menu first
-        setTimeout(() => {
-          confirmDelete();
-        }, 0); // Optional delay to ensure the popover is fully closed
-      };
+    })
+  }
+
+  const handleMenuCloseAndConfirmDelete = () => {
+    handleClosePopover() // Close the popover or menu first
+    setTimeout(() => {
+      confirmDelete()
+    }, 0) // Optional delay to ensure the popover is fully closed
+  }
   return (
     <>
       <TableRow>
-      {/* <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell> */}
         {/* <TableCell component="th" scope="row">
@@ -88,13 +94,26 @@ export function FinalQualityInpsectionTableRow({setUpdate, row, selected, onSele
           
           </Box>
         </TableCell> */}
-        <TableCell>  {row.inspectionNumber}</TableCell>
+        <TableCell> {row.inspectionNumber}</TableCell>
         <TableCell>{row.productName}</TableCell>
-        <TableCell>{row.inspectionResults}</TableCell>
+        <TableCell
+          sx={{
+            color:
+              row.inspectionResults === 'Accepted'
+                ? 'green'
+                : row.inspectionResults === 'Quarantine'
+                ? 'purple'
+                : row.inspectionResults === 'Rejected'
+                ? 'red'
+                : 'inherit' // Default color if none of the above matches
+          }}
+        >
+          {row.inspectionResults}
+        </TableCell>
 
-        <TableCell align="right">
+        <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
+            <Iconify icon='eva:more-vertical-fill' />
           </IconButton>
         </TableCell>
       </TableRow>
@@ -118,17 +137,24 @@ export function FinalQualityInpsectionTableRow({setUpdate, row, selected, onSele
               px: 1,
               gap: 2,
               borderRadius: 0.75,
-              [`&.${menuItemClasses.selected}`]: { bgcolor: 'action.selected' },
-            },
+              [`&.${menuItemClasses.selected}`]: { bgcolor: 'action.selected' }
+            }
           }}
         >
-<EditQualityInspectionForm setUpdate={setUpdate} qualityInspectionData={qualityInspectionData}/>
-          <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete 
+          <EditQualityInspectionForm
+            setUpdate={setUpdate}
+            qualityInspectionData={qualityInspectionData}
+            productNames={productNames}
+          />
+          <MenuItem
+            onClick={handleMenuCloseAndConfirmDelete}
+            sx={{ color: 'error.main' }}
+          >
+            <Iconify icon='solar:trash-bin-trash-bold' />
+            Delete
           </MenuItem>
         </MenuList>
       </Popover>
     </>
-  );
+  )
 }

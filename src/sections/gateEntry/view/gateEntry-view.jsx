@@ -24,7 +24,6 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 import GateEntryForm from 'src/layouts/modals/addGateEntry';
 import axiosInstance from 'src/configs/axiosInstance';
 
-
 // ----------------------------------------------------------------------
 
 export function GateEntryView() {

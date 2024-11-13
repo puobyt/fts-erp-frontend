@@ -32,12 +32,14 @@ export function ProductionOrderCreationView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [productionOrders,setProductionOrders] = useState([]);
+  const [batches,setBatches] = useState([]);
 const fetchProductionOrders = async ()=>{
 try{
 const result = await axiosInstance.get('/productionOrderCreation');
 if(result.data.data){
   console.log(result.data);
   setProductionOrders(result.data.data);
+  setBatches(result.data.batches)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -71,7 +73,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <ProductionOrderCreationForm setUpdate={setUpdate}/>
+        <ProductionOrderCreationForm setUpdate={setUpdate} batches={batches}/>
     
       </Box>
 
@@ -121,6 +123,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <ProductionOrderCreationTableRow
+                    batches={batches}
                     setUpdate={setUpdate}
                       key={index}
                       row={row}

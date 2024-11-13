@@ -32,12 +32,14 @@ export function RequestCreationForMaterialsView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [requestMaterials,setRequestMaterials] = useState([]);
+  const [materialNames,setMaterialNames] = useState([]);
 const fetchRequestCreationMaterials = async ()=>{
 try{
 const result = await axiosInstance.get('/requestCreationForMaterials');
 if(result.data.data){
   console.log(result.data);
   setRequestMaterials(result.data.data);
+  setMaterialNames(result.data.materials)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -71,7 +73,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <RequestCreationForMaterialsForm setUpdate={setUpdate}/>
+        <RequestCreationForMaterialsForm setUpdate={setUpdate} materialNames={materialNames}/>
     
       </Box>
 
@@ -115,6 +117,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <RequestCreationForMaterialsTableRow
+                    materialNames={materialNames}
                     setUpdate={setUpdate}
                       key={index}
                       row={row}

@@ -19,7 +19,7 @@ import toast, { Toaster } from 'react-hot-toast'
 
 
 
-export function ProductionOrderCreationTableRow({setUpdate, row, selected, onSelectRow }) {
+export function ProductionOrderCreationTableRow({batches,setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
   const productionOrderData = {
     productionOrderId:row._id,
@@ -137,7 +137,7 @@ export function ProductionOrderCreationTableRow({setUpdate, row, selected, onSel
             },
           }}
         >
-       <EditProductionOrderCreationForm setUpdate={setUpdate} productionOrderData={productionOrderData}/>
+       <EditProductionOrderCreationForm setUpdate={setUpdate} productionOrderData={productionOrderData} batches={batches}/>
 
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />

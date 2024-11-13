@@ -31,12 +31,14 @@ export function QualityCheckView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [qualityChecks,setQualityChecks] = useState([]);
+  const [batches,setBatches] = useState([]);
 const fetchQualityChecks = async ()=>{
 try{
 const result = await axiosInstance.get('/qualityCheck');
 if(result.data.data){
   console.log(result.data);
   setQualityChecks(result.data.data);
+  setBatches(result.data.batches)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -70,7 +72,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <QualityCheckForm setUpdate={setUpdate}/>
+        <QualityCheckForm setUpdate={setUpdate} batches={batches}/>
     
       </Box>
 

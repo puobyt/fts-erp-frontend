@@ -80,7 +80,7 @@ export const navData = [
   },
   {
     title: 'Invoice Creation',
-    path: '/user',
+    path: '/invoice-creations',
     icon: icon('ic-user'),
   },
   {

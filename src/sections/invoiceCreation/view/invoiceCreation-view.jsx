@@ -16,42 +16,40 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { TableNoData } from '../table-no-data';
 
 import { TableEmptyRows } from '../table-empty-rows';
-
-import { MaterialAssignmentTableHead } from '../materialAssignment-table-head';
-import { MaterialAssignmentTableRow } from '../materialAssignment-table-row';
-import { MaterialAssignmentTableToolbar } from '../materialAssignment-table-toolbar';
+import { InvoiceCreationTableHead } from '../invoiceCreation-table-head';
+import { InvoiceCreationTableRow } from '../invoiceCreation-table-row';
+import { InvoiceCreationTableToolbar } from '../invoiceCreation-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import MaterialAssignmentForm from 'src/layouts/modals/materialAssignMent';
+import InvoiceCreationForm from '../../../layouts/modals/addInvoiceCreation';
 import axiosInstance from 'src/configs/axiosInstance';
-
 
 // ----------------------------------------------------------------------
 
-export function MaterialAssignmentView() {
+export function InvoiceCreationView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
-  const [materialAssignments,setMaterialAssignments] = useState([]);
-  const [materialNames,setMaterialNames] = useState([]);
-const fetchMaterialsAssignment = async ()=>{
+  const [invoiceCreations,setInvoiceCreations] = useState([]);
+  // const [firmNames,setfirmNames] = useState([]);
+const fetchInvoiceCreations = async ()=>{
 try{
-const result = await axiosInstance.get('/materialAssignment');
+const result = await axiosInstance.get('/invoiceCreations');
 if(result.data.data){
   console.log(result.data);
-  setMaterialAssignments(result.data.data);
-  setMaterialNames(result.data.materials)
+  setInvoiceCreations(result.data.data);
+  // setfirmNames(result.data.firmNames);
 }
 }catch(err){
-  console.error('Error occured in fetching vendors inc client side',err.message)
+  console.error('Error occured in fetching Invoice Creations in client side',err.message)
 }
 }
   const [filterName, setFilterName] = useState('');
 useEffect(()=>{
-  fetchMaterialsAssignment();
+  fetchInvoiceCreations();
 },[update]);
 
 
   const dataFiltered= applyFilter({
-    inputData: materialAssignments,
+    inputData: invoiceCreations,
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
@@ -62,7 +60,7 @@ useEffect(()=>{
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-       Material Assignment
+        Invoice Creations
         </Typography>
         {/* <Button
           variant="contained"
@@ -72,12 +70,12 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <MaterialAssignmentForm setUpdate={setUpdate} materialNames={materialNames}/>
+        <InvoiceCreationForm setUpdate={setUpdate}/>
     
       </Box>
 
       <Card>
-        <MaterialAssignmentTableToolbar
+        <InvoiceCreationTableToolbar
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {
@@ -89,10 +87,10 @@ useEffect(()=>{
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <MaterialAssignmentTableHead
+              <InvoiceCreationTableHead
                 order={table.order}
                 orderBy={table.orderBy}
-                rowCount={materialAssignments.length}
+                rowCount={invoiceCreations.length}
                 numSelected={table.selected.length}
                 onSort={table.onSort}
                 // onSelectAllRows={(checked) =>
@@ -102,10 +100,13 @@ useEffect(()=>{
                 //   )
                 // }
                 headLabel={[
-                  { id: 'assignmentNumber', label: 'Assignment Number' },
-                  { id: 'materialName', label: 'Material Name' },
-                  { id: 'assignedQuantity', label: 'Assigned Quantity' },
-                  { id: 'assignedTo', label: 'Assigned To' },
+                  { id: 'invoiceNumber', label: 'Invoice Number' },
+                  { id: 'invoiceDate', label: 'Invoice Date' },
+                  { id: 'customerName', label: 'Customer Name' },
+                  { id: 'customerAddress', label: 'Customer Address' },
+                  { id: 'itemName', label: 'Item Name' },
+                  { id: 'quantity', label: 'Quantity' },
+                  { id: 'price', label: 'Price' },
                 ]}
               />
               <TableBody>
@@ -115,8 +116,7 @@ useEffect(()=>{
                     table.page * table.rowsPerPage + table.rowsPerPage
                   )
                   .map((row,index) => (
-                    <MaterialAssignmentTableRow
-                    materialNames={materialNames}
+                    <InvoiceCreationTableRow
                     setUpdate={setUpdate}
                       key={index}
                       row={row}
@@ -127,7 +127,7 @@ useEffect(()=>{
 
                 <TableEmptyRows
                   height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, materialAssignments.length)}
+                  emptyRows={emptyRows(table.page, table.rowsPerPage, invoiceCreations.length)}
                 />
 
                 {notFound && <TableNoData searchQuery={filterName} />}
@@ -139,7 +139,7 @@ useEffect(()=>{
         <TablePagination
           component="div"
           page={table.page}
-          count={materialAssignments.length}
+          count={invoiceCreations.length}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
           rowsPerPageOptions={[5, 10, 25]}

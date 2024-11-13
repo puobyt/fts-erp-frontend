@@ -23,40 +23,34 @@ const style = {
   p: 4
 }
 
-export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
+export default function InvoiceCreationForm ({ setUpdate }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const formattedDate = qualityCheckData.inspectionDate
-    ? new Date(qualityCheckData.inspectionDate).toISOString().split('T')[0]
-    : ''
   const [formData, setFormData] = useState({
-    authPassword: '',
-    qualityCheckId: qualityCheckData.qualityCheckId,
-    batchNumber: qualityCheckData.batchNumber,
-    productName: qualityCheckData.productName,
-    inspectionDate: formattedDate,
-    inspectorName: qualityCheckData.inspectorName,
-    qualityStatus: qualityCheckData.qualityStatus,
-    comments: qualityCheckData.comments
+    invoiceNumber: '',
+    invoiceDate: '',
+    customerName: '',
+    customerAddress: '',
+    itemName: '',
+    quantity: '',
+    price: ''
   })
   const [errors, setErrors] = useState({})
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.authPassword)
-      newErrors.authPassword = 'Authorization Password is required'
-    if (!formData.batchNumber)
-      newErrors.batchNumber = 'Batch Number is required'
-    if (!formData.productName)
-      newErrors.productName = 'Product Name is required'
-    if (!formData.inspectionDate)
-      newErrors.inspectionDate = 'Inspection Date is required'
-    if (!formData.inspectorName)
-      newErrors.inspectorName = 'Inspector Name is required'
-    if (!formData.qualityStatus)
-      newErrors.qualityStatus = 'Quality Status is required'
-    if (!formData.comments) newErrors.comments = 'Comments is required'
+    if (!formData.invoiceNumber)
+      newErrors.invoiceNumber = 'Invoice Number is required'
+    if (!formData.invoiceDate)
+      newErrors.invoiceDate = 'Invoice Date is required'
+    if (!formData.customerName)
+      newErrors.customerName = 'Customer Name is required'
+    if (!formData.customerAddress)
+      newErrors.customerAddress = 'Customer Address is required'
+    if (!formData.itemName) newErrors.itemName = 'Item Name is required'
+    if (!formData.quantity) newErrors.quantity = 'Quantity is required'
+    if (!formData.price) newErrors.price = 'Price is required'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
@@ -75,32 +69,31 @@ export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
     }
     try {
       const result = await axiosInstance
-        .put('/editQualityCheck', formData)
+        .post('/newInvoiceCreation', formData)
         .then(result => {
           toast.success(result.data.message)
           handleClose()
           setFormData({
-            authPassword: '',
-            qualityCheckId: '',
-            batchNumber: '',
-            productName: '',
-            inspectionDate: '',
-            inspectorName: '',
-            qualityStatus: '',
-            comments: ''
+            invoiceNumber: '',
+            invoiceDate: '',
+            customerName: '',
+            customerAddress: '',
+            itemName: '',
+            quantity: '',
+            price: ''
           })
           setUpdate(prev => !prev)
         })
         .catch(err => {
           toast.error(err.response.data.message)
           console.error(
-            'Error occured in editing quality check in client side',
+            'Error occured in adding invoice creation client side',
             err.message
           )
         })
     } catch (err) {
       console.error(
-        'Error occured in editing quality check in client side',
+        'Error occured in adding invoice creation client side',
         err.message
       )
     }
@@ -108,10 +101,14 @@ export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
-      <MenuItem onClick={handleOpen}>
-        <Iconify icon='solar:pen-bold' />
-        Edit
-      </MenuItem>
+      <Button
+        onClick={handleOpen}
+        variant='contained'
+        color='inherit'
+        startIcon={<Iconify icon='mingcute:add-line' />}
+      >
+        New Invoice Creation
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -140,10 +137,10 @@ export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
                 color='primary'
                 gutterBottom
               >
-                Edit Quality Check Details
+                Add New Inovice Creation
               </Typography>
               <Typography variant='body2' color='textSecondary'>
-                Quality Check Management
+                Invoice Creation Management
               </Typography>
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
@@ -151,13 +148,12 @@ export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Authorization Password'
-                    type='password'
-                    name='authPassword'
-                    value={formData.authPassword}
+                    label='Invoice Number'
+                    name='invoiceNumber'
+                    value={formData.invoiceNumber}
                     onChange={handleChange}
-                    error={!!errors.authPassword}
-                    helperText={errors.authPassword}
+                    error={!!errors.invoiceNumber}
+                    helperText={errors.invoiceNumber}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
@@ -165,55 +161,29 @@ export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={formData.batchNumber}
-                    onChange={handleChange}
-                    error={!!errors.batchNumber}
-                    helperText={errors.batchNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Product Name'
-                    name='productName'
-                    value={formData.productName}
-                    onChange={handleChange}
-                    error={!!errors.productName}
-                    helperText={errors.productName}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Inspection Date'
-                    name='inspectionDate'
+                    label='Invoice Date'
+                    name='invoiceDate'
                     type='date'
-                    value={formData.inspectionDate}
+                    value={formData.invoiceDate}
                     onChange={handleChange}
-                    error={!!errors.inspectionDate}
-                    helperText={errors.inspectionDate}
+                    error={!!errors.invoiceDate}
+                    helperText={errors.invoiceDate}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{
-                      shrink: true
-                    }}
+                        shrink: true
+                      }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Inspector Name'
-                    name='inspectorName'
-                    value={formData.inspectorName}
+                    label='Customer Name'
+                    name='customerName'
+                    value={formData.customerName}
                     onChange={handleChange}
-                    error={!!errors.inspectorName}
-                    helperText={errors.inspectorName}
+                    error={!!errors.customerName}
+                    helperText={errors.customerName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
@@ -221,39 +191,54 @@ export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    select
-                    label='Quality Status'
-                    name='qualityStatus'
-                    value={formData.qualityStatus}
+                    label='Customer Address'
+                    name='customerAddress'
+                    value={formData.customerAddress}
                     onChange={handleChange}
-                    error={!!errors.qualityStatus}
-                    helperText={errors.qualityStatus}
+                    error={!!errors.customerAddress}
+                    helperText={errors.customerAddress}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    <MenuItem value='Accepted' sx={{ color: 'green' }}>
-                      Accepted
-                    </MenuItem>
-
-                    <MenuItem sx={{ color: 'red' }} value='Rejected'>
-                      Rejected
-                    </MenuItem>
-                    <MenuItem sx={{ color: 'purple' }} value='Quarantine'>
-                      Quarantine
-                    </MenuItem>
-                  </TextField>
+                  />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Comments'
-                    name='comments'
-                    value={formData.comments}
+                    label='Item Name'
+                    name='itemName'
+                    value={formData.itemName}
                     onChange={handleChange}
-                    error={!!errors.comments}
-                    helperText={errors.comments}
+                    error={!!errors.itemName}
+                    helperText={errors.itemName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Quantity'
+                    name='quantity'
+                    value={formData.quantity}
+                    onChange={handleChange}
+                    error={!!errors.quantity}
+                    helperText={errors.quantity}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Price'
+                    name='price'
+                    value={formData.price}
+                    onChange={handleChange}
+                    error={!!errors.price}
+                    helperText={errors.price}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+              
                   />
                 </Grid>
               </Grid>

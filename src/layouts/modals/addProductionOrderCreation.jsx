@@ -23,7 +23,7 @@ const style = {
   p: 4
 }
 
-export default function ProductionOrderCreationForm ({ setUpdate }) {
+export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -215,8 +215,9 @@ export default function ProductionOrderCreationForm ({ setUpdate }) {
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
+                <TextField
                     fullWidth
+                    select
                     label='Batch'
                     name='batch'
                     value={formData.batch}
@@ -225,7 +226,21 @@ export default function ProductionOrderCreationForm ({ setUpdate }) {
                     helperText={errors.batch}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch}>
+                        {batch}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

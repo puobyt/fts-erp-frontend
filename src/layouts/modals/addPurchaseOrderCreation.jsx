@@ -32,13 +32,15 @@ export default function PurchaseOrderCreationForm ({ setUpdate }) {
   const navigate = useNavigate()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+
+
+
   const fetchFirms = async () => {
     try {
       const result = await axiosInstance.get('/firms')
       if (result.data.data) {
         console.log(result.data)
         setFirms(result.data.data);
-        setContacts(result.data.contact)
       }
     } catch (err) {
       console.error(
@@ -67,6 +69,27 @@ export default function PurchaseOrderCreationForm ({ setUpdate }) {
     pan: '',
     gst: ''
   })
+
+  const handleFirmChange = (event) => {
+    const selectedFirmName = event.target.value;
+    const selectedFirm = firms.find(firm => firm.nameOfTheFirm === selectedFirmName);
+
+    // Update form values with selected firm's details
+    if (selectedFirm) {
+      setFormData({
+        ...formData,
+        nameOfTheFirm: selectedFirm.nameOfTheFirm,
+        contact: selectedFirm.contact,
+        pan: selectedFirm.pan,
+        gst: selectedFirm.gst,
+        address: selectedFirm.address,
+        contactPersonName: selectedFirm.contactPersonName,
+        contactPersonDetails:selectedFirm.contactPersonDetails,
+        vendorId:selectedFirm._id
+      });
+    }
+  };
+
   const [errors, setErrors] = useState({})
 
   const validateForm = () => {
@@ -238,15 +261,15 @@ export default function PurchaseOrderCreationForm ({ setUpdate }) {
                     label='Name Of The Firm'
                     name='nameOfTheFirm'
                     value={formData.nameOfTheFirm}
-                    onChange={handleChange}
+                    onChange={handleFirmChange}
                     error={!!errors.nameOfTheFirm}
                     helperText={errors.nameOfTheFirm}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
                     {firms.map((firm, index) => (
-                      <MenuItem key={index} value= {firm}>
-                   {firm}
+                      <MenuItem key={index} value= {firm.nameOfTheFirm}>
+                   {firm.nameOfTheFirm}
                       </MenuItem>
                     ))}
 
@@ -262,30 +285,15 @@ export default function PurchaseOrderCreationForm ({ setUpdate }) {
                 <Grid item xs={6}>
                 <TextField
                     fullWidth
-                    select
                     label='Contact'
                     name='contact'
                     value={formData.contact}
                     onChange={handleChange}
-                    error={!!errors.contact}
+                    error={!!errors.contactPercontactsonName}
                     helperText={errors.contact}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    {contacts.map((contact, index) => (
-                      <MenuItem key={index} value= {contact}>
-                   {contact}
-                      </MenuItem>
-                    ))}
-
-                    {/* This item only triggers navigation, not a form selection */}
-                    <MenuItem
-                      onClick={() => navigate('/vendor-management')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
-                    >
-                      Add New contact +
-                    </MenuItem>
-                  </TextField>
+                  />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

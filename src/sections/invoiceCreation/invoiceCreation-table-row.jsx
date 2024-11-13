@@ -9,30 +9,31 @@ import MenuList from '@mui/material/MenuList'
 import TableCell from '@mui/material/TableCell'
 import IconButton from '@mui/material/IconButton'
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem'
-import EditQualityCheckForm from 'src/layouts/editModals/editQualityCheck'
+import EditGateEntryForm from 'src/layouts/editModals/editGateEntry'
 import { Label } from 'src/components/label'
 import { Iconify } from 'src/components/iconify'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import EditInvoiceCreationForm from '../../layouts/editModals/editInvoiceCreation'
 // ----------------------------------------------------------------------
 
-export function QualityCheckTableRow ({
+export function InvoiceCreationTableRow ({
   setUpdate,
   row,
   selected,
   onSelectRow
 }) {
   const [openPopover, setOpenPopover] = useState(null)
-
-  const qualityCheckData = {
-    qualityCheckId: row._id,
-    batchNumber: row.batchNumber,
-    productName: row.productName,
-    inspectionDate: row.inspectionDate,
-    inspectorName: row.inspectorName,
-    qualityStatus: row.qualityStatus,
-    comments: row.comments
+  const invoiceData = {
+    invoiceId: row._id,
+    invoiceNumber: row.invoiceNumber,
+    invoiceDate: row.invoiceDate,
+    customerName: row.customerName,
+    customerAddress: row.customerAddress,
+    itemName: row.itemName,
+    quantity: row.quantity,
+    price: row.price
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -41,20 +42,19 @@ export function QualityCheckTableRow ({
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null)
   }, [])
-
   const handleDelete = async () => {
     try {
-      const qualityCheckId = row._id
+      const invoiceId = row._id
       const result = await axiosInstance.delete(
-        `/removeQualityCheck?qualityCheckId=${qualityCheckId}`
+        `/removeInvoiceCreation?invoiceId=${invoiceId}`
       )
       if (result) {
         toast.success(result.data.message)
       }
     } catch (err) {
-      toast.success(err.response.data.message)
+      toast.error(err.response.data.message)
       console.error(
-        'Error occured in removing quality check in client side',
+        'Error occured in removing InvoiceC reation entry in client side',
         err.message
       )
     }
@@ -96,27 +96,13 @@ export function QualityCheckTableRow ({
           
           </Box>
         </TableCell> */}
-        <TableCell> {row.batchNumber}</TableCell>
-        <TableCell>{row.productName}</TableCell>
-        <TableCell>
-          {new Date(row.inspectionDate).toLocaleDateString()}
-        </TableCell>
-        <TableCell>{row.inspectorName}</TableCell>
-        <TableCell
-          sx={{
-            color:
-              row.qualityStatus === 'Accepted'
-                ? 'green'
-                : row.qualityStatus === 'Quarantine'
-                ? 'purple'
-                : row.qualityStatus === 'Rejected'
-                ? 'red'
-                : 'inherit' // Default color if none of the above matches
-          }}
-        >
-          {row.qualityStatus}
-        </TableCell>
-        <TableCell>{row.comments}</TableCell>
+        <TableCell> {row.invoiceNumber} </TableCell>
+        <TableCell>{new Date(row.invoiceDate).toLocaleDateString()}</TableCell>
+        <TableCell> {row.customerName} </TableCell>
+        <TableCell>{row.customerAddress}</TableCell>
+        <TableCell> {row.itemName} </TableCell>
+        <TableCell>{row.quantity}</TableCell>
+        <TableCell> {row.price} </TableCell>
 
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
@@ -148,11 +134,10 @@ export function QualityCheckTableRow ({
             }
           }}
         >
-          <EditQualityCheckForm
+          <EditInvoiceCreationForm
             setUpdate={setUpdate}
-            qualityCheckData={qualityCheckData}
+            invoiceData={invoiceData}
           />
-
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}
             sx={{ color: 'error.main' }}

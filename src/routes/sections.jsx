@@ -22,6 +22,7 @@ export const RequestCreationForMaterials = lazy(() => import('src/pages/requestC
 export const MaterialAssignment = lazy(() => import('src/pages/materialAssignment'));
 export const BillOfMaterials = lazy(() => import('src/pages/billOfMaterials'));
 export const FinalQualityInspection = lazy(() => import('src/pages/finalQualityInspection'));
+export const InvoiceCreations = lazy(() => import('src/pages/invoiceCreations'));
 export const FinishedGoods = lazy(() => import('src/pages/finishedGoods'));
 export const Rework = lazy(() => import('src/pages/rework'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
@@ -67,6 +68,7 @@ export function Router() {
         { path: 'bill-of-materials', element: <BillOfMaterials/> },
         { path: 'final-quality-inspection', element: <FinalQualityInspection/> },
         { path: 'finished-goods', element: <FinishedGoods/> },
+        { path: 'invoice-creations', element: <InvoiceCreations/> },
       ],
     },
     {

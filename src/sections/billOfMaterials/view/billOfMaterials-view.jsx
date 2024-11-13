@@ -32,12 +32,14 @@ export function BillOfMaterialsView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [billOfMaterials,setBillOfMaterials] = useState([]);
+  const [productNames,setProductNames] = useState([])
 const fetchbillOfMaterials = async ()=>{
 try{
 const result = await axiosInstance.get('/billOfMaterials');
 if(result.data.data){
   console.log(result.data);
   setBillOfMaterials(result.data.data);
+  setProductNames(result.data.productNames)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -71,7 +73,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <BillOfMaterialsForm setUpdate={setUpdate}/>
+        <BillOfMaterialsForm setUpdate={setUpdate} productNames={productNames}/>
     
       </Box>
 
@@ -114,6 +116,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <BillOfMaterialsTableRow
+                    productNames={productNames}
                     setUpdate={setUpdate}
                       key={index}
                       row={row}
