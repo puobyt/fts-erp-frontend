@@ -118,9 +118,10 @@ useEffect(()=>{
                     table.page * table.rowsPerPage,
                     table.page * table.rowsPerPage + table.rowsPerPage
                   )
-                  .map((row) => (
+                  .map((row,index) => (
                     <ProductionOrderCreationOutputTableRow
                     setUpdate={setUpdate}
+                    index={index}
                       key={row.id}
                       row={row}
                       selected={table.selected.includes(row.id)}
