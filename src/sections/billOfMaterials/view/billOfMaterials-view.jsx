@@ -106,6 +106,7 @@ useEffect(()=>{
                   { id: 'BomNumber', label: 'BOM Number'},
                   { id: 'productName', label: 'Product Name' },
                   { id: 'materialsList', label: 'Materials List'},
+                  { id: 'quantity', label: 'Quantity'},
                 ]}
               />
               <TableBody>

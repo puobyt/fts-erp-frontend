@@ -1,69 +1,72 @@
-import { useState, useCallback, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
+import { useState, useCallback, useEffect } from 'react'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import Table from '@mui/material/Table'
+import Button from '@mui/material/Button'
+import TableBody from '@mui/material/TableBody'
+import Typography from '@mui/material/Typography'
+import TableContainer from '@mui/material/TableContainer'
+import TablePagination from '@mui/material/TablePagination'
 
-import { DashboardContent } from 'src/layouts/dashboard';
-import { _users } from 'src/_mock';
-import { Iconify } from 'src/components/iconify';
-import { Scrollbar } from 'src/components/scrollbar';
+import { DashboardContent } from 'src/layouts/dashboard'
+import { _users } from 'src/_mock'
+import { Iconify } from 'src/components/iconify'
+import { Scrollbar } from 'src/components/scrollbar'
 
-import { TableNoData } from '../table-no-data';
+import { TableNoData } from '../table-no-data'
 
-import { TableEmptyRows } from '../table-empty-rows';
+import { TableEmptyRows } from '../table-empty-rows'
 
-import { RequestCreationForMaterialsTableHead } from '../requestCreationForMaterials-table-head';
-import { RequestCreationForMaterialsTableRow } from '../requestCreationForMaterials-table-row';
-import { RequestCreationForMaterialsTableToolbar } from '../requestCreationForMaterials-table-toolbar';
-import RequestCreationForMaterialsForm from 'src/layouts/modals/addRequestCreationMaterials';
-import { emptyRows, applyFilter, getComparator } from '../utils';
-import ReworkForm from 'src/layouts/modals/addRework';
-import axiosInstance from 'src/configs/axiosInstance';
-
+import { RequestCreationForMaterialsTableHead } from '../requestCreationForMaterials-table-head'
+import { RequestCreationForMaterialsTableRow } from '../requestCreationForMaterials-table-row'
+import { RequestCreationForMaterialsTableToolbar } from '../requestCreationForMaterials-table-toolbar'
+import RequestCreationForMaterialsForm from 'src/layouts/modals/addRequestCreationMaterials'
+import { emptyRows, applyFilter, getComparator } from '../utils'
+import ReworkForm from 'src/layouts/modals/addRework'
+import axiosInstance from 'src/configs/axiosInstance'
 
 // ----------------------------------------------------------------------
 
-export function RequestCreationForMaterialsView() {
-  const table = useTable();
-  const [update,setUpdate] = useState(false);
-  const [requestMaterials,setRequestMaterials] = useState([]);
-  const [materialNames,setMaterialNames] = useState([]);
-const fetchRequestCreationMaterials = async ()=>{
-try{
-const result = await axiosInstance.get('/requestCreationForMaterials');
-if(result.data.data){
-  console.log(result.data);
-  setRequestMaterials(result.data.data);
-  setMaterialNames(result.data.materials)
-}
-}catch(err){
-  console.error('Error occured in fetching vendors inc client side',err.message)
-}
-}
-  const [filterName, setFilterName] = useState('');
-useEffect(()=>{
-  fetchRequestCreationMaterials();
-},[update]);
+export function RequestCreationForMaterialsView () {
+  const table = useTable()
+  const [update, setUpdate] = useState(false)
+  const [requestMaterials, setRequestMaterials] = useState([])
+  const [products, setProducts] = useState([])
+  const [finishedGoods, setFinishedGoods] = useState([])
+  const fetchRequestCreationMaterials = async () => {
+    try {
+      const result = await axiosInstance.get('/requestCreationForMaterials')
+      if (result.data.data) {
+        console.log(result.data)
+        setRequestMaterials(result.data.data)
+        setProducts(result.data.products)
+        setFinishedGoods(result.data.finishedGoods)
+      }
+    } catch (err) {
+      console.error(
+        'Error occured in fetching vendors inc client side',
+        err.message
+      )
+    }
+  }
+  const [filterName, setFilterName] = useState('')
+  useEffect(() => {
+    fetchRequestCreationMaterials()
+  }, [update])
 
-
-  const dataFiltered= applyFilter({
+  const dataFiltered = applyFilter({
     inputData: requestMaterials,
     comparator: getComparator(table.order, table.orderBy),
-    filterName,
-  });
+    filterName
+  })
 
-  const notFound = !dataFiltered.length && !!filterName;
+  const notFound = !dataFiltered.length && !!filterName
 
   return (
     <DashboardContent>
-      <Box display="flex" alignItems="center" mb={5}>
-        <Typography variant="h4" flexGrow={1}>
-       Request Creation For Materials Management
+      <Box display='flex' alignItems='center' mb={5}>
+        <Typography variant='h4' flexGrow={1}>
+          Request Creation For Materials Management
         </Typography>
         {/* <Button
           variant="contained"
@@ -73,17 +76,20 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <RequestCreationForMaterialsForm setUpdate={setUpdate} materialNames={materialNames}/>
-    
+        <RequestCreationForMaterialsForm
+          setUpdate={setUpdate}
+          products={products}
+          finishedGoods={finishedGoods}
+        />
       </Box>
 
       <Card>
         <RequestCreationForMaterialsTableToolbar
           numSelected={table.selected.length}
           filterName={filterName}
-          onFilterName={(event) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
+          onFilterName={event => {
+            setFilterName(event.target.value)
+            table.onResetPage()
           }}
         />
 
@@ -104,9 +110,11 @@ useEffect(()=>{
                 // }
                 headLabel={[
                   { id: 'requestNumber', label: 'Request Number' },
+                  { id: 'batchNumber', label: 'Batch Number' },
                   { id: 'materialName', label: 'Material Name' },
                   { id: 'quantity', label: 'quantity' },
                   { id: 'requiredDate', label: 'Required Date' },
+                
                 ]}
               />
               <TableBody>
@@ -115,10 +123,11 @@ useEffect(()=>{
                     table.page * table.rowsPerPage,
                     table.page * table.rowsPerPage + table.rowsPerPage
                   )
-                  .map((row,index) => (
+                  .map((row, index) => (
                     <RequestCreationForMaterialsTableRow
-                    materialNames={materialNames}
-                    setUpdate={setUpdate}
+                    products={products}
+                    finishedGoods={finishedGoods}
+                      setUpdate={setUpdate}
                       key={index}
                       row={row}
                       selected={table.selected.includes(row.id)}
@@ -128,7 +137,11 @@ useEffect(()=>{
 
                 <TableEmptyRows
                   height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, requestMaterials.length)}
+                  emptyRows={emptyRows(
+                    table.page,
+                    table.rowsPerPage,
+                    requestMaterials.length
+                  )}
                 />
 
                 {notFound && <TableNoData searchQuery={filterName} />}
@@ -138,7 +151,7 @@ useEffect(()=>{
         </Scrollbar>
 
         <TablePagination
-          component="div"
+          component='div'
           page={table.page}
           count={requestMaterials.length}
           rowsPerPage={table.rowsPerPage}
@@ -148,63 +161,60 @@ useEffect(()=>{
         />
       </Card>
     </DashboardContent>
-  );
+  )
 }
 
 // ----------------------------------------------------------------------
 
-export function useTable() {
-  const [page, setPage] = useState(0);
-  const [orderBy, setOrderBy] = useState('name');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState([]);  // Ensure this is an array
-  const [order, setOrder] = useState('asc');
+export function useTable () {
+  const [page, setPage] = useState(0)
+  const [orderBy, setOrderBy] = useState('name')
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [selected, setSelected] = useState([]) // Ensure this is an array
+  const [order, setOrder] = useState('asc')
 
   const onSort = useCallback(
-    (id) => {
-      const isAsc = orderBy === id && order === 'asc';
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(id);
+    id => {
+      const isAsc = orderBy === id && order === 'asc'
+      setOrder(isAsc ? 'desc' : 'asc')
+      setOrderBy(id)
     },
     [order, orderBy]
-  );
+  )
 
   const onSelectAllRows = useCallback((checked, newSelecteds) => {
     if (checked) {
-      setSelected(newSelecteds);
+      setSelected(newSelecteds)
     } else {
-      setSelected([]);
+      setSelected([])
     }
-  }, []);
+  }, [])
 
-  const onSelectRow = useCallback(
-    (inputValue) => {
-      setSelected((prevSelected) => {
-        if (prevSelected.includes(inputValue)) {
-          return prevSelected.filter((value) => value !== inputValue);
-        } else {
-          return [...prevSelected, inputValue];
-        }
-      });
-    },
-    []
-  );
+  const onSelectRow = useCallback(inputValue => {
+    setSelected(prevSelected => {
+      if (prevSelected.includes(inputValue)) {
+        return prevSelected.filter(value => value !== inputValue)
+      } else {
+        return [...prevSelected, inputValue]
+      }
+    })
+  }, [])
 
   const onResetPage = useCallback(() => {
-    setPage(0);
-  }, []);
+    setPage(0)
+  }, [])
 
   const onChangePage = useCallback((event, newPage) => {
-    setPage(newPage);
-  }, []);
+    setPage(newPage)
+  }, [])
 
   const onChangeRowsPerPage = useCallback(
-    (event) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      onResetPage();
+    event => {
+      setRowsPerPage(parseInt(event.target.value, 10))
+      onResetPage()
     },
     [onResetPage]
-  );
+  )
 
   return {
     page,
@@ -217,6 +227,6 @@ export function useTable() {
     onResetPage,
     onChangePage,
     onSelectAllRows,
-    onChangeRowsPerPage,
-  };
+    onChangeRowsPerPage
+  }
 }

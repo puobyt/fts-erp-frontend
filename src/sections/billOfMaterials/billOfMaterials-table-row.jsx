@@ -29,7 +29,8 @@ export function BillOfMaterialsTableRow ({
     billOfMaterialsId: row._id,
     bomNumber: row.bomNumber,
     productName: row.productName,
-    materialsList: row.materialsList
+    materialsList: row.materialsList,
+    quantity:row.quantity
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -95,7 +96,7 @@ export function BillOfMaterialsTableRow ({
         <TableCell>{row.productName}</TableCell>
 
         <TableCell>{row.materialsList}</TableCell>
-
+        <TableCell>{row.quantity}</TableCell>
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon='eva:more-vertical-fill' />

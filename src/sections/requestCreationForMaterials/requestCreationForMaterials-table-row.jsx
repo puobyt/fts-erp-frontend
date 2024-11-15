@@ -19,11 +19,12 @@ import toast, { Toaster } from 'react-hot-toast'
 
 
  
-export function RequestCreationForMaterialsTableRow({materialNames,setUpdate, row, selected, onSelectRow }) {
+export function RequestCreationForMaterialsTableRow({products,finishedGoods,setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
   const requestMaterialsData = {
     requestMaterialsId:row._id,
     requestNumber:row.requestNumber,
+    batchNumber:row.batchNumber,
     materialName:row.materialName,
     quantity:row.quantity,
     requiredDate:row.requiredDate
@@ -91,6 +92,7 @@ export function RequestCreationForMaterialsTableRow({materialNames,setUpdate, ro
           </Box>
         </TableCell> */}
         <TableCell>  {row.requestNumber}</TableCell>
+        <TableCell>  {row.batchNumber}</TableCell>
         <TableCell>{row.materialName}</TableCell>
 
         <TableCell>{row.quantity}</TableCell>
@@ -126,7 +128,7 @@ export function RequestCreationForMaterialsTableRow({materialNames,setUpdate, ro
             },
           }}
         >
-        <EditRequestCreationForMaterialsForm setUpdate={setUpdate} requestMaterialsData={requestMaterialsData} materialNames={materialNames} />
+        <EditRequestCreationForMaterialsForm setUpdate={setUpdate} requestMaterialsData={requestMaterialsData} products={products} finishedGoods={finishedGoods} />
 
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />

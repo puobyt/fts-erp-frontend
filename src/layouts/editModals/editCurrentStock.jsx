@@ -9,6 +9,9 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { parse, isValid } from 'date-fns';
+
+
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
@@ -24,14 +27,23 @@ const style = {
   p: 4
 }
 
-export default function EditCurrentStockForm ({purchaseOrderData, setUpdate, currentStockData }) {
+export default function EditCurrentStockForm ({
+  purchaseOrderData,
+  setUpdate,
+  currentStockData
+}) {
   const [open, setOpen] = useState(false)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const formattedDate = currentStockData.dateRecieved
     ? new Date(currentStockData.dateRecieved).toISOString().split('T')[0]
     : ''
+    const formattedExpDate = currentStockData.expiryDate
+    ? new Date(currentStockData.expiryDate).toISOString().split('T')[0]
+    : ''
+
+    // const formattedExpiryDate = isValid(parsedDate) ? parsedDate.toISOString().split('T')[0] : null;
   const [formData, setFormData] = useState({
     authPassword: '',
     currentStockId: currentStockData.currentStockId,
@@ -39,7 +51,8 @@ export default function EditCurrentStockForm ({purchaseOrderData, setUpdate, cur
     quantity: currentStockData.quantity,
     price: currentStockData.price,
     supplier: currentStockData.supplier,
-    dateRecieved: formattedDate
+    dateRecieved: formattedDate,
+    expiryDate: formattedExpDate
   })
   const [errors, setErrors] = useState({})
 
@@ -54,7 +67,7 @@ export default function EditCurrentStockForm ({purchaseOrderData, setUpdate, cur
     if (!formData.supplier) newErrors.supplier = 'Supplier is required'
     if (!formData.dateRecieved)
       newErrors.dateRecieved = 'Date Recieved is required'
-
+    if (!formData.expiryDate) newErrors.expiryDate = 'Expiry is required'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
@@ -80,7 +93,8 @@ export default function EditCurrentStockForm ({purchaseOrderData, setUpdate, cur
           quantity: '',
           price: '',
           supplier: '',
-          dateRecieved: ''
+          dateRecieved: '',
+          expiryDate: ''
         })
         setUpdate(prev => !prev)
       }
@@ -150,7 +164,7 @@ export default function EditCurrentStockForm ({purchaseOrderData, setUpdate, cur
                   />
                 </Grid>
                 <Grid item xs={6}>
-                <TextField
+                  <TextField
                     fullWidth
                     select
                     label='Product Name'
@@ -163,8 +177,11 @@ export default function EditCurrentStockForm ({purchaseOrderData, setUpdate, cur
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
                     {purchaseOrderData.map((purchaseOrderData, index) => (
-                      <MenuItem key={index} value= {purchaseOrderData.productName}>
-                   {purchaseOrderData.productName}
+                      <MenuItem
+                        key={index}
+                        value={purchaseOrderData.productName}
+                      >
+                        {purchaseOrderData.productName}
                       </MenuItem>
                     ))}
 
@@ -203,6 +220,7 @@ export default function EditCurrentStockForm ({purchaseOrderData, setUpdate, cur
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -226,6 +244,23 @@ export default function EditCurrentStockForm ({purchaseOrderData, setUpdate, cur
                     onChange={handleChange}
                     error={!!errors.dateRecieved}
                     helperText={errors.dateRecieved}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Expiry'
+                    name='expiryDate'
+                    type='date'
+                    value={formData.expiryDate}
+                    onChange={handleChange}
+                    error={!!errors.expiryDate}
+                    helperText={errors.expiryDate}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{

@@ -9,6 +9,7 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
@@ -23,9 +24,15 @@ const style = {
   p: 4
 }
 
-export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
+export default function EditQualityCheckForm ({
+  setUpdate,
+  qualityCheckData,
+  products,
+  batches
+}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
+  const navigate = useNavigate()
   const handleClose = () => setOpen(false)
   const formattedDate = qualityCheckData.inspectionDate
     ? new Date(qualityCheckData.inspectionDate).toISOString().split('T')[0]
@@ -41,7 +48,20 @@ export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
     comments: qualityCheckData.comments
   })
   const [errors, setErrors] = useState({})
+  const handleBatchChange = event => {
+    const selectedBatch = event.target.value
+    const isSelectedBatch = batches.find(
+      batch => selectedBatch === batch.batchNumber
+    )
 
+    if (isSelectedBatch) {
+      setFormData({
+        ...formData,
+        productName: isSelectedBatch.productName,
+        batchNumber: isSelectedBatch.batchNumber
+      })
+    }
+  }
   const validateForm = () => {
     const newErrors = {}
     if (!formData.authPassword)
@@ -165,19 +185,35 @@ export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Batch Number'
                     name='batchNumber'
                     value={formData.batchNumber}
-                    onChange={handleChange}
+                    onChange={handleBatchChange}
                     error={!!errors.batchNumber}
                     helperText={errors.batchNumber}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch.batchNumber}>
+                        {batch.batchNumber}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Product Name'
                     name='productName'
                     value={formData.productName}
@@ -186,7 +222,21 @@ export default function EditQualityCheckForm ({ setUpdate, qualityCheckData }) {
                     helperText={errors.productName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {products.map((product, index) => (
+                      <MenuItem key={index} value={product}>
+                        {product}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/current-stock')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Product In Current Stock +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

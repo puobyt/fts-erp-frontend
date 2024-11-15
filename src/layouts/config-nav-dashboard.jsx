@@ -54,6 +54,11 @@ export const navData = [
     icon: icon('ic-user'),
   },
   {
+    title: 'Production Order Creation-Output',
+    path: '/production-order-creation-output',
+    icon: icon('ic-user'),
+  },
+  {
     title: 'Request Creation For Materials',
     path: '/request-creation-for-materials',
     icon: icon('ic-cart'),
@@ -83,11 +88,11 @@ export const navData = [
     path: '/invoice-creations',
     icon: icon('ic-user'),
   },
-  {
-    title: '',
-    path: '',
+  // {
+  //   title: 'sign-in',
+  //   path: '/sign-in',
 
-  },
+  // },
   {
     title: '',
     path: '',

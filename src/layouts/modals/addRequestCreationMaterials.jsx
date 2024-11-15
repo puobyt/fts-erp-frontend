@@ -9,8 +9,9 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import '../../global.css'
-import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -23,12 +24,18 @@ const style = {
   p: 4
 }
 
-export default function RequestCreationForMaterialsForm ({ setUpdate, materialNames}) {
+export default function RequestCreationForMaterialsForm ({
+  setUpdate,
+  products,
+  finishedGoods
+}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     requestNumber: '',
+    batchNumber: '',
     materialName: '',
     quantity: '',
     requiredDate: ''
@@ -39,6 +46,8 @@ export default function RequestCreationForMaterialsForm ({ setUpdate, materialNa
     const newErrors = {}
     if (!formData.requestNumber)
       newErrors.requestNumber = 'Request Number is required'
+    if (!formData.batchNumber)
+      newErrors.batchNumber = 'Batch Number is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
     if (!formData.quantity) newErrors.quantity = 'Quantity is required'
@@ -60,12 +69,16 @@ export default function RequestCreationForMaterialsForm ({ setUpdate, materialNa
       return
     }
     try {
-      const result = await axiosInstance.post('/newRequestCreationForMaterials', formData)
+      const result = await axiosInstance.post(
+        '/newRequestCreationForMaterials',
+        formData
+      )
       if (result) {
         toast.success(result.data.message)
         handleClose()
         setFormData({
           requestNumber: '',
+          batchNumber: '',
           materialName: '',
           quantity: '',
           requiredDate: ''
@@ -122,7 +135,7 @@ export default function RequestCreationForMaterialsForm ({ setUpdate, materialNa
                 Add New Request For Creation Materials
               </Typography>
               <Typography variant='body2' color='textSecondary'>
-              Request Creation For Materials Management
+                Request Creation For Materials Management
               </Typography>
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
@@ -141,7 +154,20 @@ export default function RequestCreationForMaterialsForm ({ setUpdate, materialNa
                   />
                 </Grid>
                 <Grid item xs={6}>
-                <TextField
+                  <TextField
+                    fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
                     fullWidth
                     select
                     label='Material Name'
@@ -153,18 +179,42 @@ export default function RequestCreationForMaterialsForm ({ setUpdate, materialNa
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
-                    {materialNames.map((materialName, index) => (
-                      <MenuItem key={index} value={materialName}>
-                        {materialName}
+                    {/* Heading for Products */}
+                    <MenuItem
+                      disabled
+                      sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                    >
+                      Products
+                    </MenuItem>
+                    {products.map((product, index) => (
+                      <MenuItem key={`product-${index}`} value={product}>
+                        {product}
+                      </MenuItem>
+                    ))}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Product +
+                    </MenuItem>
+
+                    <MenuItem
+                      disabled
+                      sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                    >
+                      Finished Goods
+                    </MenuItem>
+                    {finishedGoods.map((item, index) => (
+                      <MenuItem key={`finished-${index}`} value={item}>
+                        {item}
                       </MenuItem>
                     ))}
 
-                    {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
+                      onClick={() => navigate('/finished-goods')}
+                      sx={{ fontStyle: 'italic' }}
                     >
-                      Add New Batch +
+                      Add New Finished Goods +
                     </MenuItem>
                   </TextField>
                 </Grid>
@@ -194,8 +244,8 @@ export default function RequestCreationForMaterialsForm ({ setUpdate, materialNa
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{
-                        shrink: true,
-                      }}
+                      shrink: true
+                    }}
                   />
                 </Grid>
               </Grid>

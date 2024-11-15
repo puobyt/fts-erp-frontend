@@ -24,7 +24,7 @@ const style = {
   p: 4
 }
 
-export default function QualityCheckForm ({ setUpdate, batches }) {
+export default function QualityCheckForm ({ setUpdate, batches ,products}) {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -181,9 +181,10 @@ export default function QualityCheckForm ({ setUpdate, batches }) {
                     </MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
+                   <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Product Name'
                     name='productName'
                     value={formData.productName}
@@ -192,7 +193,21 @@ export default function QualityCheckForm ({ setUpdate, batches }) {
                     helperText={errors.productName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {products.map((product, index) => (
+                      <MenuItem key={index} value={product}>
+                        {product}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/current-stock')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Product In Current Stock +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

@@ -25,33 +25,12 @@ const style = {
   p: 4
 }
 
-export default function PurchaseOrderCreationForm ({ setUpdate }) {
+export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
   const [open, setOpen] = useState(false)
-  const [firms, setFirms] = useState([])
-  const [contacts, setContacts] = useState([])
   const navigate = useNavigate()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
-
-
-  const fetchFirms = async () => {
-    try {
-      const result = await axiosInstance.get('/firms')
-      if (result.data.data) {
-        console.log(result.data)
-        setFirms(result.data.data);
-      }
-    } catch (err) {
-      console.error(
-        'Error occured in fetching vendors inc client side',
-        err.message
-      )
-    }
-  }
-  useEffect(() => {
-    fetchFirms()
-  }, [])
   const [formData, setFormData] = useState({
     purchaseOrderNumber: '',
     date: '',

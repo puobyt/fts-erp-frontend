@@ -8,6 +8,7 @@ import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
@@ -25,15 +26,20 @@ const style = {
 
 export default function EditMaterialAssignmentForm ({
   setUpdate,
-  materialAssignmentData
+  materialAssignmentData,
+  products,
+  finishedGoods
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
+  const navigate = useNavigate();
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     authPassword: '',
     materialAssignmentId: materialAssignmentData.materialAssignmentId,
     assignmentNumber: materialAssignmentData.assignmentNumber,
+    batchNumber: materialAssignmentData.batchNumber,
+    processOrderNumber: materialAssignmentData.processOrderNumber,
     materialName: materialAssignmentData.materialName,
     assignedQuantity: materialAssignmentData.assignedQuantity,
     assignedTo: materialAssignmentData.assignedTo
@@ -44,6 +50,10 @@ export default function EditMaterialAssignmentForm ({
     const newErrors = {}
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
+    if (!formData.batchNumber)
+      newErrors.batchNumber = 'Batch Number is required'
+    if (!formData.processOrderNumber)
+      newErrors.processOrderNumber = 'Process Order Number is required'
     if (!formData.assignmentNumber)
       newErrors.assignMentNumber = 'Assignment Number is required'
     if (!formData.materialName)
@@ -77,6 +87,8 @@ export default function EditMaterialAssignmentForm ({
             authPassword: '',
             materialAssignmentId: '',
             assignmentNumber: '',
+            batchNumber: '',
+            processOrderNumber: '',
             materialName: '',
             assignedQuantity: '',
             assignedTo: ''
@@ -170,6 +182,33 @@ export default function EditMaterialAssignmentForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Process Order Number'
+                    name='processOrderNumber'
+                    value={formData.processOrderNumber}
+                    onChange={handleChange}
+                    error={!!errors.processOrderNumber}
+                    helperText={errors.processOrderNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
                     label='Material Name'
                     name='materialName'
                     value={formData.materialName}
@@ -178,7 +217,45 @@ export default function EditMaterialAssignmentForm ({
                     helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {/* Heading for Products */}
+                    <MenuItem
+                      disabled
+                      sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                    >
+                      Products
+                    </MenuItem>
+                    {products.map((product, index) => (
+                      <MenuItem key={`product-${index}`} value={product}>
+                        {product}
+                      </MenuItem>
+                    ))}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Product +
+                    </MenuItem>
+
+                    <MenuItem
+                      disabled
+                      sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                    >
+                      Finished Goods
+                    </MenuItem>
+                    {finishedGoods.map((item, index) => (
+                      <MenuItem key={`finished-${index}`} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+
+                    <MenuItem
+                      onClick={() => navigate('/finished-goods')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Finished Goods +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

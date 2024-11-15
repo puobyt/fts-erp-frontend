@@ -32,12 +32,14 @@ export function PurchaseOrderCreationView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [purchaseCreations,setPurchaseCreations] = useState([]);
+  const [firms,setFirms] = useState([]);
 const fetchPurchaseOrderCreation = async ()=>{
 try{
 const result = await axiosInstance.get('/purchaseOrderCreation');
 if(result.data.data){
   console.log('populated',result.data.data);
   setPurchaseCreations(result.data.data);
+  setFirms(result.data.firms);
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -70,7 +72,7 @@ useEffect(()=>{
         >
           New user
         </Button> */}
-        <PurchaseOrderCreationForm setUpdate={setUpdate}/>
+        <PurchaseOrderCreationForm setUpdate={setUpdate} firms={firms}/>
       </Box>
 
       <Card>
@@ -126,6 +128,7 @@ useEffect(()=>{
                   .map((row) => (
                     <PurchaseOrderCreationTableRow
                     setUpdate={setUpdate}
+                    firms={firms}
                       key={row.id}
                       row={row}
                       selected={table.selected.includes(row.id)}

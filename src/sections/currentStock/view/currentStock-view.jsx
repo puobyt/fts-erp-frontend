@@ -108,6 +108,7 @@ useEffect(()=>{
                   { id: 'price', label: 'Price' },
                   { id: 'supplier', label: 'Supplier' },
                   { id: 'dateRecieved', label: 'Date Recieved' },
+                  { id: 'expiryDate', label: 'Expiry' },
                 ]}
               />
               <TableBody>

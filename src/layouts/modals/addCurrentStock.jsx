@@ -33,6 +33,7 @@ export default function CurrentStockForm({setUpdate,purchaseOrderData}) {
      price: '', 
      supplier: '', 
      dateRecieved: '', 
+     expiryDate: '', 
     });
   const [errors, setErrors] = useState({});
 
@@ -43,6 +44,7 @@ export default function CurrentStockForm({setUpdate,purchaseOrderData}) {
     if (!formData.price) newErrors.price = 'Price is required';
     if (!formData.supplier) newErrors.supplier = 'Supplier is required';
     if (!formData.dateRecieved) newErrors.dateRecieved = 'Date Recieved is required';
+    if (!formData.expiryDate) newErrors.expiryDate = 'Expiry is required';
   
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Returns true if there are no errors
@@ -71,6 +73,7 @@ try{
             price: '', 
             supplier: '', 
             dateRecieved: '', 
+            expiryDate:''
            })
            setUpdate(prev=>!prev);
     }
@@ -208,7 +211,23 @@ try{
                   }}
               />
             </Grid>
-         
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Expiry"
+                name="expiryDate"
+                type='date'
+                value={formData.expiryDate}
+                onChange={handleChange}
+                error={!!errors.expiryDate}
+                helperText={errors.expiryDate}
+                variant="outlined"
+                InputProps={{ style: { borderRadius: 8 } }}
+                InputLabelProps={{
+                    shrink: true, // Keeps the label above the field to avoid overlap
+                  }}
+              />
+            </Grid>
           </Grid>
           <Button
   type="submit"

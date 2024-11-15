@@ -25,7 +25,8 @@ const style = {
 
 export default function EditQualityInspectionForm ({
   setUpdate,
-  qualityInspectionData
+  qualityInspectionData,
+  productNames
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -165,8 +166,9 @@ export default function EditQualityInspectionForm ({
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
+            <TextField
                     fullWidth
+                    select
                     label='Product Name'
                     name='productName'
                     value={formData.productName}
@@ -175,8 +177,22 @@ export default function EditQualityInspectionForm ({
                     helperText={errors.productName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
+                  >
+                    {productNames.map((productName, index) => (
+                      <MenuItem key={index} value={productName}>
+                        {productName}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
+            </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

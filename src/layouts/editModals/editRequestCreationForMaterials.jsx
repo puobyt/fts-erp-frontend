@@ -9,6 +9,7 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
@@ -25,13 +26,17 @@ const style = {
 
 export default function EditRequestCreationForMaterialsForm ({
   setUpdate,
-  requestMaterialsData
+  requestMaterialsData,
+  products,
+  finishedGoods
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     authPassword: '',
+    batchNumber:requestMaterialsData.batchNumber,
     requestMaterialsId: requestMaterialsData.requestMaterialsId,
     requestNumber: requestMaterialsData.requestNumber,
     materialName: requestMaterialsData.materialName,
@@ -46,6 +51,8 @@ export default function EditRequestCreationForMaterialsForm ({
       newErrors.authPassword = 'Authorization Password is required'
     if (!formData.requestNumber)
       newErrors.requestNumber = 'Request Number is required'
+    if (!formData.batchNumber)
+      newErrors.batchNumber = 'Batch Number is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
     if (!formData.quantity) newErrors.quantity = 'Quantity is required'
@@ -76,6 +83,7 @@ export default function EditRequestCreationForMaterialsForm ({
             authPassword: '',
             requestMaterialsId: '',
             requestNumber: '',
+            batchNumber:'',
             materialName: '',
             quantity: '',
             requiredDate: ''
@@ -170,6 +178,20 @@ export default function EditRequestCreationForMaterialsForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
                     label='Material Name'
                     name='materialName'
                     value={formData.materialName}
@@ -178,7 +200,45 @@ export default function EditRequestCreationForMaterialsForm ({
                     helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {/* Heading for Products */}
+                    <MenuItem
+                      disabled
+                      sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                    >
+                      Products
+                    </MenuItem>
+                    {products.map((product, index) => (
+                      <MenuItem key={`product-${index}`} value={product}>
+                        {product}
+                      </MenuItem>
+                    ))}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Product +
+                    </MenuItem>
+
+                    <MenuItem
+                      disabled
+                      sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                    >
+                      Finished Goods
+                    </MenuItem>
+                    {finishedGoods.map((item, index) => (
+                      <MenuItem key={`finished-${index}`} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+
+                    <MenuItem
+                      onClick={() => navigate('/finished-goods')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Finished Goods +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

@@ -8,9 +8,10 @@ import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
-import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -23,12 +24,15 @@ const style = {
   p: 4
 }
 
-export default function MaterialAssignmentForm ({ setUpdate,materialNames }) {
+export default function MaterialAssignmentForm ({ setUpdate, products,finishedGoods }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
+  const navigate = useNavigate();
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     assignmentNumber: '',
+    batchNumber: '',
+    processOrderNumber:'',
     materialName: '',
     assignedQuantity: '',
     assignedTo: ''
@@ -39,6 +43,10 @@ export default function MaterialAssignmentForm ({ setUpdate,materialNames }) {
     const newErrors = {}
     if (!formData.assignmentNumber)
       newErrors.assignMentNumber = 'Assignment Number is required'
+    if (!formData.batchNumber)
+      newErrors.batchNumber = 'Batch Number is required'
+        if (!formData.processOrderNumber)
+      newErrors.processOrderNumber = 'Process Order Number is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
     if (!formData.assignedQuantity)
@@ -61,12 +69,17 @@ export default function MaterialAssignmentForm ({ setUpdate,materialNames }) {
       return
     }
     try {
-      const result = await axiosInstance.post('/newMaterialAssignment', formData)
+      const result = await axiosInstance.post(
+        '/newMaterialAssignment',
+        formData
+      )
       if (result) {
         toast.success(result.data.message)
         handleClose()
         setFormData({
           assignmentNumber: '',
+          batchNumber: '',
+          processOrderNumber:'',
           materialName: '',
           assignedQuantity: '',
           assignedTo: ''
@@ -142,7 +155,33 @@ export default function MaterialAssignmentForm ({ setUpdate,materialNames }) {
                   />
                 </Grid>
                 <Grid item xs={6}>
-                <TextField
+                  <TextField
+                    fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Process Order Number'
+                    name='processOrderNumber'
+                    value={formData.processOrderNumber}
+                    onChange={handleChange}
+                    error={!!errors.processOrderNumber}
+                    helperText={errors.processOrderNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
                     fullWidth
                     select
                     label='Material Name'
@@ -154,18 +193,42 @@ export default function MaterialAssignmentForm ({ setUpdate,materialNames }) {
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
-                    {materialNames.map((materialName, index) => (
-                      <MenuItem key={index} value={materialName}>
-                        {materialName}
+                    {/* Heading for Products */}
+                    <MenuItem
+                      disabled
+                      sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                    >
+                      Products
+                    </MenuItem>
+                    {products.map((product, index) => (
+                      <MenuItem key={`product-${index}`} value={product}>
+                        {product}
+                      </MenuItem>
+                    ))}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Product +
+                    </MenuItem>
+
+                    <MenuItem
+                      disabled
+                      sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                    >
+                      Finished Goods
+                    </MenuItem>
+                    {finishedGoods.map((item, index) => (
+                      <MenuItem key={`finished-${index}`} value={item}>
+                        {item}
                       </MenuItem>
                     ))}
 
-                    {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
+                      onClick={() => navigate('/finished-goods')}
+                      sx={{ fontStyle: 'italic' }}
                     >
-                      Add New Batch +
+                      Add New Finished Goods +
                     </MenuItem>
                   </TextField>
                 </Grid>

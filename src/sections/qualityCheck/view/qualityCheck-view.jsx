@@ -32,13 +32,15 @@ export function QualityCheckView() {
   const [update,setUpdate] = useState(false);
   const [qualityChecks,setQualityChecks] = useState([]);
   const [batches,setBatches] = useState([]);
+  const [products,setProducts] = useState([]);
 const fetchQualityChecks = async ()=>{
 try{
 const result = await axiosInstance.get('/qualityCheck');
 if(result.data.data){
   console.log(result.data);
   setQualityChecks(result.data.data);
-  setBatches(result.data.batches)
+  setBatches(result.data.batches);
+  setProducts(result.data.products);
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -72,7 +74,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <QualityCheckForm setUpdate={setUpdate} batches={batches}/>
+        <QualityCheckForm setUpdate={setUpdate} batches={batches} products={products}/>
     
       </Box>
 
@@ -119,6 +121,8 @@ useEffect(()=>{
                   .map((row,index) => (
                     <QualityCheckTableRow
                     setUpdate={setUpdate}
+                    products={products}
+                    batches={batches}
                       key={index}
                       row={row}
                       selected={table.selected.includes(row.id)}

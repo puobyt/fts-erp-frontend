@@ -19,6 +19,8 @@ import toast, { Toaster } from 'react-hot-toast'
 
 export function QualityCheckTableRow ({
   setUpdate,
+  products,
+  batches,
   row,
   selected,
   onSelectRow
@@ -151,6 +153,8 @@ export function QualityCheckTableRow ({
           <EditQualityCheckForm
             setUpdate={setUpdate}
             qualityCheckData={qualityCheckData}
+            products={products}
+            batches={batches}
           />
 
           <MenuItem

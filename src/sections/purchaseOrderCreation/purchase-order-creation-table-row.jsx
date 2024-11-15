@@ -20,7 +20,7 @@ import toast, { Toaster } from 'react-hot-toast'
 
 
 
-export function PurchaseOrderCreationTableRow({setUpdate, row, selected, onSelectRow }) {
+export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
   const orderData = {
     orderId:row._id,
@@ -149,7 +149,7 @@ export function PurchaseOrderCreationTableRow({setUpdate, row, selected, onSelec
             },
           }}
         >
-      <EditPurchaseOrderCreationForm setUpdate={setUpdate} orderData={orderData}/>
+      <EditPurchaseOrderCreationForm setUpdate={setUpdate} orderData={orderData} firms={firms}/>
 
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />

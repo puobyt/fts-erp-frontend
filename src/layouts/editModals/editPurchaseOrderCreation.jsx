@@ -27,33 +27,16 @@ const style = {
 
 export default function EditPurchaseOrderCreationForm ({
   setUpdate,
-  orderData
+  orderData,
+  firms
 }) {
   const [open, setOpen] = useState(false)
-  const [firms, setFirms] = useState([])
   const navigate = useNavigate()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const formattedDate = orderData.date
     ? new Date(orderData.date).toISOString().split('T')[0]
     : ''
-  const fetchFirms = async () => {
-    try {
-      const result = await axiosInstance.get('/firms')
-      if (result.data.data) {
-        console.log(result.data)
-        setFirms(result.data.data)
-      }
-    } catch (err) {
-      console.error(
-        'Error occured in fetching vendors inc client side',
-        err.message
-      )
-    }
-  }
-  useEffect(() => {
-    fetchFirms()
-  }, [])
   const [formData, setFormData] = useState({
     authPassword: '',
     orderId: orderData.orderId,
@@ -74,7 +57,25 @@ export default function EditPurchaseOrderCreationForm ({
     gst: orderData.gst
   })
   const [errors, setErrors] = useState({})
+  const handleFirmChange = (event) => {
+    const selectedFirmName = event.target.value;
+    const selectedFirm = firms.find(firm => firm.nameOfTheFirm === selectedFirmName);
 
+    // Update form values with selected firm's details
+    if (selectedFirm) {
+      setFormData({
+        ...formData,
+        nameOfTheFirm: selectedFirm.nameOfTheFirm,
+        contact: selectedFirm.contact,
+        pan: selectedFirm.pan,
+        gst: selectedFirm.gst,
+        address: selectedFirm.address,
+        contactPersonName: selectedFirm.contactPersonName,
+        contactPersonDetails:selectedFirm.contactPersonDetails,
+        vendorId:selectedFirm._id
+      });
+    }
+  };
   const validateForm = () => {
     const newErrors = {}
     if (!formData.authPassword)
@@ -262,15 +263,15 @@ export default function EditPurchaseOrderCreationForm ({
                     label='Name Of The Firm'
                     name='nameOfTheFirm'
                     value={formData.nameOfTheFirm}
-                    onChange={handleChange}
+                    onChange={handleFirmChange}
                     error={!!errors.nameOfTheFirm}
                     helperText={errors.nameOfTheFirm}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
                     {firms.map((firm, index) => (
-                      <MenuItem key={index} value={firm}>
-                        {firm}
+                      <MenuItem key={index} value= {firm.nameOfTheFirm}>
+                   {firm.nameOfTheFirm}
                       </MenuItem>
                     ))}
 

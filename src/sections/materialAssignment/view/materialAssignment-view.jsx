@@ -31,14 +31,16 @@ export function MaterialAssignmentView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [materialAssignments,setMaterialAssignments] = useState([]);
-  const [materialNames,setMaterialNames] = useState([]);
+  const [products,setProducts] = useState([]);
+  const [finishedGoods,setFinishedGoods] = useState([]);
 const fetchMaterialsAssignment = async ()=>{
 try{
 const result = await axiosInstance.get('/materialAssignment');
 if(result.data.data){
   console.log(result.data);
   setMaterialAssignments(result.data.data);
-  setMaterialNames(result.data.materials)
+  setProducts(result.data.products);
+  setFinishedGoods(result.data.finishedGoods)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -72,7 +74,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <MaterialAssignmentForm setUpdate={setUpdate} materialNames={materialNames}/>
+        <MaterialAssignmentForm setUpdate={setUpdate} products={products} finishedGoods={finishedGoods}/>
     
       </Box>
 
@@ -103,6 +105,8 @@ useEffect(()=>{
                 // }
                 headLabel={[
                   { id: 'assignmentNumber', label: 'Assignment Number' },
+                  { id: 'batchNumber', label: 'Batch Number' },
+                  { id: 'processOrderNubmer', label: 'Process Order Nubmer' },
                   { id: 'materialName', label: 'Material Name' },
                   { id: 'assignedQuantity', label: 'Assigned Quantity' },
                   { id: 'assignedTo', label: 'Assigned To' },
@@ -116,7 +120,8 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <MaterialAssignmentTableRow
-                    materialNames={materialNames}
+                    products={products}
+                    finishedGoods={finishedGoods}
                     setUpdate={setUpdate}
                       key={index}
                       row={row}

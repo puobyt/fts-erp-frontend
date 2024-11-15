@@ -9,6 +9,7 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
@@ -25,17 +26,21 @@ const style = {
 
 export default function EditBillOfMaterialsForm ({
   setUpdate,
-  billOfMaterialsData
+  billOfMaterialsData,
+  productNames
+  
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     authPassword: '',
     billOfMaterialsId: billOfMaterialsData.billOfMaterialsId,
     bomNumber: billOfMaterialsData.bomNumber,
     productName: billOfMaterialsData.productName,
-    materialsList: billOfMaterialsData.materialsList
+    materialsList: billOfMaterialsData.materialsList,
+    quantity: billOfMaterialsData.quantity
   })
   const [errors, setErrors] = useState({})
 
@@ -48,7 +53,7 @@ export default function EditBillOfMaterialsForm ({
       newErrors.productName = 'Product Name is required'
     if (!formData.materialsList)
       newErrors.materialsList = 'Materials List is required'
-
+    if (!formData.quantity) newErrors.quantity = 'Quantity is required'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
@@ -75,7 +80,8 @@ export default function EditBillOfMaterialsForm ({
             billOfMaterialsId: '',
             bomNumber: '',
             productName: '',
-            materialsList: ''
+            materialsList: '',
+            quantity: ''
           })
           setUpdate(prev => !prev)
         })
@@ -165,8 +171,9 @@ export default function EditBillOfMaterialsForm ({
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
+                <TextField
                     fullWidth
+                    select
                     label='Product Name'
                     name='productName'
                     value={formData.productName}
@@ -175,7 +182,21 @@ export default function EditBillOfMaterialsForm ({
                     helperText={errors.productName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {productNames.map((productName, index) => (
+                      <MenuItem key={index} value={productName}>
+                        {productName}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Product +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -186,6 +207,19 @@ export default function EditBillOfMaterialsForm ({
                     onChange={handleChange}
                     error={!!errors.materialsList}
                     helperText={errors.materialsList}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Quantity'
+                    name='quantity'
+                    value={formData.quantity}
+                    onChange={handleChange}
+                    error={!!errors.quantity}
+                    helperText={errors.quantity}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

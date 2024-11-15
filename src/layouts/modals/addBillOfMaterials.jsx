@@ -9,8 +9,10 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import '../../global.css'
 import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -26,11 +28,13 @@ const style = {
 export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
+  const navigate = useNavigate();
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     bomNumber: '',
     productName: '',
-    materialsList: ''
+    materialsList: '',
+    quantity:''
   })
   const [errors, setErrors] = useState({})
 
@@ -41,7 +45,8 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
       newErrors.productName = 'Product Name is required'
     if (!formData.materialsList)
       newErrors.materialsList = 'Materials List is required'
-
+   if (!formData.quantity)
+      newErrors.quantity = 'Quantity List is required'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
@@ -65,7 +70,8 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
         setFormData({
           bomNumber: '',
           productName: '',
-          materialsList: ''
+          materialsList: '',
+          quantity:''
         })
         setUpdate(prev => !prev)
       }
@@ -161,7 +167,7 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
                       onClick={() => navigate('/purchase-order-creation')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
-                      Add New Batch +
+                      Add New Product +
                     </MenuItem>
                   </TextField>
                 </Grid>
@@ -174,6 +180,19 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
                     onChange={handleChange}
                     error={!!errors.materialsList}
                     helperText={errors.materialsList}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Quantity'
+                    name='quantity'
+                    value={formData.quantity}
+                    onChange={handleChange}
+                    error={!!errors.quantity}
+                    helperText={errors.quantity}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
