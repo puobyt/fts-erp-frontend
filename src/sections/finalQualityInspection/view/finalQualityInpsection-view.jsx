@@ -78,6 +78,7 @@ useEffect(()=>{
 
       <Card>
         <FinalQualityInpsectionTableToolbar
+          sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {

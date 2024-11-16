@@ -10,7 +10,10 @@ import { Iconify } from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 
-export function ProductOrderCreationTableToolbar({ numSelected, filterName, onFilterName }) {
+export function PurchcaseOrderCreationTableToolbar({ sort,numSelected, filterName, onFilterName }) {
+  const handleSortClick = () => {
+    sort('createdAt'); // Example: sorting by the "nameOfTheFirm" column
+  };
   return (
     <Toolbar
       sx={{
@@ -50,7 +53,7 @@ export function ProductOrderCreationTableToolbar({ numSelected, filterName, onFi
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
+        <Tooltip title="Filter list" onClick={handleSortClick}>
           <IconButton>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>

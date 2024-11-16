@@ -55,6 +55,7 @@ useEffect(()=>{
 
   const notFound = !dataFiltered.length && !!filterName;
 
+  
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -75,6 +76,7 @@ useEffect(()=>{
 
       <Card>
         <UserTableToolbar
+        sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {

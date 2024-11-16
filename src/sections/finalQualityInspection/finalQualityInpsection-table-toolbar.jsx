@@ -10,7 +10,10 @@ import { Iconify } from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 
-export function FinalQualityInpsectionTableToolbar({ numSelected, filterName, onFilterName }) {
+export function FinalQualityInpsectionTableToolbar({sort, numSelected, filterName, onFilterName }) {
+  const handleSortClick = () => {
+    sort('createdAt'); 
+  };
   return (
     <Toolbar
       sx={{
@@ -50,7 +53,7 @@ export function FinalQualityInpsectionTableToolbar({ numSelected, filterName, on
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
+        <Tooltip title="Filter list" onClick={handleSortClick}>
           <IconButton>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>

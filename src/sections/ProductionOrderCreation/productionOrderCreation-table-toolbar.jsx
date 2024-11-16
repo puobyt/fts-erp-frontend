@@ -10,7 +10,10 @@ import { Iconify } from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 
-export function ProductionOrderCreationTableToolbar({ numSelected, filterName, onFilterName }) {
+export function ProductionOrderCreationTableToolbar({sort, numSelected, filterName, onFilterName }) {
+  const handleSortClick = () => {
+    sort('createdAt'); 
+  };
   return (
     <Toolbar
       sx={{
@@ -50,7 +53,7 @@ export function ProductionOrderCreationTableToolbar({ numSelected, filterName, o
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
+        <Tooltip title="Filter list" onClick={handleSortClick}>
           <IconButton>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>

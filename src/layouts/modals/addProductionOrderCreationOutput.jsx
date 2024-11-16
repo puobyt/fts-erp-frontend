@@ -23,7 +23,7 @@ const style = {
   p: 4
 }
 
-export default function ProductionOrderCreationOutputForm ({ setUpdate, batches }) {
+export default function ProductionOrderCreationOutputForm ({ setUpdate, batches ,nextBatchNumber }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -32,7 +32,7 @@ export default function ProductionOrderCreationOutputForm ({ setUpdate, batches 
     productionCompletionDate: '',
     qualityCheckStatus: '',
     storageLocationforOutput: '',
-    batchNumberforOutput: '',
+    batchNumberforOutput:nextBatchNumber,
     productionNotes: '',
     Yield: '',
     outputQualityRating: '',

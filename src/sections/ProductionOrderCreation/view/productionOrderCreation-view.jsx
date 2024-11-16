@@ -79,6 +79,7 @@ useEffect(()=>{
 
       <Card>
         <ProductionOrderCreationTableToolbar
+             sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {

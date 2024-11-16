@@ -10,7 +10,10 @@ import { Iconify } from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 
-export function GateEntryTableToolbar({ numSelected, filterName, onFilterName }) {
+export function GateEntryTableToolbar({ sort,numSelected, filterName, onFilterName }) {
+  const handleSortClick = () => {
+    sort('createdAt'); // Example: sorting by the "nameOfTheFirm" column
+  };
   return (
     <Toolbar
       sx={{
@@ -50,7 +53,7 @@ export function GateEntryTableToolbar({ numSelected, filterName, onFilterName })
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
+        <Tooltip title="Filter list" onClick={handleSortClick}>
           <IconButton>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>

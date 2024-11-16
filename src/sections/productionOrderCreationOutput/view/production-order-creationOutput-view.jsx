@@ -32,6 +32,7 @@ export function ProductionOrderCreationOutputView() {
   const [update,setUpdate] = useState(false);
   const [productionOrderOutputCreations,setProductionOrderOutputCreations] = useState([]);
   const [batches,setBatches] = useState([]);
+  const [tableRows,setTableRows] = useState([]);
 const fetchPurchaseOrderCreation = async ()=>{
 try{
 const result = await axiosInstance.get('/productionOrderCreationOutput');
@@ -55,8 +56,11 @@ useEffect(()=>{
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
-
+  useEffect(() => {
+    setTableRows(dataFiltered.length); // Set the total number of rows after rendering
+  }, [dataFiltered, setTableRows,update]);
   const notFound = !dataFiltered.length && !!filterName;
+  const nextBatchNumber = `FN${String(tableRows + 1).padStart(3, '0')}`; // Generate batch number
 
   return (
     <DashboardContent>
@@ -70,12 +74,13 @@ useEffect(()=>{
           startIcon={<Iconify icon="mingcute:add-line" />}
         >
           New user
-        </Button> */}
-        <ProductionOrderCreationOutputForm setUpdate={setUpdate}  batches={batches}/>
+        </Button> */} 
+        <ProductionOrderCreationOutputForm setUpdate={setUpdate}  batches={batches}  nextBatchNumber={nextBatchNumber}/>
       </Box>
 
       <Card>
         <ProductionOrderCreationOutputTableToolbar
+            sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {

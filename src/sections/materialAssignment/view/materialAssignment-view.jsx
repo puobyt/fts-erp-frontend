@@ -80,6 +80,7 @@ useEffect(()=>{
 
       <Card>
         <MaterialAssignmentTableToolbar
+         sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {

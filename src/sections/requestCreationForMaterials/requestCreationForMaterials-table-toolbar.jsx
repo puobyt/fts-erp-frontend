@@ -10,7 +10,10 @@ import { Iconify } from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 
-export function RequestCreationForMaterialsTableToolbar({ numSelected, filterName, onFilterName }) {
+export function RequestCreationForMaterialsTableToolbar({sort, numSelected, filterName, onFilterName }) {
+  const handleSortClick = () => {
+    sort('createdAt'); 
+  };
   return (
     <Toolbar
       sx={{
@@ -50,7 +53,7 @@ export function RequestCreationForMaterialsTableToolbar({ numSelected, filterNam
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
+        <Tooltip title="Filter list" onClick={handleSortClick}>
           <IconButton>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>

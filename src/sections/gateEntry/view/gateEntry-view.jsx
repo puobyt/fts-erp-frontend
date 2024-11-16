@@ -77,6 +77,7 @@ useEffect(()=>{
 
       <Card>
         <GateEntryTableToolbar
+         sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {
@@ -89,6 +90,7 @@ useEffect(()=>{
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <GateEntryTableHead
+              
                 order={table.order}
                 orderBy={table.orderBy}
                 rowCount={gateEntries.length}

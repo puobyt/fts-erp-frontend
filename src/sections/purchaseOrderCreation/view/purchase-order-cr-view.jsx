@@ -20,7 +20,7 @@ import { TableNoData } from '../table-no-data';
 import { PurchaseOrderCreationTableRow } from '../purchase-order-creation-table-row';
 import { PurchaseOrderCreationTableHead } from '../purchase-order-creation-table-head';
 import { TableEmptyRows } from '../table-empty-rows';
-import { ProductOrderCreationTableToolbar } from '../product-order-creation-table-toolbar';
+import { PurchcaseOrderCreationTableToolbar } from '../purchase-order-creation-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import axiosInstance from 'src/configs/axiosInstance';
 import PurchaseOrderCreationForm from 'src/layouts/modals/addPurchaseOrderCreation';
@@ -76,7 +76,8 @@ useEffect(()=>{
       </Box>
 
       <Card>
-        <ProductOrderCreationTableToolbar
+        <PurchcaseOrderCreationTableToolbar
+        sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {

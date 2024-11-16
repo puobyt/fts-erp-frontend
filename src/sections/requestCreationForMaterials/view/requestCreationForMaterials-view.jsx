@@ -85,6 +85,7 @@ export function RequestCreationForMaterialsView () {
 
       <Card>
         <RequestCreationForMaterialsTableToolbar
+           sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={event => {
