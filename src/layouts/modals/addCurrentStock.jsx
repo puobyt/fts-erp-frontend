@@ -23,12 +23,13 @@ const style = {
   p: 4,
 };
 
-export default function CurrentStockForm({setUpdate,purchaseOrderData}) {
+export default function CurrentStockForm({setUpdate,purchaseOrderData,materials}) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [formData, setFormData] = useState({
-     productName: '', 
+    materialName: '', 
+    batchNumber:'',
      quantity: '', 
      price: '', 
      supplier: '', 
@@ -39,7 +40,7 @@ export default function CurrentStockForm({setUpdate,purchaseOrderData}) {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.productName) newErrors.productName = 'Product Name is required';
+    if (!formData.materialName) newErrors.materialName = 'Material Name is required';
     if (!formData.quantity) newErrors.quantity = 'quantity is required';
     if (!formData.price) newErrors.price = 'Price is required';
     if (!formData.supplier) newErrors.supplier = 'Supplier is required';
@@ -68,7 +69,8 @@ try{
         toast.success(result.data.message);
         handleClose();
         setFormData({
-            productName: '', 
+          materialName: '', 
+          batchNumber:'',
             quantity: '', 
             price: '', 
             supplier: '', 
@@ -131,29 +133,41 @@ try{
             <TextField
                     fullWidth
                     select
-                    label='Product Name'
-                    name='productName'
-                    value={formData.productName}
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
                     onChange={handleChange}
-                    error={!!errors.productName}
-                    helperText={errors.productName}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
-                    {purchaseOrderData.map((purchaseOrderData, index) => (
-                      <MenuItem key={index} value= {purchaseOrderData.productName}>
-                   {purchaseOrderData.productName}
+                    {materials.map((material, index) => (
+                      <MenuItem key={index} value= {material}>
+                   {material}
                       </MenuItem>
                     ))}
 
-                    {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/vendor-management')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
-                      Add New Product +
+                      Add New Material +
                     </MenuItem>
                   </TextField>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Batch Number"
+                name="batchNumber"
+                value={formData.batchNumber}
+                onChange={handleChange}
+                error={!!errors.batchNumber}
+                helperText={errors.batchNumber}
+                variant="outlined"
+                InputProps={{ style: { borderRadius: 8 } }}
+              />
             </Grid>
             <Grid item xs={6}>
               <TextField

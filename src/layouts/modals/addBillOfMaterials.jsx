@@ -8,10 +8,12 @@ import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import IconButton from '@mui/material/IconButton'
+
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../../global.css'
-import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 
 const style = {
   position: 'absolute',
@@ -25,16 +27,16 @@ const style = {
   p: 4
 }
 
-export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
+export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     bomNumber: '',
     productName: '',
-    materialsList: '',
-    quantity:''
+    materials: [{ materialsList: '', quantity: '' }],
+    quantity: ''
   })
   const [errors, setErrors] = useState({})
 
@@ -43,10 +45,9 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
     if (!formData.bomNumber) newErrors.bomNumber = 'BOM Number is required'
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
-    if (!formData.materialsList)
-      newErrors.materialsList = 'Materials List is required'
-   if (!formData.quantity)
-      newErrors.quantity = 'Quantity List is required'
+    if (formData.materials.some(mat => !mat.materialsList || !mat.quantity)) {
+      newErrors.materials = 'All material fields must be filled'
+    }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
@@ -58,7 +59,7 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
 
   const handleSubmit = async e => {
     e.preventDefault()
-
+    console.log('handle submit form trigger')
     if (!validateForm()) {
       return
     }
@@ -70,9 +71,9 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
         setFormData({
           bomNumber: '',
           productName: '',
-          materialsList: '',
-          quantity:''
+          materials: [{ materialsList: '', quantity: '' }]
         })
+        setErrors({})
         setUpdate(prev => !prev)
       }
     } catch (err) {
@@ -83,6 +84,29 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
       )
     }
   }
+
+  const handleMaterialChange = (e, index) => {
+    const { name, value } = e.target
+    const updatedMaterials = [...formData.materials]
+    updatedMaterials[index][name] = value
+    setFormData({ ...formData, materials: updatedMaterials })
+  }
+
+  const addMaterial = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      materials: [
+        ...prevFormData.materials,
+        { materialsList: '', quantity: '' }
+      ]
+    }))
+  }
+
+  const removeMaterial = index => {
+    const updatedMaterials = formData.materials.filter((_, i) => i !== index)
+    setFormData({ ...formData, materials: updatedMaterials })
+  }
+
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
@@ -125,7 +149,7 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
                 Add New Bill Of Material
               </Typography>
               <Typography variant='body2' color='textSecondary'>
-               Bill Of Material Management
+                Bill Of Material Management
               </Typography>
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
@@ -144,7 +168,7 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
                   />
                 </Grid>
                 <Grid item xs={6}>
-                <TextField
+                  <TextField
                     fullWidth
                     select
                     label='Product Name'
@@ -171,33 +195,71 @@ export default function BillOfMaterialsForm ({ setUpdate,productNames }) {
                     </MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Materials List'
-                    name='materialsList'
-                    value={formData.materialsList}
-                    onChange={handleChange}
-                    error={!!errors.materialsList}
-                    helperText={errors.materialsList}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Quantity'
-                    name='quantity'
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    error={!!errors.quantity}
-                    helperText={errors.quantity}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+
+                {formData.materials.map((material, index) => (
+                  <React.Fragment key={index}>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label='Materials List'
+                        name='materialsList'
+                        value={material.materialsList}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        error={!!errors.materials}
+                        helperText={errors.materials}
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label='Quantity'
+                        name='quantity'
+                        error={!!errors.materials}
+                        value={material.quantity}
+                        helperText={errors.materials}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end', // Align to the right
+                        alignItems: 'center' // Vertically center the content if needed
+                      }}
+                    >
+                      <Button
+                        variant='text'
+                        color='error'
+                        onClick={() => removeMaterial(index)}
+                        size='small'
+                        sx={{
+                          textTransform: 'none',
+                          padding: 0,
+                          minWidth: 'auto'
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  </React.Fragment>
+                ))}
+                <Grid item xs={12}>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={addMaterial}
+                  >
+                    Add Material
+                  </Button>
                 </Grid>
               </Grid>
+
               <Button
                 type='submit'
                 fullWidth

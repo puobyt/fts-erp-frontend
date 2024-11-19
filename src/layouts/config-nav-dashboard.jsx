@@ -16,7 +16,7 @@ export const navData = [
   {
     title: 'Vendor Management',
     path: '/vendor-management',
-    icon: icon('ic-user'),
+    icon: icon('ic-cart'),
   },
   {
     title: 'Purchase Order Creation',
@@ -34,13 +34,18 @@ export const navData = [
     icon: icon('ic-cart'),
   },
   {
-    title: 'Current Stock',
+    title: 'Inward Current Stock',
     path: '/current-stock',
-    icon: icon('ic-user'),
+    icon: icon('ic-cart'),
   },
   {
-    title: 'Quality Check',
+    title: 'Inward Quality Check',
     path: '/quality-check',
+    icon: icon('ic-cart'),
+  },
+  {
+    title: 'Main Stock',
+    path: '/main-stock',
     icon: icon('ic-cart'),
   },
   {
@@ -51,12 +56,12 @@ export const navData = [
   {
     title: 'Production Order Creation',
     path: '/production-order-creation',
-    icon: icon('ic-user'),
+    icon: icon('ic-cart'),
   },
   {
     title: 'Production Order Creation-Output',
     path: '/production-order-creation-output',
-    icon: icon('ic-user'),
+    icon: icon('ic-cart'),
   },
   {
     title: 'Request Creation For Materials',
@@ -71,7 +76,7 @@ export const navData = [
   {
     title: 'Bill Of Materials',
     path: '/bill-of-materials',
-    icon: icon('ic-user'),
+    icon: icon('ic-cart'),
   },
   {
     title: 'Final Quality Inspection',
@@ -86,7 +91,7 @@ export const navData = [
   {
     title: 'Invoice Creation',
     path: '/invoice-creations',
-    icon: icon('ic-user'),
+    icon: icon('ic-cart'),
   },
   // {
   //   title: 'sign-in',

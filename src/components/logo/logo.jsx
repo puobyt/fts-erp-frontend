@@ -115,7 +115,7 @@ export const Logo = forwardRef(
     // );
     const singleLogo = (
       <img
-        src="/public/assets/logo/fts logo.png"
+        src="/assets/logo/fts logo.png"
         alt="Logo"
         style={{
           display: "inline-block",

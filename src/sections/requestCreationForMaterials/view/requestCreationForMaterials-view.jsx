@@ -31,7 +31,7 @@ export function RequestCreationForMaterialsView () {
   const table = useTable()
   const [update, setUpdate] = useState(false)
   const [requestMaterials, setRequestMaterials] = useState([])
-  const [products, setProducts] = useState([])
+  const [materials, setMaterials] = useState([])
   const [finishedGoods, setFinishedGoods] = useState([])
   const fetchRequestCreationMaterials = async () => {
     try {
@@ -39,7 +39,7 @@ export function RequestCreationForMaterialsView () {
       if (result.data.data) {
         console.log(result.data)
         setRequestMaterials(result.data.data)
-        setProducts(result.data.products)
+        setMaterials(result.data.materials)
         setFinishedGoods(result.data.finishedGoods)
       }
     } catch (err) {
@@ -78,7 +78,7 @@ export function RequestCreationForMaterialsView () {
 
         <RequestCreationForMaterialsForm
           setUpdate={setUpdate}
-          products={products}
+          materials={materials}
           finishedGoods={finishedGoods}
         />
       </Box>
@@ -126,7 +126,7 @@ export function RequestCreationForMaterialsView () {
                   )
                   .map((row, index) => (
                     <RequestCreationForMaterialsTableRow
-                    products={products}
+                    materials={materials}
                     finishedGoods={finishedGoods}
                       setUpdate={setUpdate}
                       key={index}

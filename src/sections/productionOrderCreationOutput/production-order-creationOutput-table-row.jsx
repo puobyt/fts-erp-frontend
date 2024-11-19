@@ -30,7 +30,7 @@ export function ProductionOrderCreationOutputTableRow ({
     productionOrderoutputId: row._id,
     producedQuantity: row.producedQuantity,
     productionCompletionDate: row.productionCompletionDate,
-    qualityCheckStatus: row.qualityCheckStatus,
+    // qualityCheckStatus: row.qualityCheckStatus,
     storageLocationforOutput: row.storageLocationforOutput,
     batchNumberforOutput: row.batchNumberforOutput,
     productionNotes: row.productionNotes,
@@ -103,9 +103,9 @@ export function ProductionOrderCreationOutputTableRow ({
         <TableCell>
           {new Date(row.productionCompletionDate).toLocaleDateString()}
         </TableCell>
-        <TableCell>{row.qualityCheckStatus}</TableCell>
+        {/* <TableCell>{row.qualityCheckStatus}</TableCell> */}
         <TableCell>{row.storageLocationforOutput}</TableCell>
-        <TableCell>FN{String(index + 1).padStart(3, '0')}</TableCell>
+        <TableCell>{row.batchNumberforOutput}</TableCell>
         <TableCell>{row.productionNotes}</TableCell>
         <TableCell>{row.Yield}</TableCell>
         <TableCell>{row.outputQualityRating}</TableCell>

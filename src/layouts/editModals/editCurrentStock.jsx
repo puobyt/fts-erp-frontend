@@ -29,6 +29,7 @@ const style = {
 
 export default function EditCurrentStockForm ({
   purchaseOrderData,
+  materials,
   setUpdate,
   currentStockData
 }) {
@@ -47,7 +48,8 @@ export default function EditCurrentStockForm ({
   const [formData, setFormData] = useState({
     authPassword: '',
     currentStockId: currentStockData.currentStockId,
-    productName: currentStockData.productName,
+    materialName: currentStockData.materialName,
+    batchNumber:currentStockData.batchNumber,
     quantity: currentStockData.quantity,
     price: currentStockData.price,
     supplier: currentStockData.supplier,
@@ -60,8 +62,8 @@ export default function EditCurrentStockForm ({
     const newErrors = {}
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
-    if (!formData.productName)
-      newErrors.productName = 'Product Name is required'
+    if (!formData.materialName)
+      newErrors.materialName = 'Material Name is required'
     if (!formData.quantity) newErrors.quantity = 'quantity is required'
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.supplier) newErrors.supplier = 'Supplier is required'
@@ -89,7 +91,8 @@ export default function EditCurrentStockForm ({
         toast.success(result.data.message)
         handleClose()
         setFormData({
-          productName: '',
+          materialName: '',
+          batchNumber:'',
           quantity: '',
           price: '',
           supplier: '',
@@ -167,32 +170,45 @@ export default function EditCurrentStockForm ({
                   <TextField
                     fullWidth
                     select
-                    label='Product Name'
-                    name='productName'
-                    value={formData.productName}
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
                     onChange={handleChange}
-                    error={!!errors.productName}
-                    helperText={errors.productName}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
-                    {purchaseOrderData.map((purchaseOrderData, index) => (
+                    {materials.map((material, index) => (
                       <MenuItem
                         key={index}
-                        value={purchaseOrderData.productName}
+                        value={material}
                       >
-                        {purchaseOrderData.productName}
+                        {material}
                       </MenuItem>
                     ))}
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/vendor-management')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
-                      Add New Product +
+                      Add New Material +
                     </MenuItem>
                   </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

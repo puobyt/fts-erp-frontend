@@ -26,10 +26,10 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
     address: row.address,
     vendorId: row._id,
     contact:row.contact,
-    contactPersonName:row.contactPersonDetails,
+    contactPersonName:row.contactPersonName,
     contactPersonDetails:row.contactPersonDetails,
     material:row.material,
-    bankDetails:row.material,
+    bankDetails:row.bankDetails,
     pan:row.pan,
     gst:row.gst
   };
@@ -104,7 +104,6 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
         </TableCell> */}
         <TableCell>  {row.nameOfTheFirm}</TableCell>
         <TableCell>{row.address}</TableCell>
-
         <TableCell>{row.contact}</TableCell>
         <TableCell>{row.contactPersonName}</TableCell>
         <TableCell>{row.contactPersonDetails}</TableCell>

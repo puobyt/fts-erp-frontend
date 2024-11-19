@@ -19,6 +19,7 @@ import toast, { Toaster } from 'react-hot-toast'
 
 export function CurrentStockTableRow ({
   purchaseOrderData,
+  materials,
   setUpdate,
   row,
   selected,
@@ -27,7 +28,8 @@ export function CurrentStockTableRow ({
   const [openPopover, setOpenPopover] = useState(null)
   const currentStockData = {
     currentStockId: row._id,
-    productName: row.productName,
+    materialName: row.materialName,
+    batchNumber:row.batchNumber,
     quantity: row.quantity,
     price: row.price,
     supplier: row.supplier,
@@ -95,9 +97,9 @@ export function CurrentStockTableRow ({
           
           </Box>
         </TableCell> */}
-        <TableCell> {row.productName}</TableCell>
+        <TableCell> {row.materialName}</TableCell>
+        <TableCell>{row.batchNumber}</TableCell>
         <TableCell>{row.quantity}</TableCell>
-
         <TableCell>{row.price}</TableCell>
         <TableCell>{row.supplier}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
@@ -135,6 +137,7 @@ export function CurrentStockTableRow ({
         >
           <EditCurrentStockForm
             purchaseOrderData={purchaseOrderData}
+            materials={materials}
             setUpdate={setUpdate}
             currentStockData={currentStockData}
           />

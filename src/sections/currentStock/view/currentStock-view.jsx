@@ -32,6 +32,7 @@ export function CurrentStockView() {
   const [update,setUpdate] = useState(false);
   const [currentStocks,setCurrentStocks] = useState([]);
   const [purchaseOrderData,setPurchaseOrderData] = useState([]);
+  const [materials,setMaterials] = useState([]);
 const fetchCurrentStock = async ()=>{
 try{
 const result = await axiosInstance.get('/currentStock');
@@ -39,7 +40,8 @@ if(result.data.data){
   console.log(result.data);
   console.log('purchase orders data',result.data.purchaseOrderCreationData);
   setCurrentStocks(result.data.data);
-  setPurchaseOrderData(result.data.purchaseOrderCreationData)
+  setPurchaseOrderData(result.data.purchaseOrderCreationData);
+  setMaterials(result.data.materials);
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -73,7 +75,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <CurrentStockForm setUpdate={setUpdate} purchaseOrderData={purchaseOrderData}/>
+        <CurrentStockForm setUpdate={setUpdate} purchaseOrderData={purchaseOrderData} materials={materials}/>
     
       </Box>
 
@@ -104,7 +106,8 @@ useEffect(()=>{
                 //   )
                 // }
                 headLabel={[
-                  { id: 'productName', label: 'Product Name' },
+                  { id: 'materiaName', label: 'Material Name' },
+                  { id: 'batchNumber', label: 'Batch Number' },
                   { id: 'quantity', label: 'Quantity' },
                   { id: 'price', label: 'Price' },
                   { id: 'supplier', label: 'Supplier' },
@@ -121,6 +124,7 @@ useEffect(()=>{
                   .map((row,index) => (
                     <CurrentStockTableRow
                     purchaseOrderData={purchaseOrderData}
+                    materials={materials}
                     setUpdate={setUpdate}
                       key={index}
                       row={row}

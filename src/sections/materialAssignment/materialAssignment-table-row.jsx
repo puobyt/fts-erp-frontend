@@ -18,7 +18,7 @@ import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 export function MaterialAssignmentTableRow ({
-  products,
+  materials,
   finishedGoods,
   setUpdate,
   row,
@@ -135,7 +135,7 @@ export function MaterialAssignmentTableRow ({
             }
           }}
         >
-          <EditMaterialAssignmentForm setUpdate={setUpdate} materialAssignmentData={materialAssignmentData} products={products} finishedGoods={finishedGoods}/>
+          <EditMaterialAssignmentForm setUpdate={setUpdate} materialAssignmentData={materialAssignmentData} materials={materials} finishedGoods={finishedGoods}/>
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon='solar:trash-bin-trash-bold' />
             Delete

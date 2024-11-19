@@ -27,16 +27,16 @@ const style = {
 export default function EditRequestCreationForMaterialsForm ({
   setUpdate,
   requestMaterialsData,
-  products,
+  materials,
   finishedGoods
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     authPassword: '',
-    batchNumber:requestMaterialsData.batchNumber,
+    batchNumber: requestMaterialsData.batchNumber,
     requestMaterialsId: requestMaterialsData.requestMaterialsId,
     requestNumber: requestMaterialsData.requestNumber,
     materialName: requestMaterialsData.materialName,
@@ -66,7 +66,19 @@ export default function EditRequestCreationForMaterialsForm ({
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
+  const handleMaterialChange = event => {
+    const selectedMaterialName = event.target.value
 
+    const selectedMaterial = materials.find(
+      material => material.materialName === selectedMaterialName
+    )
+
+    setFormData({
+      ...formData,
+      materialName: selectedMaterialName,
+      batchNumber: selectedMaterial?.batchNumber || '' 
+    })
+  }
   const handleSubmit = async e => {
     e.preventDefault()
 
@@ -83,7 +95,7 @@ export default function EditRequestCreationForMaterialsForm ({
             authPassword: '',
             requestMaterialsId: '',
             requestNumber: '',
-            batchNumber:'',
+            batchNumber: '',
             materialName: '',
             quantity: '',
             requiredDate: ''
@@ -195,7 +207,7 @@ export default function EditRequestCreationForMaterialsForm ({
                     label='Material Name'
                     name='materialName'
                     value={formData.materialName}
-                    onChange={handleChange}
+                    onChange={handleMaterialChange}
                     error={!!errors.materialName}
                     helperText={errors.materialName}
                     variant='outlined'
@@ -206,18 +218,18 @@ export default function EditRequestCreationForMaterialsForm ({
                       disabled
                       sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
                     >
-                      Products
+                      Materials
                     </MenuItem>
-                    {products.map((product, index) => (
-                      <MenuItem key={`product-${index}`} value={product}>
-                        {product}
+                    {materials.map((material, index) => (
+                      <MenuItem key={`material-${index}`} value={material.materialName}>
+                        {material.materialName}
                       </MenuItem>
                     ))}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/vendor-management')}
                       sx={{ fontStyle: 'italic' }}
                     >
-                      Add New Product +
+                      Add New Material +
                     </MenuItem>
 
                     <MenuItem

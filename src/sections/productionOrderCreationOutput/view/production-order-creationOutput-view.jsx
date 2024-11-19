@@ -107,7 +107,7 @@ useEffect(()=>{
                 headLabel={[
                   { id: 'producedQuantity', label: 'Produced Quantity' },
                   { id: 'productionCompletionDate', label: 'Production Completion Date' },
-                  { id: 'qualityCheckStatus', label: 'Quality Check Status' },
+                  // { id: 'qualityCheckStatus', label: 'Quality Check Status' },
                   { id: 'storageLocationForOutput', label: 'Storage Location for Output' },
                   { id: 'batchNumberForOutput', label: 'Batch Number for Output' },
                   { id: 'productionNotes', label: 'Production Notes' },

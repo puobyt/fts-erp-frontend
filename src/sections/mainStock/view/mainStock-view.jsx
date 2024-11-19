@@ -16,30 +16,28 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { TableNoData } from '../table-no-data';
 
 import { TableEmptyRows } from '../table-empty-rows';
-
-import { ProductionOrderCreationTableHead } from '../productionOrderCreation-table-head';
-import { ProductionOrderCreationTableRow } from '../productionOrderCreation-row';
-import { ProductionOrderCreationTableToolbar } from '../productionOrderCreation-table-toolbar';
-import ProductionOrderCreationForm from 'src/layouts/modals/addProductionOrderCreation';
+import { MainStockTableHead } from '../mainStock-table-head';
+import { MainStockTableRow } from '../mainStock-table-row';
+import { MainStockTableToolbar } from '../mainStock-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-
+import MainStockForm from '../../../layouts/modals/addMainStock';
 import axiosInstance from 'src/configs/axiosInstance';
 
 
 // ----------------------------------------------------------------------
 
-export function ProductionOrderCreationView() {
+export function MainStockView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
-  const [productionOrders,setProductionOrders] = useState([]);
-  const [batches,setBatches] = useState([]);
-const fetchProductionOrders = async ()=>{
+  const [mainStocks,setMainStocks] = useState([]);
+const fetchMainStock = async ()=>{
 try{
-const result = await axiosInstance.get('/productionOrderCreation');
+const result = await axiosInstance.get('/mainStock');
 if(result.data.data){
   console.log(result.data);
-  setProductionOrders(result.data.data);
-  setBatches(result.data.batches)
+  console.log('purchase orders data',result.data.purchaseOrderCreationData);
+  setMainStocks(result.data.data);
+
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -47,12 +45,12 @@ if(result.data.data){
 }
   const [filterName, setFilterName] = useState('');
 useEffect(()=>{
-  fetchProductionOrders();
+  fetchMainStock();
 },[update]);
 
 
   const dataFiltered= applyFilter({
-    inputData: productionOrders,
+    inputData: mainStocks,
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
@@ -63,7 +61,7 @@ useEffect(()=>{
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-        Production Order Creation
+      Main Stock Management
         </Typography>
         {/* <Button
           variant="contained"
@@ -73,13 +71,13 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <ProductionOrderCreationForm setUpdate={setUpdate} batches={batches}/>
+      <MainStockForm setUpdate={setUpdate}/>
     
       </Box>
 
       <Card>
-        <ProductionOrderCreationTableToolbar
-             sort={table.onSort}
+        <MainStockTableToolbar
+           sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {
@@ -91,10 +89,10 @@ useEffect(()=>{
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <ProductionOrderCreationTableHead
+              <MainStockTableHead
                 order={table.order}
                 orderBy={table.orderBy}
-                rowCount={productionOrders.length}
+                rowCount={mainStocks.length}
                 numSelected={table.selected.length}
                 onSort={table.onSort}
                 // onSelectAllRows={(checked) =>
@@ -104,16 +102,13 @@ useEffect(()=>{
                 //   )
                 // }
                 headLabel={[
-                  { id: 'processOrder', label: 'Process Order Number' },
-                  { id: 'plant', label: 'Plant' },
-                  { id: 'materialCode', label: 'Material Code' },
-                  { id: 'productDescription', label: 'Product Description' },
+                  { id: 'ProductName', label: 'Product Name' },
+                  { id: 'quantity', label: 'Quantity' },
+                  { id: 'price', label: 'Price' },
                   { id: 'storageLocation', label: 'Storage Location' },
-                  { id: 'batch', label: 'Batch' },
-                  { id: 'requiredQuantity', label: 'Required Quantity' },
-                  { id: 'instructions', label: 'Instructions' },
-                  { id: 'startDate', label: 'Start Date' },
-                  { id: 'endDate', label: 'End Date' },
+                  { id: 'supplier', label: 'Supplier' },
+                  { id: 'dateRecieved', label: 'Date Recieved' },
+                  { id: 'expiryDate', label: 'Expiry' },
                 ]}
               />
               <TableBody>
@@ -123,8 +118,8 @@ useEffect(()=>{
                     table.page * table.rowsPerPage + table.rowsPerPage
                   )
                   .map((row,index) => (
-                    <ProductionOrderCreationTableRow
-                    batches={batches}
+                    <MainStockTableRow
+                  
                     setUpdate={setUpdate}
                       key={index}
                       row={row}
@@ -135,7 +130,7 @@ useEffect(()=>{
 
                 <TableEmptyRows
                   height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, productionOrders.length)}
+                  emptyRows={emptyRows(table.page, table.rowsPerPage, mainStocks.length)}
                 />
 
                 {notFound && <TableNoData searchQuery={filterName} />}
@@ -147,7 +142,7 @@ useEffect(()=>{
         <TablePagination
           component="div"
           page={table.page}
-          count={productionOrders.length}
+          count={mainStocks.length}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
           rowsPerPageOptions={[5, 10, 25]}

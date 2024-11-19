@@ -40,7 +40,7 @@ export default function EditProductionOrderCreationOutputForm ({
     productionOrderoutputId: productionOrderOutputData.productionOrderoutputId,
     producedQuantity: productionOrderOutputData.producedQuantity,
     productionCompletionDate: formattedDate,
-    qualityCheckStatus: productionOrderOutputData.qualityCheckStatus,
+    // qualityCheckStatus: productionOrderOutputData.qualityCheckStatus,
     storageLocationforOutput:
       productionOrderOutputData.storageLocationforOutput,
     batchNumberforOutput: productionOrderOutputData.batchNumberforOutput,
@@ -62,13 +62,13 @@ export default function EditProductionOrderCreationOutputForm ({
     if (!formData.productionCompletionDate)
       newErrors.productionCompletionDate =
         'Production Completion Date is required'
-    if (!formData.qualityCheckStatus)
-      newErrors.qualityCheckStatus = 'Quality Check status is required'
+    // if (!formData.qualityCheckStatus)
+    //   newErrors.qualityCheckStatus = 'Quality Check status is required'
     if (!formData.storageLocationforOutput)
       newErrors.storageLocationforOutput =
         'Storage Location for Output is required'
-    if (!formData.batchNumberforOutput)
-      newErrors.batchNumberforOutput = 'Batch Number for Output is required'
+    // if (!formData.batchNumberforOutput)
+    //   newErrors.batchNumberforOutput = 'Batch Number for Output is required'
     if (!formData.productionNotes)
       newErrors.productionNotes = 'Production Notes is required'
     if (!formData.Yield) newErrors.Yield = 'Yield is required'
@@ -104,7 +104,7 @@ export default function EditProductionOrderCreationOutputForm ({
             productionOrderOutputId: '',
             producedQuantity: '',
             productionCompletionDate: '',
-            qualityCheckStatus: '',
+            // qualityCheckStatus: '',
             storageLocationforOutput: '',
             batchNumberforOutput: '',
             productionNotes: '',
@@ -212,7 +212,7 @@ export default function EditProductionOrderCreationOutputForm ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Quality Check Status'
@@ -224,7 +224,7 @@ export default function EditProductionOrderCreationOutputForm ({
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -248,7 +248,10 @@ export default function EditProductionOrderCreationOutputForm ({
                     error={!!errors.batchNumberforOutput}
                     helperText={errors.batchNumberforOutput}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate' 
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>

@@ -9,8 +9,11 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { parse, isValid } from 'date-fns'
+
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -23,35 +26,46 @@ const style = {
   p: 4
 }
 
-export default function InvoiceCreationForm ({ setUpdate }) {
+export default function EditMainStockForm ({ setUpdate, mainStockData }) {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const formattedDate = mainStockData.dateRecieved
+    ? new Date(mainStockData.dateRecieved).toISOString().split('T')[0]
+    : ''
+  const formattedExpDate = mainStockData.expiryDate
+    ? new Date(mainStockData.expiryDate).toISOString().split('T')[0]
+    : ''
+
+  // const formattedExpiryDate = isValid(parsedDate) ? parsedDate.toISOString().split('T')[0] : null;
   const [formData, setFormData] = useState({
-    invoiceNumber: '',
-    invoiceDate: '',
-    customerName: '',
-    customerAddress: '',
-    itemName: '',
-    quantity: '',
-    price: ''
+    authPassword: '',
+    mainStockId: mainStockData.mainStockId,
+    productName: mainStockData.productName,
+    quantity: mainStockData.quantity,
+    price: mainStockData.price,
+    storageLocation: mainStockData.storageLocation,
+    supplier: mainStockData.supplier,
+    dateRecieved: formattedDate,
+    expiryDate: formattedExpDate
   })
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({})
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.invoiceNumber)
-      newErrors.invoiceNumber = 'Invoice Number is required'
-    if (!formData.invoiceDate)
-      newErrors.invoiceDate = 'Invoice Date is required'
-    if (!formData.customerName)
-      newErrors.customerName = 'Customer Name is required'
-    if (!formData.customerAddress)
-      newErrors.customerAddress = 'Customer Address is required'
-    if (!formData.itemName) newErrors.itemName = 'Item Name is required'
-    if (!formData.quantity) newErrors.quantity = 'Quantity is required'
+    if (!formData.authPassword)
+      newErrors.authPassword = 'Authorization Password is required'
+    if (!formData.productName)
+      newErrors.productName = 'Product Name is required'
+    if (!formData.quantity) newErrors.quantity = 'quantity is required'
     if (!formData.price) newErrors.price = 'Price is required'
-
+    if (!formData.storageLocation)
+      newErrors.storageLocation = 'Storage Location is required'
+    if (!formData.supplier) newErrors.supplier = 'Supplier is required'
+    if (!formData.dateRecieved)
+      newErrors.dateRecieved = 'Date Recieved is required'
+    if (!formData.expiryDate) newErrors.expiryDate = 'Expiry is required'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
@@ -68,32 +82,26 @@ export default function InvoiceCreationForm ({ setUpdate }) {
       return
     }
     try {
-      const result = await axiosInstance
-        .post('/newInvoiceCreation', formData)
-        .then(result => {
-          toast.success(result.data.message)
-          handleClose()
-          setFormData({
-            invoiceNumber: '',
-            invoiceDate: '',
-            customerName: '',
-            customerAddress: '',
-            itemName: '',
-            quantity: '',
-            price: ''
-          })
-          setUpdate(prev => !prev)
+      const result = await axiosInstance.put('/editMainStock', formData)
+      if (result) {
+        toast.success(result.data.message)
+        handleClose()
+        setFormData({
+          authPassword: '',
+          productName: '',
+          quantity: '',
+          price: '',
+          supplier: '',
+          storageLocation: '',
+          dateRecieved: '',
+          expiryDate: ''
         })
-        .catch(err => {
-          toast.error(err.response.data.message)
-          console.error(
-            'Error occured in adding invoice creation client side',
-            err.message
-          )
-        })
+        setUpdate(prev => !prev)
+      }
     } catch (err) {
+      toast.error(err.response.data.message)
       console.error(
-        'Error occured in adding invoice creation client side',
+        'Error occured in editing Current stock in client side',
         err.message
       )
     }
@@ -101,14 +109,10 @@ export default function InvoiceCreationForm ({ setUpdate }) {
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
-      <Button
-        onClick={handleOpen}
-        variant='contained'
-        color='inherit'
-        startIcon={<Iconify icon='mingcute:add-line' />}
-      >
-        New Invoice Creation
-      </Button>
+      <MenuItem onClick={handleOpen}>
+        <Iconify icon='solar:pen-bold' />
+        Edit
+      </MenuItem>
       <Modal
         open={open}
         onClose={handleClose}
@@ -137,10 +141,10 @@ export default function InvoiceCreationForm ({ setUpdate }) {
                 color='primary'
                 gutterBottom
               >
-                Add New Inovice Creation
+                Edit Main Stock Details
               </Typography>
               <Typography variant='body2' color='textSecondary'>
-                Invoice Creation Management
+                Main Stock Management
               </Typography>
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
@@ -148,12 +152,13 @@ export default function InvoiceCreationForm ({ setUpdate }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Invoice Number'
-                    name='invoiceNumber'
-                    value={formData.invoiceNumber}
+                    label='Authorization Password'
+                    name='authPassword'
+                    type='password'
+                    value={formData.authPassword}
                     onChange={handleChange}
-                    error={!!errors.invoiceNumber}
-                    helperText={errors.invoiceNumber}
+                    error={!!errors.authPassword}
+                    helperText={errors.authPassword}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
@@ -161,55 +166,12 @@ export default function InvoiceCreationForm ({ setUpdate }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Invoice Date'
-                    name='invoiceDate'
-                    type='date'
-                    value={formData.invoiceDate}
+                    label='Product Name'
+                    name='productName'
+                    value={formData.productName}
                     onChange={handleChange}
-                    error={!!errors.invoiceDate}
-                    helperText={errors.invoiceDate}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                    InputLabelProps={{
-                        shrink: true
-                      }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Customer Name'
-                    name='customerName'
-                    value={formData.customerName}
-                    onChange={handleChange}
-                    error={!!errors.customerName}
-                    helperText={errors.customerName}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Customer Address'
-                    name='customerAddress'
-                    value={formData.customerAddress}
-                    onChange={handleChange}
-                    error={!!errors.customerAddress}
-                    helperText={errors.customerAddress}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Item Name'
-                    name='itemName'
-                    value={formData.itemName}
-                    onChange={handleChange}
-                    error={!!errors.itemName}
-                    helperText={errors.itemName}
+                    error={!!errors.productName}
+                    helperText={errors.productName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
@@ -238,7 +200,66 @@ export default function InvoiceCreationForm ({ setUpdate }) {
                     helperText={errors.price}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-              
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Storage Location'
+                    name='storageLocation'
+                    value={formData.storageLocation}
+                    onChange={handleChange}
+                    error={!!errors.storageLocation}
+                    helperText={errors.storageLocation}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Supplier'
+                    name='supplier'
+                    value={formData.supplier}
+                    onChange={handleChange}
+                    error={!!errors.supplier}
+                    helperText={errors.supplier}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Date Recieved'
+                    name='dateRecieved'
+                    type='date'
+                    value={formData.dateRecieved}
+                    onChange={handleChange}
+                    error={!!errors.dateRecieved}
+                    helperText={errors.dateRecieved}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Expiry'
+                    name='expiryDate'
+                    type='date'
+                    value={formData.expiryDate}
+                    onChange={handleChange}
+                    error={!!errors.expiryDate}
+                    helperText={errors.expiryDate}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
                   />
                 </Grid>
               </Grid>

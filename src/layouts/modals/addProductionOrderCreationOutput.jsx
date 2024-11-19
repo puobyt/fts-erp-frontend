@@ -23,16 +23,20 @@ const style = {
   p: 4
 }
 
-export default function ProductionOrderCreationOutputForm ({ setUpdate, batches ,nextBatchNumber }) {
+export default function ProductionOrderCreationOutputForm ({
+  setUpdate,
+  batches,
+  nextBatchNumber
+}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     producedQuantity: '',
     productionCompletionDate: '',
-    qualityCheckStatus: '',
+    // qualityCheckStatus: '',
     storageLocationforOutput: '',
-    batchNumberforOutput:nextBatchNumber,
+    batchNumberforOutput:'',
     productionNotes: '',
     Yield: '',
     outputQualityRating: '',
@@ -47,13 +51,13 @@ export default function ProductionOrderCreationOutputForm ({ setUpdate, batches 
     if (!formData.productionCompletionDate)
       newErrors.productionCompletionDate =
         'Production Completion Date is required'
-    if (!formData.qualityCheckStatus)
-      newErrors.qualityCheckStatus = 'Quality Check Status is required'
+    // if (!formData.qualityCheckStatus)
+    //   newErrors.qualityCheckStatus = 'Quality Check Status is required'
     if (!formData.storageLocationforOutput)
       newErrors.storageLocationforOutput =
         'Storage Location for Output is required'
-    if (!formData.batchNumberforOutput)
-      newErrors.batchNumberforOutput = 'Batch Number for Output is required'
+    // if (!formData.batchNumberforOutput)
+    //   newErrors.batchNumberforOutput = 'Batch Number for Output is required'
     if (!formData.productionNotes)
       newErrors.productionNotes = 'Production Notes is required'
     if (!formData.Yield) newErrors.Yield = 'Yield is required'
@@ -89,7 +93,7 @@ export default function ProductionOrderCreationOutputForm ({ setUpdate, batches 
         setFormData({
           producedQuantity: '',
           productionCompletionDate: '',
-          qualityCheckStatus: '',
+          //   qualityCheckStatus: '',
           storageLocationforOutput: '',
           batchNumberforOutput: '',
           productionNotes: '',
@@ -179,10 +183,10 @@ export default function ProductionOrderCreationOutputForm ({ setUpdate, batches 
                     helperText={errors.productionCompletionDate}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                    InputLabelProps={{shrink:true}}
+                    InputLabelProps={{ shrink: true }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Quality Check Status'
@@ -194,7 +198,7 @@ export default function ProductionOrderCreationOutputForm ({ setUpdate, batches 
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -218,7 +222,10 @@ export default function ProductionOrderCreationOutputForm ({ setUpdate, batches 
                     error={!!errors.batchNumberforOutput}
                     helperText={errors.batchNumberforOutput}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>

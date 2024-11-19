@@ -26,7 +26,7 @@ const style = {
 
 export default function RequestCreationForMaterialsForm ({
   setUpdate,
-  products,
+  materials,
   finishedGoods
 }) {
   const [open, setOpen] = useState(false)
@@ -62,6 +62,19 @@ export default function RequestCreationForMaterialsForm ({
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  const handleMaterialChange = event => {
+    const selectedMaterialName = event.target.value
+
+    const selectedMaterial = materials.find(
+      material => material.materialName === selectedMaterialName
+    )
+
+    setFormData({
+      ...formData,
+      materialName: selectedMaterialName,
+      batchNumber: selectedMaterial?.batchNumber || '' 
+    })
+  }
   const handleSubmit = async e => {
     e.preventDefault()
 
@@ -173,7 +186,7 @@ export default function RequestCreationForMaterialsForm ({
                     label='Material Name'
                     name='materialName'
                     value={formData.materialName}
-                    onChange={handleChange}
+                    onChange={handleMaterialChange}
                     error={!!errors.materialName}
                     helperText={errors.materialName}
                     variant='outlined'
@@ -184,18 +197,21 @@ export default function RequestCreationForMaterialsForm ({
                       disabled
                       sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
                     >
-                      Products
+                      Materials
                     </MenuItem>
-                    {products.map((product, index) => (
-                      <MenuItem key={`product-${index}`} value={product}>
-                        {product}
+                    {materials.map((material, index) => (
+                      <MenuItem
+                        key={`product-${index}`}
+                        value={material.materialName}
+                      >
+                        {material.materialName}
                       </MenuItem>
                     ))}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/vendor-management')}
                       sx={{ fontStyle: 'italic' }}
                     >
-                      Add New Product +
+                      Add New Material +
                     </MenuItem>
 
                     <MenuItem

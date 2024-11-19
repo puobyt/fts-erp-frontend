@@ -9,6 +9,7 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import '../../global.css'
 import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
 const style = {
@@ -26,6 +27,7 @@ const style = {
 export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
+  const navigate = useNavigate();
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     processOrder: '',
@@ -43,8 +45,8 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.processOrder)
-      newErrors.processOrder = 'Process Order is required'
+    // if (!formData.processOrder)
+    //   newErrors.processOrder = 'Process Order is required'
     if (!formData.plant) newErrors.plant = 'Plant is required'
     if (!formData.materialCode)
       newErrors.materialCode = 'Material Code is required'
@@ -152,7 +154,7 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Process Order'
+                    label='Process Order No. Auto-Generates'
                     name='processOrder'
                     value={formData.processOrder}
                     onChange={handleChange}
@@ -215,6 +217,19 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
                   />
                 </Grid>
                 <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Batch'
+                    name='batch'
+                    value={formData.batch}
+                    onChange={handleChange}
+                    error={!!errors.batch}
+                    helperText={errors.batch}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                {/* <Grid item xs={6}>
                 <TextField
                     fullWidth
                     select
@@ -233,7 +248,7 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
                       </MenuItem>
                     ))}
 
-                    {/* This item only triggers navigation, not a form selection */}
+                  
                     <MenuItem
                       onClick={() => navigate('/purchase-order-creation')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
@@ -241,7 +256,7 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
                       Add New Batch +
                     </MenuItem>
                   </TextField>
-                </Grid>
+                </Grid>  */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

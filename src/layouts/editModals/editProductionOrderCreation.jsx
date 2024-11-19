@@ -10,7 +10,7 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import '../../global.css'
-import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -23,38 +23,41 @@ const style = {
   p: 4
 }
 
-export default function EditProductionOrderCreationForm ({ setUpdate,productionOrderData }) {
+export default function EditProductionOrderCreationForm ({
+  setUpdate,
+  productionOrderData
+}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const formattedStartDate = productionOrderData.startDate
-  ? new Date(productionOrderData.startDate).toISOString().split('T')[0]
-  : ''
+    ? new Date(productionOrderData.startDate).toISOString().split('T')[0]
+    : ''
   const formattedEndDate = productionOrderData.endDate
-  ? new Date(productionOrderData.endDate).toISOString().split('T')[0]
-  : ''
+    ? new Date(productionOrderData.endDate).toISOString().split('T')[0]
+    : ''
   const [formData, setFormData] = useState({
-    authPassword:'',
-    productionOrderId:productionOrderData.productionOrderId,
-    processOrder:productionOrderData.processOrder,
-    plant:productionOrderData.plant,
-    materialCode:productionOrderData.materialCode,
-    productDescription:productionOrderData.productDescription,
-    storageLocation:productionOrderData.storageLocation,
-    batch:productionOrderData.batch,
-    requiredQuantity:productionOrderData.requiredQuantity,
-    instructions:productionOrderData.instructions,
-    startDate:formattedStartDate,
-    endDate:formattedEndDate
+    authPassword: '',
+    productionOrderId: productionOrderData.productionOrderId,
+    processOrder: productionOrderData.processOrder,
+    plant: productionOrderData.plant,
+    materialCode: productionOrderData.materialCode,
+    productDescription: productionOrderData.productDescription,
+    storageLocation: productionOrderData.storageLocation,
+    batch: productionOrderData.batch,
+    requiredQuantity: productionOrderData.requiredQuantity,
+    instructions: productionOrderData.instructions,
+    startDate: formattedStartDate,
+    endDate: formattedEndDate
   })
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({})
 
   const validateForm = () => {
     const newErrors = {}
-      if (!formData.authPassword)
+    if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
-    if (!formData.processOrder)
-      newErrors.processOrder = 'Process Order is required'
+    // if (!formData.processOrder)
+    //   newErrors.processOrder = 'Process Order is required'
     if (!formData.plant) newErrors.plant = 'Plant is required'
     if (!formData.materialCode)
       newErrors.materialCode = 'Material Code is required'
@@ -86,32 +89,34 @@ export default function EditProductionOrderCreationForm ({ setUpdate,productionO
       return
     }
     try {
-      await axiosInstance.put('/editProductionOrderCreation', formData)
-      .then((result)=>{
-        toast.success(result.data.message)
-        handleClose()
-        setFormData({
-          authPassword:'',
-          productionOrderId:'',
-          processOrder: '',
-          plant: '',
-          materialCode: '',
-          productDescription: '',
-          storageLocation: '',
-          batch: '',
-          requiredQuantity: '',
-          instructions: '',
-          startDate: '',
-          endDate: ''
+      await axiosInstance
+        .put('/editProductionOrderCreation', formData)
+        .then(result => {
+          toast.success(result.data.message)
+          handleClose()
+          setFormData({
+            authPassword: '',
+            productionOrderId: '',
+            processOrder: '',
+            plant: '',
+            materialCode: '',
+            productDescription: '',
+            storageLocation: '',
+            batch: '',
+            requiredQuantity: '',
+            instructions: '',
+            startDate: '',
+            endDate: ''
+          })
+          setUpdate(prev => !prev)
         })
-        setUpdate(prev => !prev)
-      }).catch((err)=>{
-        toast.error(err.response.data.message)
-      console.error(
-        'Error occured in editing production order in client side',
-        err.message
-      )
-      })
+        .catch(err => {
+          toast.error(err.response.data.message)
+          console.error(
+            'Error occured in editing production order in client side',
+            err.message
+          )
+        })
     } catch (err) {
       console.error(
         'Error occured in editing production orderin client side',
@@ -162,7 +167,7 @@ export default function EditProductionOrderCreationForm ({ setUpdate,productionO
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-              <Grid item xs={6}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Authorization Password'
@@ -186,7 +191,10 @@ export default function EditProductionOrderCreationForm ({ setUpdate,productionO
                     error={!!errors.processOrder}
                     helperText={errors.processOrder}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate' // Add your placeholder here
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -293,8 +301,8 @@ export default function EditProductionOrderCreationForm ({ setUpdate,productionO
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{
-                        shrink: true, // Keeps the label above the field to avoid overlap
-                      }}
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -310,8 +318,8 @@ export default function EditProductionOrderCreationForm ({ setUpdate,productionO
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{
-                        shrink: true, // Keeps the label above the field to avoid overlap
-                      }}
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
                   />
                 </Grid>
               </Grid>

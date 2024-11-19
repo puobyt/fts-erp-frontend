@@ -20,6 +20,7 @@ export const PurhcaseOrderCreation = lazy(() =>
 )
 export const GateEntry = lazy(() => import('src/pages/gateEntry'))
 export const CurrentStock = lazy(() => import('src/pages/currentStock'))
+export const MainStock = lazy(() => import('src/pages/mainStock'))
 export const QualityCheck = lazy(() => import('src/pages/qualityCheck'))
 export const ProductionOrderCreation = lazy(() =>
   import('src/pages/productionOrderCreation')
@@ -82,6 +83,7 @@ export function Router () {
         { path: 'purchase-order-creation', element: <PurhcaseOrderCreation /> },
         { path: 'gate-entry', element: <GateEntry /> },
         { path: 'current-stock', element: <CurrentStock /> },
+        { path: 'main-stock', element: <MainStock /> },
         { path: 'quality-check', element: <QualityCheck /> },
         { path: 'rework', element: <Rework /> },
         {

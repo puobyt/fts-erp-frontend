@@ -24,15 +24,19 @@ const style = {
   p: 4
 }
 
-export default function MaterialAssignmentForm ({ setUpdate, products,finishedGoods }) {
+export default function MaterialAssignmentForm ({
+  setUpdate,
+  materials,
+  finishedGoods
+}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     assignmentNumber: '',
     batchNumber: '',
-    processOrderNumber:'',
+    processOrderNumber: '',
     materialName: '',
     assignedQuantity: '',
     assignedTo: ''
@@ -45,7 +49,7 @@ export default function MaterialAssignmentForm ({ setUpdate, products,finishedGo
       newErrors.assignMentNumber = 'Assignment Number is required'
     if (!formData.batchNumber)
       newErrors.batchNumber = 'Batch Number is required'
-        if (!formData.processOrderNumber)
+    if (!formData.processOrderNumber)
       newErrors.processOrderNumber = 'Process Order Number is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
@@ -56,6 +60,21 @@ export default function MaterialAssignmentForm ({ setUpdate, products,finishedGo
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
+
+  const handleMaterialChange = event => {
+    const selectedMaterialName = event.target.value;
+  
+    const selectedMaterial = materials.find(
+      material => material.materialName === selectedMaterialName
+    );
+  
+    setFormData({
+      ...formData,
+      materialName: selectedMaterialName,
+      batchNumber: selectedMaterial?.batchNumber || "" // Assign directly from batchNumber
+    });
+  };
+  
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -68,31 +87,32 @@ export default function MaterialAssignmentForm ({ setUpdate, products,finishedGo
     if (!validateForm()) {
       return
     }
-    try {
-      const result = await axiosInstance.post(
-        '/newMaterialAssignment',
-        formData
-      )
-      if (result) {
+    axiosInstance
+      .post('/newMaterialAssignment', formData)
+      .then(result => {
         toast.success(result.data.message)
         handleClose()
         setFormData({
           assignmentNumber: '',
           batchNumber: '',
-          processOrderNumber:'',
+          processOrderNumber: '',
           materialName: '',
           assignedQuantity: '',
           assignedTo: ''
         })
         setUpdate(prev => !prev)
-      }
-    } catch (err) {
-      toast.success(err.response.data.message)
-      console.error(
-        'Error occured in adding Rework in client side',
-        err.message
-      )
-    }
+      })
+      .catch(err => {
+        if (err.response && err.response.data) {
+          toast.error(err.response.data.message)
+        } else {
+          toast.error('An unexpected error occurred.')
+        }
+        console.error(
+          'Error occurred in adding Rework in client side:',
+          err.message
+        )
+      })
   }
   return (
     <div>
@@ -187,7 +207,7 @@ export default function MaterialAssignmentForm ({ setUpdate, products,finishedGo
                     label='Material Name'
                     name='materialName'
                     value={formData.materialName}
-                    onChange={handleChange}
+                    onChange={handleMaterialChange}
                     error={!!errors.materialName}
                     helperText={errors.materialName}
                     variant='outlined'
@@ -198,18 +218,18 @@ export default function MaterialAssignmentForm ({ setUpdate, products,finishedGo
                       disabled
                       sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
                     >
-                      Products
+                      Materials
                     </MenuItem>
-                    {products.map((product, index) => (
-                      <MenuItem key={`product-${index}`} value={product}>
-                        {product}
+                    {materials.map((material, index) => (
+                      <MenuItem key={`product-${index}`} value={material.materialName}>
+                        {material.materialName}
                       </MenuItem>
                     ))}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/vendor-management')}
                       sx={{ fontStyle: 'italic' }}
                     >
-                      Add New Product +
+                      Add New Material +
                     </MenuItem>
 
                     <MenuItem

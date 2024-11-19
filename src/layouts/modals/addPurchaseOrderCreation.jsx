@@ -25,7 +25,7 @@ const style = {
   p: 4
 }
 
-export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
+export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const handleOpen = () => setOpen(true)
@@ -41,7 +41,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
     contactPersonDetails: '',
     vendorId: '',
     productName: '',
-    batchNumber: '',
+    // batchNumber: '',
     mfgDate: '',
     quantity: '',
     price: '',
@@ -49,11 +49,13 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
     gst: ''
   })
 
-  const handleFirmChange = (event) => {
-    const selectedFirmName = event.target.value;
-    const selectedFirm = firms.find(firm => firm.nameOfTheFirm === selectedFirmName);
+  const handleFirmChange = event => {
+    const selectedFirmName = event.target.value
+    const selectedFirm = firms.find(
+      firm => firm.nameOfTheFirm === selectedFirmName
+    )
 
-    // Update form values with selected firm's details
+
     if (selectedFirm) {
       setFormData({
         ...formData,
@@ -63,18 +65,18 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
         gst: selectedFirm.gst,
         address: selectedFirm.address,
         contactPersonName: selectedFirm.contactPersonName,
-        contactPersonDetails:selectedFirm.contactPersonDetails,
-        vendorId:selectedFirm._id
-      });
+        contactPersonDetails: selectedFirm.contactPersonDetails,
+        vendorId: selectedFirm._id
+      })
     }
-  };
+  }
 
   const [errors, setErrors] = useState({})
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.purchaseOrderNumber)
-      newErrors.purchaseOrderNumber = 'Purchase Order Number is required'
+    // if (!formData.purchaseOrderNumber)
+    //   newErrors.purchaseOrderNumber = 'Purchase Order Number is required'
     if (!formData.date) newErrors.date = 'Date is required'
     if (!formData.nameOfTheFirm)
       newErrors.nameOfTheFirm = 'Name Of The Firm is required'
@@ -84,12 +86,12 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
       newErrors.contactPersonName = 'Contact Person Name is required'
     if (!formData.contactPersonDetails)
       newErrors.contactPersonDetails = 'Contact Person Details are required'
-    if (!formData.vendorId) newErrors.vendorId = 'Vendor Id is required'
+    // if (!formData.vendorId) newErrors.vendorId = 'Vendor Id is required'
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
     if (!formData.mfgDate) newErrors.mfgDate = 'Mfg Date is required'
-    if (!formData.batchNumber)
-      newErrors.batchNumber = 'Batch Number is required'
+    // if (!formData.batchNumber)
+    //   newErrors.batchNumber = 'Batch Number is required'
     if (!formData.quantity) newErrors.quantity = 'Quantity is required'
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.pan) newErrors.pan = 'PAN is required'
@@ -128,7 +130,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
           contactPersonDetails: '',
           vendorId: '',
           productName: '',
-          batchNumber: '',
+          // batchNumber: '',
           mfgDate: '',
           quantity: '',
           price: '',
@@ -190,7 +192,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
                 paddingRight: 2 // Add padding to avoid scrollbar overlap with content
               }}
             >
-              <Grid container spacing={2}>
+              <Grid container spacing={2} sx={{ mt: 0.5 }}>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -201,7 +203,13 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
                     error={!!errors.purchaseOrderNumber}
                     helperText={errors.purchaseOrderNumber}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{
+                      style: { borderRadius: 8, marginTop: '2px' },
+                      placeholder: 'Auto-Generate'
+                    }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -247,8 +255,8 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
                     {firms.map((firm, index) => (
-                      <MenuItem key={index} value= {firm.nameOfTheFirm}>
-                   {firm.nameOfTheFirm}
+                      <MenuItem key={index} value={firm.nameOfTheFirm}>
+                        {firm.nameOfTheFirm}
                       </MenuItem>
                     ))}
 
@@ -262,7 +270,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
                   </TextField>
                 </Grid>
                 <Grid item xs={6}>
-                <TextField
+                  <TextField
                     fullWidth
                     label='Contact'
                     name='contact'
@@ -300,7 +308,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Vendor Id'
@@ -312,7 +320,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -326,7 +334,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Batch Number'
@@ -338,7 +346,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate,firms }) {
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
