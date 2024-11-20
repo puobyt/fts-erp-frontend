@@ -13,7 +13,7 @@ import { DashboardLayout } from 'src/layouts/dashboard'
 // ----------------------------------------------------------------------
 
 export const HomePage = lazy(() => import('src/pages/home'))
-export const BlogPage = lazy(() => import('src/pages/blog'))
+
 export const VendorManagement = lazy(() => import('src/pages/vendorManagement'))
 export const PurhcaseOrderCreation = lazy(() =>
   import('src/pages/purchaseOrderCreation')
