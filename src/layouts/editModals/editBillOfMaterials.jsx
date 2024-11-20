@@ -28,12 +28,11 @@ export default function EditBillOfMaterialsForm ({
   setUpdate,
   billOfMaterialsData,
   productNames
-  
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     authPassword: '',
     billOfMaterialsId: billOfMaterialsData.billOfMaterialsId,
@@ -48,7 +47,7 @@ export default function EditBillOfMaterialsForm ({
     const newErrors = {}
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
-    if (!formData.bomNumber) newErrors.bomNumber = 'BOM Number is required'
+    // if (!formData.bomNumber) newErrors.bomNumber = 'BOM Number is required'
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
     if (!formData.materialsList)
@@ -167,11 +166,17 @@ export default function EditBillOfMaterialsForm ({
                     error={!!errors.bomNumber}
                     helperText={errors.bomNumber}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
-                <TextField
+                  <TextField
                     fullWidth
                     select
                     label='Product Name'

@@ -11,7 +11,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../../global.css'
-import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -24,17 +24,17 @@ const style = {
   p: 4
 }
 
-export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
+export default function ProductionOrderCreationForm ({ setUpdate, batches }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     processOrder: '',
     plant: '',
     materialCode: '',
     productDescription: '',
-    storageLocation: '',
+    productName: '',
     batch: '',
     requiredQuantity: '',
     instructions: '',
@@ -50,11 +50,11 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
     if (!formData.plant) newErrors.plant = 'Plant is required'
     if (!formData.materialCode)
       newErrors.materialCode = 'Material Code is required'
+    if (!formData.productName)
+      newErrors.productName = 'Product Name is required'
     if (!formData.productDescription)
       newErrors.productDescription = 'Product Description is required'
-    if (!formData.storageLocation)
-      newErrors.storageLocation = 'Storage Location is required'
-    if (!formData.batch) newErrors.batch = 'Batch is required'
+    // if (!formData.batch) newErrors.batch = 'Batch is required'
     if (!formData.requiredQuantity)
       newErrors.requiredQuantity = 'Required Quantityis required'
     if (!formData.instructions)
@@ -78,7 +78,10 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
       return
     }
     try {
-      const result = await axiosInstance.post('/newProductionOrderCreation', formData)
+      const result = await axiosInstance.post(
+        '/newProductionOrderCreation',
+        formData
+      )
       if (result) {
         toast.success(result.data.message)
         handleClose()
@@ -87,7 +90,7 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
           plant: '',
           materialCode: '',
           productDescription: '',
-          storageLocation: '',
+          productName: '',
           batch: '',
           requiredQuantity: '',
           instructions: '',
@@ -102,6 +105,35 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
         'Error occured in adding Current stock in client side',
         err.message
       )
+    }
+  }
+  const handleMaterialChange = event => {
+    const selectedMaterial = event.target.value
+    const isSelectedMaterial = batches.find(
+      batch => selectedMaterial === batch.materialName
+    )
+
+    if (isSelectedMaterial) {
+      setFormData({
+        ...formData,
+        materialName: selectedMaterial,
+        batch: isSelectedMaterial.batchNumber
+      })
+    }
+  }
+
+  const handleBatchChange = event => {
+    const selectedBatch = event.target.value
+    const isSelectedBatch = batches.find(
+      batch => selectedBatch === batch.batchNumber
+    )
+
+    if (isSelectedBatch) {
+      setFormData({
+        ...formData,
+        materialName: isSelectedBatch.materialName,
+        batch: selectedBatch
+      })
     }
   }
   return (
@@ -151,17 +183,33 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
+              <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Product Name'
+                    name='productName'
+                    value={formData.productName}
+                    onChange={handleChange}
+                    error={!!errors.productName}
+                    helperText={errors.productName}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Process Order No. Auto-Generates'
+                    label='Process Order'
                     name='processOrder'
                     value={formData.processOrder}
                     onChange={handleChange}
                     error={!!errors.processOrder}
                     helperText={errors.processOrder}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{ style: { borderRadius: 8 },placeholder:'Auto-Generate' }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -203,19 +251,7 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Storage Location'
-                    name='storageLocation'
-                    value={formData.storageLocation}
-                    onChange={handleChange}
-                    error={!!errors.storageLocation}
-                    helperText={errors.storageLocation}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -296,8 +332,8 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{
-                        shrink: true, // Keeps the label above the field to avoid overlap
-                      }}
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -313,8 +349,8 @@ export default function ProductionOrderCreationForm ({ setUpdate ,batches}) {
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{
-                        shrink: true, // Keeps the label above the field to avoid overlap
-                      }}
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
                   />
                 </Grid>
               </Grid>

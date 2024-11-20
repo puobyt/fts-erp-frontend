@@ -32,7 +32,7 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
     contactPersonName:row.contactPersonName,
     contactPersonDetails:row.contactPersonDetails,
     vendorId:row.vendorId,
-    productName:row.productName,
+    materialName:row.materialName,
     // batchNumber:row.batchNumber,
     mfgDate:row.mfgDate,
     quantity:row.quantity,
@@ -109,7 +109,7 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
         <TableCell>{row.contactPersonName}</TableCell>
         <TableCell>{row.contactPersonDetails}</TableCell>
         <TableCell>{row.vendorId}</TableCell>
-        <TableCell>{row.productName}</TableCell>
+        <TableCell>{row.materialName}</TableCell>
         {/* <TableCell>{row.batchNumber}</TableCell> */}
         <TableCell>{new Date(row.mfgDate).toLocaleDateString()}</TableCell>
         <TableCell>{row.quantity}</TableCell>

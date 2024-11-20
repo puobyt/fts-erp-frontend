@@ -110,7 +110,7 @@ useEffect(()=>{
                   { id: 'contactPersonName', label: 'Contact Person Name' },
                   { id: 'contactPersonDetails', label: 'Contact Person Details' },
                   { id: 'vendorId', label: 'Vendor Id' },
-                  { id: 'productName', label: 'Product Name' },
+                  { id: 'materialName', label: 'Material Name' },
                   // { id: 'BatchNumber', label: 'Batch Number' },
                   { id: 'MfgDate', label: 'MfgDate' },
                   { id: 'quantity', label: 'Quantity' },

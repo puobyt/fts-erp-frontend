@@ -30,7 +30,7 @@ export function QualityCheckTableRow ({
   const qualityCheckData = {
     qualityCheckId: row._id,
     batchNumber: row.batchNumber,
-    productName: row.productName,
+    materialName: row.materialName,
     inspectionDate: row.inspectionDate,
     inspectorName: row.inspectorName,
     qualityStatus: row.qualityStatus,
@@ -99,7 +99,7 @@ export function QualityCheckTableRow ({
           </Box>
         </TableCell> */}
         <TableCell> {row.batchNumber}</TableCell>
-        <TableCell>{row.productName}</TableCell>
+        <TableCell>{row.materialName}</TableCell>
         <TableCell>
           {new Date(row.inspectionDate).toLocaleDateString()}
         </TableCell>

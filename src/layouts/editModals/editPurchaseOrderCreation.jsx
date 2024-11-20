@@ -48,7 +48,7 @@ export default function EditPurchaseOrderCreationForm ({
     contactPersonName: orderData.contactPersonName,
     contactPersonDetails: orderData.contactPersonDetails,
     vendorId: orderData.vendorId,
-    productName: orderData.productName,
+    materialName: orderData.materialName,
     // batchNumber: orderData.batchNumber,
     mfgDate: orderData.mfgDate,
     quantity: orderData.quantity,
@@ -72,6 +72,7 @@ export default function EditPurchaseOrderCreationForm ({
         pan: selectedFirm.pan,
         gst: selectedFirm.gst,
         address: selectedFirm.address,
+        materialName:selectedFirm.material,
         contactPersonName: selectedFirm.contactPersonName,
         contactPersonDetails: selectedFirm.contactPersonDetails,
         vendorId: selectedFirm._id
@@ -94,12 +95,16 @@ export default function EditPurchaseOrderCreationForm ({
     if (!formData.contactPersonDetails)
       newErrors.contactPersonDetails = 'Contact Person Details are required'
     // if (!formData.vendorId) newErrors.vendorId = 'Vendor Id is required'
-    if (!formData.productName)
-      newErrors.productName = 'Product Name is required'
+    if (!formData.materialName)
+      newErrors.materialName = 'Material Name is required'
     if (!formData.mfgDate) newErrors.mfgDate = 'Mfg Date is required'
     // if (!formData.batchNumber)
     //   newErrors.batchNumber = 'Batch Number is required'
-    if (!formData.quantity) newErrors.quantity = 'Quantity is required'
+    if (!formData.quantity) {
+      newErrors.quantity = 'Quantity is required'
+    } else if (!/^\d+$/.test(formData.quantity)) {
+      newErrors.quantity = 'Quantity must be a number only'
+    }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.pan) newErrors.pan = 'PAN is required'
     if (!formData.gst) newErrors.gst = 'GST is required'
@@ -136,7 +141,7 @@ export default function EditPurchaseOrderCreationForm ({
             contactPersonName: '',
             contactPersonDetails: '',
             vendorId: '',
-            productName: '',
+            materialName: '',
             // batchNumber: '',
             mfgDate: '',
             quantity: '',
@@ -344,12 +349,12 @@ export default function EditPurchaseOrderCreationForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Product Name'
-                    name='productName'
-                    value={formData.productName}
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
                     onChange={handleChange}
-                    error={!!errors.productName}
-                    helperText={errors.productName}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

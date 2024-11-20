@@ -41,24 +41,24 @@ export default function EditQualityCheckForm ({
     authPassword: '',
     qualityCheckId: qualityCheckData.qualityCheckId,
     batchNumber: qualityCheckData.batchNumber,
-    productName: qualityCheckData.productName,
+    materialName: qualityCheckData.materialName,
     inspectionDate: formattedDate,
     inspectorName: qualityCheckData.inspectorName,
     qualityStatus: qualityCheckData.qualityStatus,
     comments: qualityCheckData.comments
   })
   const [errors, setErrors] = useState({})
-  const handleBatchChange = event => {
-    const selectedBatch = event.target.value
-    const isSelectedBatch = batches.find(
-      batch => selectedBatch === batch.batchNumber
+  const handleMaterialChange = event => {
+    const selectedMaterial = event.target.value
+    const isSelectedMaterial = batches.find(
+      batch => selectedMaterial === batch.materialName
     )
 
-    if (isSelectedBatch) {
+    if (isSelectedMaterial) {
       setFormData({
         ...formData,
-        productName: isSelectedBatch.productName,
-        batchNumber: isSelectedBatch.batchNumber
+        materialName: selectedMaterial,
+        batchNumber: isSelectedMaterial.batchNumber
       })
     }
   }
@@ -68,8 +68,8 @@ export default function EditQualityCheckForm ({
       newErrors.authPassword = 'Authorization Password is required'
     if (!formData.batchNumber)
       newErrors.batchNumber = 'Batch Number is required'
-    if (!formData.productName)
-      newErrors.productName = 'Product Name is required'
+    if (!formData.materialName)
+      newErrors.materialName = 'Material Name is required'
     if (!formData.inspectionDate)
       newErrors.inspectionDate = 'Inspection Date is required'
     if (!formData.inspectorName)
@@ -103,7 +103,7 @@ export default function EditQualityCheckForm ({
             authPassword: '',
             qualityCheckId: '',
             batchNumber: '',
-            productName: '',
+            materialName: '',
             inspectionDate: '',
             inspectorName: '',
             qualityStatus: '',
@@ -186,10 +186,38 @@ export default function EditQualityCheckForm ({
                   <TextField
                     fullWidth
                     select
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
+                    onChange={handleMaterialChange}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch.materialName}>
+                        {batch.materialName}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Product In Current Stock +
+                    </MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
                     label='Batch Number'
                     name='batchNumber'
                     value={formData.batchNumber}
-                    onChange={handleBatchChange}
+                    onChange={handleChange}
                     error={!!errors.batchNumber}
                     helperText={errors.batchNumber}
                     variant='outlined'
@@ -203,41 +231,14 @@ export default function EditQualityCheckForm ({
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/current-stock')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Batch +
                     </MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    select
-                    label='Product Name'
-                    name='productName'
-                    value={formData.productName}
-                    onChange={handleChange}
-                    error={!!errors.productName}
-                    helperText={errors.productName}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    {products.map((product, index) => (
-                      <MenuItem key={index} value={product}>
-                        {product}
-                      </MenuItem>
-                    ))}
 
-                    {/* This item only triggers navigation, not a form selection */}
-                    <MenuItem
-                      onClick={() => navigate('/current-stock')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
-                    >
-                      Add New Product In Current Stock +
-                    </MenuItem>
-                  </TextField>
-                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

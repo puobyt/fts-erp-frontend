@@ -103,7 +103,7 @@ useEffect(()=>{
                 headLabel={[
                   { id: 'nameOfTheFirm', label: 'Name Of The Firm' },
                   { id: 'address', label: 'Address' },
-                  { id: 'contact', label: 'Contact' },
+                  { id: 'contactNumber', label: 'Contact Number' },
                   { id: 'contactPersonName', label: 'Contact Person Name' },
                   { id: 'contactPersonDetails', label: 'Contact Person Details' },
                   { id: 'Material', label: 'Material' },

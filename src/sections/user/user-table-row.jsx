@@ -25,7 +25,7 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
     nameOfTheFirm: row.nameOfTheFirm,
     address: row.address,
     vendorId: row._id,
-    contact:row.contact,
+    contactNumber:row.contactNumber,
     contactPersonName:row.contactPersonName,
     contactPersonDetails:row.contactPersonDetails,
     material:row.material,
@@ -104,7 +104,7 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
         </TableCell> */}
         <TableCell>  {row.nameOfTheFirm}</TableCell>
         <TableCell>{row.address}</TableCell>
-        <TableCell>{row.contact}</TableCell>
+        <TableCell>{row.contactNumber}</TableCell>
         <TableCell>{row.contactPersonName}</TableCell>
         <TableCell>{row.contactPersonDetails}</TableCell>
         <TableCell>{row.material}</TableCell>

@@ -42,7 +42,7 @@ export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.bomNumber) newErrors.bomNumber = 'BOM Number is required'
+    // if (!formData.bomNumber) newErrors.bomNumber = 'BOM Number is required'
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
     if (formData.materials.some(mat => !mat.materialsList || !mat.quantity)) {
@@ -164,7 +164,13 @@ export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
                     error={!!errors.bomNumber}
                     helperText={errors.bomNumber}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>

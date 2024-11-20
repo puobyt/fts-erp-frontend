@@ -34,6 +34,7 @@ export function MaterialAssignmentView() {
   const [materials,setMaterials] = useState([]);
   const [finishedGoods,setFinishedGoods] = useState([]);
   const [batches,setBatches] = useState([]);
+  const [processOrderNumbers,setProcessOrderNumbers] = useState([]);
 const fetchMaterialsAssignment = async ()=>{
 try{
 const result = await axiosInstance.get('/materialAssignment');
@@ -43,6 +44,7 @@ if(result.data.data){
   setMaterials(result.data.materials);
   setFinishedGoods(result.data.finishedGoods);
   setBatches(result.data.batchNumber);
+  setProcessOrderNumbers(result.data.processOrderNumber)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -76,7 +78,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <MaterialAssignmentForm setUpdate={setUpdate} materials={materials} finishedGoods={finishedGoods} batches={batches}/>
+        <MaterialAssignmentForm setUpdate={setUpdate} materials={materials} finishedGoods={finishedGoods} batches={batches} processOrderNumbers={processOrderNumbers}/>
     
       </Box>
 
@@ -123,6 +125,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <MaterialAssignmentTableRow
+                    processOrderNumbers={processOrderNumbers}
                     materials={materials}
                     finishedGoods={finishedGoods}
                     setUpdate={setUpdate}

@@ -166,9 +166,8 @@ export default function EditQualityInspectionForm ({
                   />
                 </Grid>
                 <Grid item xs={6}>
-            <TextField
+                  <TextField
                     fullWidth
-                    select
                     label='Product Name'
                     name='productName'
                     value={formData.productName}
@@ -177,22 +176,8 @@ export default function EditQualityInspectionForm ({
                     helperText={errors.productName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    {productNames.map((productName, index) => (
-                      <MenuItem key={index} value={productName}>
-                        {productName}
-                      </MenuItem>
-                    ))}
-
-                    {/* This item only triggers navigation, not a form selection */}
-                    <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
-                    >
-                      Add New Batch +
-                    </MenuItem>
-                  </TextField>
-            </Grid>
+                  />
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -210,9 +195,6 @@ export default function EditQualityInspectionForm ({
                       Accepted
                     </MenuItem>
 
-                    <MenuItem sx={{ color: 'red' }} value='Rejected'>
-                      Rejected
-                    </MenuItem>
                     <MenuItem sx={{ color: 'purple' }} value='Quarantine'>
                       Quarantine
                     </MenuItem>

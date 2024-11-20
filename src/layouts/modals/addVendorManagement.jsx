@@ -30,7 +30,7 @@ export default function VendorManagementForm({setUpdate}) {
   const [formData, setFormData] = useState({
      nameOfTheFirm: '', 
      address: '', 
-     contact: '', 
+     contactNumber: '', 
      contactPersonName: '' ,
      contactPersonDetails:'',
      material:'',
@@ -44,7 +44,7 @@ export default function VendorManagementForm({setUpdate}) {
     const newErrors = {};
     if (!formData.nameOfTheFirm) newErrors.nameOfTheFirm = 'Name of the Firm is required';
     if (!formData.address) newErrors.address = 'Address is required';
-    if (!formData.contact) newErrors.contact = 'Contact is required';
+    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required';
     if (!formData.contactPersonName) newErrors.contactPersonName = 'Contact Person Name is required';
     if (!formData.contactPersonDetails) newErrors.contactPersonDetails = 'Contact Person Details are required';
     if (!formData.material) newErrors.material = 'Material is required';
@@ -76,7 +76,7 @@ try{
         setFormData({
             nameOfTheFirm: '', 
             address: '', 
-            contact: '', 
+            contactNumber: '', 
             contactPersonName: '' ,
             contactPersonDetails:'',
             material:'',
@@ -165,12 +165,12 @@ try{
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="Contact"
-                name="contact"
-                value={formData.contact}
+                label="Contact Number"
+                name="contactNumber"
+                value={formData.contactNumber}
                 onChange={handleChange}
-                error={!!errors.contact}
-                helperText={errors.contact}
+                error={!!errors.contactNumber}
+                helperText={errors.contactNumber}
                 variant="outlined"
                 InputProps={{ style: { borderRadius: 8 } }}
               />

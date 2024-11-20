@@ -32,7 +32,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
     vendorId: vendorData.vendorId,
     nameOfTheFirm: vendorData.nameOfTheFirm,
     address: vendorData.address,
-    contact: vendorData.contact,
+    contactNumber: vendorData.contactNumber,
     contactPersonName: vendorData.contactPersonName,
     contactPersonDetails: vendorData.contactPersonDetails,
     material: vendorData.material,
@@ -49,7 +49,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
     if (!formData.nameOfTheFirm)
       newErrors.nameOfTheFirm = 'Name of the Firm is required'
     if (!formData.address) newErrors.address = 'Address is required'
-    if (!formData.contact) newErrors.contact = 'Contact is required'
+    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required'
     if (!formData.contactPersonName)
       newErrors.contactPersonName = 'Contact Person Name is required'
     if (!formData.contactPersonDetails)
@@ -86,7 +86,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
             vendorId: '',
             nameOfTheFirm: '',
             address: '',
-            contact: '',
+            contactNumber: '',
             contactPersonName: '',
             contactPersonDetails: '',
             material: '',
@@ -207,12 +207,12 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Contact'
-                    name='contact'
-                    value={formData.contact}
+                    label='Contact Number'
+                    name='contactNumber'
+                    value={formData.contactNumber}
                     onChange={handleChange}
-                    error={!!errors.contact}
-                    helperText={errors.contact}
+                    error={!!errors.contactNumber}
+                    helperText={errors.contactNumber}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

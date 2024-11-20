@@ -44,8 +44,8 @@ export default function RequestCreationForMaterialsForm ({
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.requestNumber)
-      newErrors.requestNumber = 'Request Number is required'
+    // if (!formData.requestNumber)
+    //   newErrors.requestNumber = 'Request Number is required'
     if (!formData.batchNumber)
       newErrors.batchNumber = 'Batch Number is required'
     if (!formData.materialName)
@@ -72,7 +72,7 @@ export default function RequestCreationForMaterialsForm ({
     setFormData({
       ...formData,
       materialName: selectedMaterialName,
-      batchNumber: selectedMaterial?.batchNumber || '' 
+      batchNumber: selectedMaterial?.batchNumber || ''
     })
   }
   const handleSubmit = async e => {
@@ -156,32 +156,6 @@ export default function RequestCreationForMaterialsForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Request Number'
-                    name='requestNumber'
-                    value={formData.requestNumber}
-                    onChange={handleChange}
-                    error={!!errors.requestNumber}
-                    helperText={errors.requestNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={formData.batchNumber}
-                    onChange={handleChange}
-                    error={!!errors.batchNumber}
-                    helperText={errors.batchNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
                     select
                     label='Material Name'
                     name='materialName'
@@ -234,6 +208,36 @@ export default function RequestCreationForMaterialsForm ({
                     </MenuItem>
                   </TextField>
                 </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Request Number'
+                    name='requestNumber'
+                    value={formData.requestNumber}
+                    onChange={handleChange}
+                    error={!!errors.requestNumber}
+                    helperText={errors.requestNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 }, placeholder: 'Auto-Generate' }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                  />
+                </Grid>
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

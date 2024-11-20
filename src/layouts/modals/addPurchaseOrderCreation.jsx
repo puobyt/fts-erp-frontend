@@ -40,7 +40,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     contactPersonName: '',
     contactPersonDetails: '',
     vendorId: '',
-    productName: '',
+    materialName: '',
     // batchNumber: '',
     mfgDate: '',
     quantity: '',
@@ -55,7 +55,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
       firm => firm.nameOfTheFirm === selectedFirmName
     )
 
-
     if (selectedFirm) {
       setFormData({
         ...formData,
@@ -64,6 +63,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
         pan: selectedFirm.pan,
         gst: selectedFirm.gst,
         address: selectedFirm.address,
+        materialName: selectedFirm.material,
         contactPersonName: selectedFirm.contactPersonName,
         contactPersonDetails: selectedFirm.contactPersonDetails,
         vendorId: selectedFirm._id
@@ -87,12 +87,16 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     if (!formData.contactPersonDetails)
       newErrors.contactPersonDetails = 'Contact Person Details are required'
     // if (!formData.vendorId) newErrors.vendorId = 'Vendor Id is required'
-    if (!formData.productName)
-      newErrors.productName = 'Product Name is required'
+    if (!formData.materialName)
+      newErrors.materialName = 'Material Name is required'
     if (!formData.mfgDate) newErrors.mfgDate = 'Mfg Date is required'
     // if (!formData.batchNumber)
     //   newErrors.batchNumber = 'Batch Number is required'
-    if (!formData.quantity) newErrors.quantity = 'Quantity is required'
+    if (!formData.quantity) {
+      newErrors.quantity = 'Quantity is required'
+    } else if (!/^\d+$/.test(formData.quantity)) {
+      newErrors.quantity = 'Quantity must be a number only'
+    }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.pan) newErrors.pan = 'PAN is required'
     if (!formData.gst) newErrors.gst = 'GST is required'
@@ -129,7 +133,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
           contactPersonName: '',
           contactPersonDetails: '',
           vendorId: '',
-          productName: '',
+          materialName: '',
           // batchNumber: '',
           mfgDate: '',
           quantity: '',
@@ -196,6 +200,34 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
+                    label='Name Of The Firm'
+                    name='nameOfTheFirm'
+                    value={formData.nameOfTheFirm}
+                    onChange={handleFirmChange}
+                    error={!!errors.nameOfTheFirm}
+                    helperText={errors.nameOfTheFirm}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {firms.map((firm, index) => (
+                      <MenuItem key={index} value={firm.nameOfTheFirm}>
+                        {firm.nameOfTheFirm}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/vendor-management')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Firm +
+                    </MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
                     label='Purchase Order Number'
                     name='purchaseOrderNumber'
                     value={formData.purchaseOrderNumber}
@@ -241,34 +273,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    select
-                    label='Name Of The Firm'
-                    name='nameOfTheFirm'
-                    value={formData.nameOfTheFirm}
-                    onChange={handleFirmChange}
-                    error={!!errors.nameOfTheFirm}
-                    helperText={errors.nameOfTheFirm}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    {firms.map((firm, index) => (
-                      <MenuItem key={index} value={firm.nameOfTheFirm}>
-                        {firm.nameOfTheFirm}
-                      </MenuItem>
-                    ))}
 
-                    {/* This item only triggers navigation, not a form selection */}
-                    <MenuItem
-                      onClick={() => navigate('/vendor-management')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
-                    >
-                      Add New Firm +
-                    </MenuItem>
-                  </TextField>
-                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -324,12 +329,12 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Product Name'
-                    name='productName'
-                    value={formData.productName}
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
                     onChange={handleChange}
-                    error={!!errors.productName}
-                    helperText={errors.productName}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
@@ -367,7 +372,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Quantity'
+                    label='Quantity In KG'
                     name='quantity'
                     value={formData.quantity}
                     onChange={handleChange}

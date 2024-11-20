@@ -36,7 +36,7 @@ export default function ProductionOrderCreationOutputForm ({
     productionCompletionDate: '',
     // qualityCheckStatus: '',
     storageLocationforOutput: '',
-    batchNumberforOutput:'',
+    batchNumberforOutput: '',
     productionNotes: '',
     Yield: '',
     outputQualityRating: '',
@@ -215,18 +215,28 @@ export default function ProductionOrderCreationOutputForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Batch Number for Output'
+                    select
+                    label='Batch Number For Output'
                     name='batchNumberforOutput'
                     value={formData.batchNumberforOutput}
                     onChange={handleChange}
                     error={!!errors.batchNumberforOutput}
                     helperText={errors.batchNumberforOutput}
                     variant='outlined'
-                    InputProps={{
-                      style: { borderRadius: 8 },
-                      placeholder: 'Auto-Generate'
-                    }}
-                  />
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch}>
+                        {batch}
+                      </MenuItem>
+                    ))}
+                    <MenuItem
+                      onClick={() => navigate('/production-order-creation')}
+                      sx={{ fontStyle: 'italic' }} 
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

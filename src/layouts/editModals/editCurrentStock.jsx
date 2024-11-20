@@ -9,8 +9,7 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
-import { parse, isValid } from 'date-fns';
-
+import { parse, isValid } from 'date-fns'
 
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
@@ -40,18 +39,19 @@ export default function EditCurrentStockForm ({
   const formattedDate = currentStockData.dateRecieved
     ? new Date(currentStockData.dateRecieved).toISOString().split('T')[0]
     : ''
-    const formattedExpDate = currentStockData.expiryDate
+  const formattedExpDate = currentStockData.expiryDate
     ? new Date(currentStockData.expiryDate).toISOString().split('T')[0]
     : ''
 
-    // const formattedExpiryDate = isValid(parsedDate) ? parsedDate.toISOString().split('T')[0] : null;
+  // const formattedExpiryDate = isValid(parsedDate) ? parsedDate.toISOString().split('T')[0] : null;
   const [formData, setFormData] = useState({
     authPassword: '',
     currentStockId: currentStockData.currentStockId,
     materialName: currentStockData.materialName,
-    batchNumber:currentStockData.batchNumber,
+    batchNumber: currentStockData.batchNumber,
     quantity: currentStockData.quantity,
     price: currentStockData.price,
+    storageLocation: currentStockData.storageLocation,
     supplier: currentStockData.supplier,
     dateRecieved: formattedDate,
     expiryDate: formattedExpDate
@@ -66,6 +66,8 @@ export default function EditCurrentStockForm ({
       newErrors.materialName = 'Material Name is required'
     if (!formData.quantity) newErrors.quantity = 'quantity is required'
     if (!formData.price) newErrors.price = 'Price is required'
+    if (!formData.storageLocation)
+      newErrors.storageLocation = 'Storage Location is required'
     if (!formData.supplier) newErrors.supplier = 'Supplier is required'
     if (!formData.dateRecieved)
       newErrors.dateRecieved = 'Date Recieved is required'
@@ -92,9 +94,10 @@ export default function EditCurrentStockForm ({
         handleClose()
         setFormData({
           materialName: '',
-          batchNumber:'',
+          batchNumber: '',
           quantity: '',
           price: '',
+          storageLocation: '',
           supplier: '',
           dateRecieved: '',
           expiryDate: ''
@@ -180,10 +183,7 @@ export default function EditCurrentStockForm ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
                     {materials.map((material, index) => (
-                      <MenuItem
-                        key={index}
-                        value={material}
-                      >
+                      <MenuItem key={index} value={material}>
                         {material}
                       </MenuItem>
                     ))}
@@ -207,7 +207,13 @@ export default function EditCurrentStockForm ({
                     error={!!errors.batchNumber}
                     helperText={errors.batchNumber}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -232,6 +238,19 @@ export default function EditCurrentStockForm ({
                     onChange={handleChange}
                     error={!!errors.price}
                     helperText={errors.price}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Storage Location'
+                    name='storageLocation'
+                    value={formData.storageLocation}
+                    onChange={handleChange}
+                    error={!!errors.storageLocation}
+                    helperText={errors.storageLocation}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

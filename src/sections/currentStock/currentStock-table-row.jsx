@@ -32,6 +32,7 @@ export function CurrentStockTableRow ({
     batchNumber:row.batchNumber,
     quantity: row.quantity,
     price: row.price,
+    storageLocation:row.storageLocation,
     supplier: row.supplier,
     dateRecieved: row.dateRecieved,
     expiryDate: row.expiryDate
@@ -101,6 +102,7 @@ export function CurrentStockTableRow ({
         <TableCell>{row.batchNumber}</TableCell>
         <TableCell>{row.quantity}</TableCell>
         <TableCell>{row.price}</TableCell>
+        <TableCell>{row.storageLocation}</TableCell>
         <TableCell>{row.supplier}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>

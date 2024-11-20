@@ -28,11 +28,12 @@ export default function EditMaterialAssignmentForm ({
   setUpdate,
   materialAssignmentData,
   materials,
-  finishedGoods
+  finishedGoods,
+  processOrderNumbers
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     authPassword: '',
@@ -54,8 +55,8 @@ export default function EditMaterialAssignmentForm ({
       newErrors.batchNumber = 'Batch Number is required'
     if (!formData.processOrderNumber)
       newErrors.processOrderNumber = 'Process Order Number is required'
-    if (!formData.assignmentNumber)
-      newErrors.assignMentNumber = 'Assignment Number is required'
+    // if (!formData.assignmentNumber)
+    //   newErrors.assignMentNumber = 'Assignment Number is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
     if (!formData.assignedQuantity)
@@ -80,7 +81,7 @@ export default function EditMaterialAssignmentForm ({
     setFormData({
       ...formData,
       materialName: selectedMaterialName,
-      batchNumber: selectedMaterial?.batchNumber || '' 
+      batchNumber: selectedMaterial?.batchNumber || ''
     })
   }
   const handleSubmit = async e => {
@@ -188,7 +189,13 @@ export default function EditMaterialAssignmentForm ({
                     error={!!errors.assignmentNumber}
                     helperText={errors.assignmentNumber}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -207,6 +214,7 @@ export default function EditMaterialAssignmentForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Process Order Number'
                     name='processOrderNumber'
                     value={formData.processOrderNumber}
@@ -215,7 +223,21 @@ export default function EditMaterialAssignmentForm ({
                     helperText={errors.processOrderNumber}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {processOrderNumbers.map((processOrderNumber, index) => (
+                      <MenuItem key={index} value={processOrderNumber}>
+                        {processOrderNumber}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/production-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Process Order Number +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -238,7 +260,10 @@ export default function EditMaterialAssignmentForm ({
                       Materials
                     </MenuItem>
                     {materials.map((material, index) => (
-                      <MenuItem key={`product-${index}`} value={material.materialName}>
+                      <MenuItem
+                        key={`product-${index}`}
+                        value={material.materialName}
+                      >
                         {material.materialName}
                       </MenuItem>
                     ))}

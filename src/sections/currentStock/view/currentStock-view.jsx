@@ -110,6 +110,7 @@ useEffect(()=>{
                   { id: 'batchNumber', label: 'Batch Number' },
                   { id: 'quantity', label: 'Quantity' },
                   { id: 'price', label: 'Price' },
+                  { id: 'storageLocation', label: 'Storage Location'},
                   { id: 'supplier', label: 'Supplier' },
                   { id: 'dateRecieved', label: 'Date Recieved' },
                   { id: 'expiryDate', label: 'Expiry' },

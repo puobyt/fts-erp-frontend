@@ -43,7 +43,7 @@ export default function EditProductionOrderCreationForm ({
     plant: productionOrderData.plant,
     materialCode: productionOrderData.materialCode,
     productDescription: productionOrderData.productDescription,
-    storageLocation: productionOrderData.storageLocation,
+    productName:productionOrderData.productName,
     batch: productionOrderData.batch,
     requiredQuantity: productionOrderData.requiredQuantity,
     instructions: productionOrderData.instructions,
@@ -61,10 +61,10 @@ export default function EditProductionOrderCreationForm ({
     if (!formData.plant) newErrors.plant = 'Plant is required'
     if (!formData.materialCode)
       newErrors.materialCode = 'Material Code is required'
+        if (!formData.productName)
+      newErrors.productName = 'ProductName is required'
     if (!formData.productDescription)
       newErrors.productDescription = 'Product Description is required'
-    if (!formData.storageLocation)
-      newErrors.storageLocation = 'Storage Location is required'
     if (!formData.batch) newErrors.batch = 'Batch is required'
     if (!formData.requiredQuantity)
       newErrors.requiredQuantity = 'Required Quantityis required'
@@ -101,7 +101,7 @@ export default function EditProductionOrderCreationForm ({
             plant: '',
             materialCode: '',
             productDescription: '',
-            storageLocation: '',
+            productName:'',
             batch: '',
             requiredQuantity: '',
             instructions: '',
@@ -184,6 +184,19 @@ export default function EditProductionOrderCreationForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    label='Product Name'
+                    name='productName'
+                    value={formData.productName}
+                    onChange={handleChange}
+                    error={!!errors.productName}
+                    helperText={errors.productName}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
                     label='Process Order'
                     name='processOrder'
                     value={formData.processOrder}
@@ -232,19 +245,6 @@ export default function EditProductionOrderCreationForm ({
                     onChange={handleChange}
                     error={!!errors.productDescription}
                     helperText={errors.productDescription}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Storage Location'
-                    name='storageLocation'
-                    value={formData.storageLocation}
-                    onChange={handleChange}
-                    error={!!errors.storageLocation}
-                    helperText={errors.storageLocation}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

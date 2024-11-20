@@ -18,7 +18,6 @@ import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 
-
 export function ProductionOrderCreationTableRow({batches,setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
   const productionOrderData = {
@@ -26,8 +25,8 @@ export function ProductionOrderCreationTableRow({batches,setUpdate, row, selecte
     processOrder:row.processOrder,
     plant:row.plant,
     materialCode:row.materialCode,
+    materialName:row.ProductName,
     productDescription:row.productDescription,
-    storageLocation:row.storageLocation,
     batch:row.batch,
     requiredQuantity:row.requiredQuantity,
     instructions:row.instructions,
@@ -100,7 +99,7 @@ export function ProductionOrderCreationTableRow({batches,setUpdate, row, selecte
 
         <TableCell>{row.materialCode}</TableCell>
         <TableCell>{row.productDescription}</TableCell>
-        <TableCell>{row.storageLocation}</TableCell>
+        <TableCell>{row.productName}</TableCell>
         <TableCell>{row.batch}</TableCell>
         <TableCell>{row.requiredQuantity}</TableCell>
         <TableCell>{row.instructions}</TableCell>

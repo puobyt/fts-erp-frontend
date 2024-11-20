@@ -27,7 +27,8 @@ const style = {
 export default function MaterialAssignmentForm ({
   setUpdate,
   materials,
-  finishedGoods
+  finishedGoods,
+  processOrderNumbers
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -45,16 +46,19 @@ export default function MaterialAssignmentForm ({
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.assignmentNumber)
-      newErrors.assignMentNumber = 'Assignment Number is required'
+    // if (!formData.assignmentNumber)
+    //   newErrors.assignMentNumber = 'Assignment Number is required'
     if (!formData.batchNumber)
       newErrors.batchNumber = 'Batch Number is required'
     if (!formData.processOrderNumber)
       newErrors.processOrderNumber = 'Process Order Number is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
-    if (!formData.assignedQuantity)
-      newErrors.assignedQuantity = 'Assigned Quantity is required'
+    if (!formData.assignedQuantity) {
+      newErrors.quantity = 'Assigned Quantity is required'
+    } else if (!/^\d+$/.test(formData.assignedQuantity)) {
+      newErrors.quantity = 'Assigned Quantity must be a number only'
+    }
     if (!formData.assignedTo) newErrors.assignedTo = 'AssignedTo is required'
 
     setErrors(newErrors)
@@ -62,19 +66,18 @@ export default function MaterialAssignmentForm ({
   }
 
   const handleMaterialChange = event => {
-    const selectedMaterialName = event.target.value;
-  
+    const selectedMaterialName = event.target.value
+
     const selectedMaterial = materials.find(
       material => material.materialName === selectedMaterialName
-    );
-  
+    )
+
     setFormData({
       ...formData,
       materialName: selectedMaterialName,
-      batchNumber: selectedMaterial?.batchNumber || "" // Assign directly from batchNumber
-    });
-  };
-  
+      batchNumber: selectedMaterial?.batchNumber || '' // Assign directly from batchNumber
+    })
+  }
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -164,45 +167,6 @@ export default function MaterialAssignmentForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Assignment Number'
-                    name='assignmentNumber'
-                    value={formData.assignmentNumber}
-                    onChange={handleChange}
-                    error={!!errors.assignmentNumber}
-                    helperText={errors.assignmentNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={formData.batchNumber}
-                    onChange={handleChange}
-                    error={!!errors.batchNumber}
-                    helperText={errors.batchNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Process Order Number'
-                    name='processOrderNumber'
-                    value={formData.processOrderNumber}
-                    onChange={handleChange}
-                    error={!!errors.processOrderNumber}
-                    helperText={errors.processOrderNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
                     select
                     label='Material Name'
                     name='materialName'
@@ -221,7 +185,10 @@ export default function MaterialAssignmentForm ({
                       Materials
                     </MenuItem>
                     {materials.map((material, index) => (
-                      <MenuItem key={`product-${index}`} value={material.materialName}>
+                      <MenuItem
+                        key={`product-${index}`}
+                        value={material.materialName}
+                      >
                         {material.materialName}
                       </MenuItem>
                     ))}
@@ -255,7 +222,65 @@ export default function MaterialAssignmentForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Assigned Quantity'
+                    label='Assignment Number'
+                    name='assignmentNumber'
+                    value={formData.assignmentNumber}
+                    onChange={handleChange}
+                    error={!!errors.assignmentNumber}
+                    helperText={errors.assignmentNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 },placeholder:'Auto-Generate' }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Process Order Number'
+                    name='processOrderNumber'
+                    value={formData.processOrderNumber}
+                    onChange={handleChange}
+                    error={!!errors.processOrderNumber}
+                    helperText={errors.processOrderNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {processOrderNumbers.map((processOrderNumber, index) => (
+                      <MenuItem key={index} value={processOrderNumber}>
+                        {processOrderNumber}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/production-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Process Order Number +
+                    </MenuItem>
+                  </TextField>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Assigned Quantity In KG'
                     name='assignedQuantity'
                     value={formData.assignedQuantity}
                     onChange={handleChange}
