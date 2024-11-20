@@ -21,7 +21,7 @@ import { FinishedGoodsTableHead } from '../finishedGoods-table-head';
 import { FinishedGoodsTableRow } from '../finishedGoods-table-row';
 import { FinishedGoodsTableToolbar } from '../finishedGoods-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import FinishedGoodsForm from 'src/layouts/modals/addFinishedGoods';
+import FinishedGoodsForm from '../../../layouts/modals/addFinishedGoods';
 import axiosInstance from 'src/configs/axiosInstance';
 
 

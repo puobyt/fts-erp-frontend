@@ -21,7 +21,7 @@ import { GateEntryTableHead } from '../gateEntry-table-head';
 import { GateEntryTableRow } from '../gateEntry-table-row';
 import { GateEntryTableToolbar } from '../gateEntry-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import GateEntryForm from 'src/layouts/modals/addGateEntry';
+import GateEntryForm from '../../../layouts/modals/addGateEntry';
 import axiosInstance from 'src/configs/axiosInstance';
 
 // ----------------------------------------------------------------------

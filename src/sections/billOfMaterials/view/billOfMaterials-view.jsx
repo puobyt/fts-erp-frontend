@@ -20,7 +20,7 @@ import { TableEmptyRows } from '../table-empty-rows';
 import { BillOfMaterialsTableHead } from '../billOfMaterials-table-head';
 import { BillOfMaterialsTableRow } from '../billOfMaterials-table-row';
 import { BillOfMaterialsTableToolbar } from '../billOfMaterials-table-toolbar';
-import BillOfMaterialsForm from 'src/layouts/modals/addBillOfMaterials';
+import BillOfMaterialsForm from '../../../layouts/modals/addBillOfMaterials';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import ReworkForm from 'src/layouts/modals/addRework';
 import axiosInstance from 'src/configs/axiosInstance';

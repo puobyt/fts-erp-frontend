@@ -20,7 +20,7 @@ import { FinalQualityInpsectionTableHead } from '../finalQualityInpsection-table
 import { FinalQualityInpsectionTableRow } from '../finalQualityInpsection-table-row';
 import { FinalQualityInpsectionTableToolbar } from '../finalQualityInpsection-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import QualityInspectionForm from 'src/layouts/modals/addQualityInspection';
+import QualityInspectionForm from '../../../layouts/modals/addQualityInspection';
 import axiosInstance from 'src/configs/axiosInstance';
 
 

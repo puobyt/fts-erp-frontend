@@ -21,7 +21,7 @@ import { QualityCheckTableHead } from '../qualityCheck-table-head';
 import { QualityCheckTableRow } from '../qualityCheck-table-row';
 import { QualityCheckTableToolbar } from '../qualityCheck-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import QualityCheckForm from 'src/layouts/modals/addQualityCheck';
+import QualityCheckForm from '../../../layouts/modals/addQualityCheck';
 import axiosInstance from 'src/configs/axiosInstance';
 
 

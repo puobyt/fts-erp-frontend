@@ -23,7 +23,7 @@ import { TableEmptyRows } from '../table-empty-rows';
 import { PurchcaseOrderCreationTableToolbar } from '../purchase-order-creation-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import axiosInstance from 'src/configs/axiosInstance';
-import PurchaseOrderCreationForm from 'src/layouts/modals/addPurchaseOrderCreation';
+import PurchaseOrderCreationForm from '../../../layouts/modals/addPurchaseOrderCreation';
 
 
 // ----------------------------------------------------------------------

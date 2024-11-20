@@ -9,7 +9,7 @@ import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
-import EditVendorManagementForm from 'src/layouts/editModals/editVendorManagement';
+import EditVendorManagementForm from '../../layouts/editModals/editVendorManagement';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import axiosInstance from 'src/configs/axiosInstance';

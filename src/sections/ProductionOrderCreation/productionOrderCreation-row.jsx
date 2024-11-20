@@ -9,7 +9,7 @@ import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
-import EditProductionOrderCreationForm from 'src/layouts/editModals/editProductionOrderCreation';
+import EditProductionOrderCreationForm from '../../layouts/editModals/editProductionOrderCreation';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import Swal from 'sweetalert2'

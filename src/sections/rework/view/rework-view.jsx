@@ -21,8 +21,7 @@ import { ReworkTableHead } from '../rework-table-head';
 import { ReworkTableRow } from '../rework-table-row';
 import { ReworkTableToolbar } from '../rework-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import QualityCheckForm from 'src/layouts/modals/addQualityCheck';
-import ReworkForm from 'src/layouts/modals/addRework';
+import ReworkForm from '../../../layouts/modals/addRework';
 import axiosInstance from 'src/configs/axiosInstance';
 
 

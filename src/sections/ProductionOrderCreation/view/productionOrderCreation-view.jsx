@@ -20,7 +20,7 @@ import { TableEmptyRows } from '../table-empty-rows';
 import { ProductionOrderCreationTableHead } from '../productionOrderCreation-table-head';
 import { ProductionOrderCreationTableRow } from '../productionOrderCreation-row';
 import { ProductionOrderCreationTableToolbar } from '../productionOrderCreation-table-toolbar';
-import ProductionOrderCreationForm from 'src/layouts/modals/addProductionOrderCreation';
+import ProductionOrderCreationForm from '../../../layouts/modals/addProductionOrderCreation';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 import axiosInstance from 'src/configs/axiosInstance';

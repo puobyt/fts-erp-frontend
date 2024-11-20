@@ -21,7 +21,7 @@ import { CurrentStockTableHead } from '../currentStock-table-head';
 import { CurrentStockTableRow } from '../currentStock-table-row';
 import { CurrentStockTableToolbar } from '../currentStock-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import CurrentStockForm from 'src/layouts/modals/addCurrentStock';
+import CurrentStockForm from '../../../layouts/modals/addCurrentStock';
 import axiosInstance from 'src/configs/axiosInstance';
 
 

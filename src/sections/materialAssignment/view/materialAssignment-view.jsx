@@ -21,7 +21,7 @@ import { MaterialAssignmentTableHead } from '../materialAssignment-table-head';
 import { MaterialAssignmentTableRow } from '../materialAssignment-table-row';
 import { MaterialAssignmentTableToolbar } from '../materialAssignment-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import MaterialAssignmentForm from 'src/layouts/modals/materialAssignMent';
+import MaterialAssignmentForm from '../../../layouts/modals/materialAssignMent';
 import axiosInstance from 'src/configs/axiosInstance';
 
 

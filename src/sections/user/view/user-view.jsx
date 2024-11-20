@@ -20,7 +20,7 @@ import { UserTableHead } from '../user-table-head';
 import { TableEmptyRows } from '../table-empty-rows';
 import { UserTableToolbar } from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import VendorManagementForm from 'src/layouts/modals/addVendorManagement';
+import VendorManagementForm from '../../../layouts/modals/addVendorManagement';
 import axiosInstance from 'src/configs/axiosInstance';
 
 

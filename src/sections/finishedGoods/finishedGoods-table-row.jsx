@@ -9,7 +9,7 @@ import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
-import EditFinishedGoodsForm from 'src/layouts/editModals/editFinishedGoods';
+import EditFinishedGoodsForm from '../../layouts/editModals/editFinishedGoods';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import Swal from 'sweetalert2'

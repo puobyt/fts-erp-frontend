@@ -12,7 +12,7 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem'
 
 import { Label } from 'src/components/label'
 import { Iconify } from 'src/components/iconify'
-import EditQualityInspectionForm from 'src/layouts/editModals/editFinalQualityInspection'
+import EditQualityInspectionForm from '../../layouts/editModals/editFinalQualityInspection'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
