@@ -33,7 +33,7 @@ export function CurrentStockTableHead({
           />
         </TableCell> */}
 
-        {headLabel.map((headCell) => (
+        {headLabel.map((headCell) => (  //HeadLable cell
           <TableCell
             key={headCell.id}
             align={headCell.align || 'left'}
