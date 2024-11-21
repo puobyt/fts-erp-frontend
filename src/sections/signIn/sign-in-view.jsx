@@ -155,7 +155,7 @@ export function SignInView () {
 
       {renderForm}
       <Toaster position='top-center' reverseOrder={false} />
-      <Divider
+      {/* <Divider
         sx={{ my: 3, '&::before, &::after': { borderTopStyle: 'dashed' } }}
       >
         <Typography
@@ -164,9 +164,9 @@ export function SignInView () {
         >
           OR
         </Typography>
-      </Divider>
+      </Divider> */}
 
-      <Box gap={1} display='flex' justifyContent='center'>
+      {/* <Box gap={1} display='flex' justifyContent='center'>
         <IconButton color='inherit'>
           <Iconify icon='logos:google-icon' />
         </IconButton>
@@ -176,7 +176,7 @@ export function SignInView () {
         <IconButton color='inherit'>
           <Iconify icon='ri:twitter-x-fill' />
         </IconButton>
-      </Box>
+      </Box> */}
     </>
   )
 }

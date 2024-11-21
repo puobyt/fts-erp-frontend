@@ -207,7 +207,7 @@ export function SignUpView () {
 
         {renderForm}
         <Toaster position='top-center' reverseOrder={false} />
-        <Divider
+        {/* <Divider
           sx={{ my: 3, '&::before, &::after': { borderTopStyle: 'dashed' } }}
         >
           <Typography
@@ -228,7 +228,7 @@ export function SignUpView () {
           <IconButton color='inherit'>
             <Iconify icon='ri:twitter-x-fill' />
           </IconButton>
-        </Box>
+        </Box> */}
       </>
     )
   }
