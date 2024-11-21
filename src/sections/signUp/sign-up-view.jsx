@@ -176,7 +176,7 @@ export function SignUpView () {
     </Box>
   )
   if (step2) {
-    return <OTPView email={email}/>
+    return <OTPView email={email} />
   } else {
     return (
       <>
@@ -190,7 +190,16 @@ export function SignUpView () {
           <Typography variant='h5'>Sign up</Typography>
           <Typography variant='body2' color='text.secondary'>
             Already have an account?
-            <ReactLink to='/sign-in' variant='subtitle2' sx={{ ml: 0.5 }}>
+            <ReactLink
+              to='/sign-in'
+              variant='subtitle2'
+              style={{
+                color: 'green',
+                fontWeight: 600, 
+                marginLeft: '8px',
+                textDecoration: 'none' 
+              }}
+            >
               Login here
             </ReactLink>
           </Typography>

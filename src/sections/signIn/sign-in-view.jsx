@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import Box from '@mui/material/Box'
-import Link from '@mui/material/Link'
+// import Link from '@mui/material/Link'
+import { Link } from 'react-router-dom'
 import Divider from '@mui/material/Divider'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
@@ -81,9 +82,9 @@ export function SignInView () {
         sx={{ mb: 3 }}
       />
 
-      <Link variant='body2' color='inherit' sx={{ mb: 1.5 }}>
+      {/* <Link variant='body2' color='inherit' sx={{ mb: 1.5 }}>
         Forgot password?
-      </Link>
+      </Link> */}
 
       <TextField
         fullWidth
@@ -138,9 +139,17 @@ export function SignInView () {
         <Typography variant='h5'>Sign in</Typography>
         <Typography variant='body2' color='text.secondary'>
           Don’t have an account?
-          <Link href='/sign-up' variant='subtitle2' sx={{ ml: 0.5 }}>
-            Get started
-          </Link>
+          <Link
+      to="/sign-up"
+      style={{
+        color: 'green',
+        fontWeight: 600, // Slightly bolder
+        marginLeft: '8px',
+        textDecoration: 'none', // Removes underline
+      }}
+    >
+      Get started
+    </Link>
         </Typography>
       </Box>
 
