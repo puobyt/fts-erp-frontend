@@ -38,8 +38,7 @@ export default function EditBillOfMaterialsForm ({
     billOfMaterialsId: billOfMaterialsData.billOfMaterialsId,
     bomNumber: billOfMaterialsData.bomNumber,
     productName: billOfMaterialsData.productName,
-    materialsList: billOfMaterialsData.materialsList,
-    quantity: billOfMaterialsData.quantity
+    materials:billOfMaterialsData.materials ,
   })
   const [errors, setErrors] = useState({})
 
@@ -50,9 +49,9 @@ export default function EditBillOfMaterialsForm ({
     // if (!formData.bomNumber) newErrors.bomNumber = 'BOM Number is required'
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
-    if (!formData.materialsList)
-      newErrors.materialsList = 'Materials List is required'
-    if (!formData.quantity) newErrors.quantity = 'Quantity is required'
+    if (formData.materials.some(mat => !mat.materialsList || !mat.quantity)) {
+      newErrors.materials = 'All material fields must be filled'
+    }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
@@ -61,7 +60,27 @@ export default function EditBillOfMaterialsForm ({
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
+  const handleMaterialChange = (e, index) => {
+    const { name, value } = e.target
+    const updatedMaterials = [...formData.materials]
+    updatedMaterials[index][name] = value
+    setFormData({ ...formData, materials: updatedMaterials })
+  }
 
+  const addMaterial = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      materials: [
+        ...prevFormData.materials,
+        { materialsList: '', quantity: '' }
+      ]
+    }))
+  }
+
+  const removeMaterial = index => {
+    const updatedMaterials = formData.materials.filter((_, i) => i !== index)
+    setFormData({ ...formData, materials: updatedMaterials })
+  }
   const handleSubmit = async e => {
     e.preventDefault()
 
@@ -79,10 +98,9 @@ export default function EditBillOfMaterialsForm ({
             billOfMaterialsId: '',
             bomNumber: '',
             productName: '',
-            materialsList: '',
-            quantity: ''
+          materials:''
           })
-          setUpdate(prev => !prev)
+          setUpdate(prev => !prev);
         })
         .catch(err => {
           toast.error(err.response.data.message)
@@ -126,7 +144,7 @@ export default function EditBillOfMaterialsForm ({
             elevation={4}
             sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}
           >
-            <Box sx={{ textAlign: 'center', mb: 3 }}>
+              <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Typography
                 component='h1'
                 variant='h5'
@@ -134,7 +152,7 @@ export default function EditBillOfMaterialsForm ({
                 color='primary'
                 gutterBottom
               >
-                Edit Bill Of Material Details
+                Add New Bill Of Material
               </Typography>
               <Typography variant='body2' color='textSecondary'>
                 Bill Of Material Management
@@ -142,7 +160,7 @@ export default function EditBillOfMaterialsForm ({
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+              <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label='Authorization Password'
@@ -203,33 +221,71 @@ export default function EditBillOfMaterialsForm ({
                     </MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Materials List'
-                    name='materialsList'
-                    value={formData.materialsList}
-                    onChange={handleChange}
-                    error={!!errors.materialsList}
-                    helperText={errors.materialsList}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Quantity'
-                    name='quantity'
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    error={!!errors.quantity}
-                    helperText={errors.quantity}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+
+                {formData.materials&&formData.materials.map((material, index) => (
+                  <React.Fragment key={index}>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label='Materials List'
+                        name='materialsList'
+                        value={material.materialsList}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        error={!!errors.materials}
+                        helperText={errors.materials}
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label='Quantity'
+                        name='quantity'
+                        error={!!errors.materials}
+                        value={material.quantity}
+                        helperText={errors.materials}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end', // Align to the right
+                        alignItems: 'center' // Vertically center the content if needed
+                      }}
+                    >
+                      <Button
+                        variant='text'
+                        color='error'
+                        onClick={() => removeMaterial(index)}
+                        size='small'
+                        sx={{
+                          textTransform: 'none',
+                          padding: 0,
+                          minWidth: 'auto'
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  </React.Fragment>
+                ))}
+                <Grid item xs={12}>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={addMaterial}
+                  >
+                    Add Material
+                  </Button>
                 </Grid>
               </Grid>
+
               <Button
                 type='submit'
                 fullWidth

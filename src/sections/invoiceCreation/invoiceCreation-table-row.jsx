@@ -28,6 +28,7 @@ export function InvoiceCreationTableRow ({
   const invoiceData = {
     invoiceId: row._id,
     invoiceNumber: row.invoiceNumber,
+    customerId:row.customerId,
     invoiceDate: row.invoiceDate,
     customerName: row.customerName,
     customerAddress: row.customerAddress,
@@ -97,6 +98,7 @@ export function InvoiceCreationTableRow ({
           </Box>
         </TableCell> */}
         <TableCell> {row.invoiceNumber} </TableCell>
+        <TableCell> {row.customerId} </TableCell>
         <TableCell>{new Date(row.invoiceDate).toLocaleDateString()}</TableCell>
         <TableCell> {row.customerName} </TableCell>
         <TableCell>{row.customerAddress}</TableCell>

@@ -21,7 +21,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null)
   const mainStockData = {
     mainStockId: row._id,
-    productName: row.productName,
+    materialName: row.materialName,
     quantity: row.quantity,
     price: row.price,
     storageLocation: row.storageLocation,
@@ -90,7 +90,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
           
           </Box>
         </TableCell> */}
-        <TableCell> {row.productName}</TableCell>
+        <TableCell> {row.materialName}</TableCell>
         <TableCell>{row.quantity}</TableCell>
 
         <TableCell>{row.price}</TableCell>

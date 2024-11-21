@@ -44,8 +44,8 @@ export default function EditQualityInspectionForm ({
     const newErrors = {}
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
-    if (!formData.inspectionNumber)
-      newErrors.inspectionNumber = 'Inspection Number is required'
+    // if (!formData.inspectionNumber)
+    //   newErrors.inspectionNumber = 'Inspection Number is required'
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
     if (!formData.inspectionResults)
@@ -155,19 +155,7 @@ export default function EditQualityInspectionForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Inspection Number'
-                    name='inspectionNumber'
-                    value={formData.inspectionNumber}
-                    onChange={handleChange}
-                    error={!!errors.inspectionNumber}
-                    helperText={errors.inspectionNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
+                    select
                     label='Product Name'
                     name='productName'
                     value={formData.productName}
@@ -176,8 +164,41 @@ export default function EditQualityInspectionForm ({
                     helperText={errors.productName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {productNames.map((productName, index) => (
+                      <MenuItem key={index} value={productName}>
+                        {productName}
+                      </MenuItem>
+                    ))}
+
+                    <MenuItem
+                      onClick={() => navigate('/current-stock')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Material In Current Stock +
+                    </MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Inspection Number'
+                    name='inspectionNumber'
+                    value={formData.inspectionNumber}
+                    onChange={handleChange}
+                    error={!!errors.inspectionNumber}
+                    helperText={errors.inspectionNumber}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
                   />
                 </Grid>
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

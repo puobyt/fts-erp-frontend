@@ -24,7 +24,7 @@ const style = {
   p: 4
 }
 
-export default function ProductionOrderCreationForm ({ setUpdate, batches }) {
+export default function ProductionOrderCreationForm ({ setUpdate, materials }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate()
@@ -32,7 +32,7 @@ export default function ProductionOrderCreationForm ({ setUpdate, batches }) {
   const [formData, setFormData] = useState({
     processOrder: '',
     plant: '',
-    materialCode: '',
+    materialName: '',
     productDescription: '',
     productName: '',
     batch: '',
@@ -48,8 +48,8 @@ export default function ProductionOrderCreationForm ({ setUpdate, batches }) {
     // if (!formData.processOrder)
     //   newErrors.processOrder = 'Process Order is required'
     if (!formData.plant) newErrors.plant = 'Plant is required'
-    if (!formData.materialCode)
-      newErrors.materialCode = 'Material Code is required'
+    if (!formData.materialName)
+      newErrors.materialName = 'Material Name is required'
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
     if (!formData.productDescription)
@@ -88,7 +88,7 @@ export default function ProductionOrderCreationForm ({ setUpdate, batches }) {
         setFormData({
           processOrder: '',
           plant: '',
-          materialCode: '',
+          materialName: '',
           productDescription: '',
           productName: '',
           batch: '',
@@ -225,19 +225,19 @@ export default function ProductionOrderCreationForm ({ setUpdate, batches }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Material Code'
-                    name='materialCode'
-                    value={formData.materialCode}
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
                     onChange={handleChange}
-                    error={!!errors.materialCode}
-                    helperText={errors.materialCode}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -262,37 +262,41 @@ export default function ProductionOrderCreationForm ({ setUpdate, batches }) {
                     error={!!errors.batch}
                     helperText={errors.batch}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                
+                    InputProps={{ style: { borderRadius: 8 },placeholder:'Auto-Generate' }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
                   />
                 </Grid>
-                {/* <Grid item xs={6}>
+                <Grid item xs={6}>
                 <TextField
                     fullWidth
                     select
-                    label='Batch'
-                    name='batch'
-                    value={formData.batch}
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
                     onChange={handleChange}
-                    error={!!errors.batch}
-                    helperText={errors.batch}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
-                    {batches.map((batch, index) => (
-                      <MenuItem key={index} value={batch}>
-                        {batch}
+                    {materials.map((material, index) => (
+                      <MenuItem key={index} value={material}>
+                        {material}
                       </MenuItem>
                     ))}
 
                   
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/main-stock')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
-                      Add New Batch +
+                      Add New Material +
                     </MenuItem>
                   </TextField>
-                </Grid>  */}
+                </Grid> 
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

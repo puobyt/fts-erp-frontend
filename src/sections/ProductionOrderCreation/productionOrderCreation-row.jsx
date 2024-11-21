@@ -18,14 +18,14 @@ import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 
-export function ProductionOrderCreationTableRow({batches,setUpdate, row, selected, onSelectRow }) {
+export function ProductionOrderCreationTableRow({materials,setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
   const productionOrderData = {
     productionOrderId:row._id,
     processOrder:row.processOrder,
     plant:row.plant,
-    materialCode:row.materialCode,
-    materialName:row.ProductName,
+    materialName:row.materialName,
+    productName:row.productName,
     productDescription:row.productDescription,
     batch:row.batch,
     requiredQuantity:row.requiredQuantity,
@@ -97,7 +97,7 @@ export function ProductionOrderCreationTableRow({batches,setUpdate, row, selecte
         <TableCell>  {row.processOrder}</TableCell>
         <TableCell>{row.plant}</TableCell>
 
-        <TableCell>{row.materialCode}</TableCell>
+        <TableCell>{row.materialName}</TableCell>
         <TableCell>{row.productDescription}</TableCell>
         <TableCell>{row.productName}</TableCell>
         <TableCell>{row.batch}</TableCell>
@@ -136,7 +136,7 @@ export function ProductionOrderCreationTableRow({batches,setUpdate, row, selecte
             },
           }}
         >
-       <EditProductionOrderCreationForm setUpdate={setUpdate} productionOrderData={productionOrderData} batches={batches}/>
+       <EditProductionOrderCreationForm setUpdate={setUpdate} productionOrderData={productionOrderData} materials={materials}/>
 
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />

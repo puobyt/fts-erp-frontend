@@ -8,6 +8,7 @@ import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
@@ -32,6 +33,7 @@ export default function CurrentStockForm ({
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     materialName: '',
     batchNumber: '',
@@ -43,7 +45,7 @@ export default function CurrentStockForm ({
     expiryDate: ''
   })
   const [errors, setErrors] = useState({})
-
+console.log('vendors listing...',vendors);
   const validateForm = () => {
     const newErrors = {}
     if (!formData.materialName)
@@ -254,7 +256,7 @@ export default function CurrentStockForm ({
 
                     <MenuItem
                       onClick={() => navigate('/purchase-order-creation')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
+                      sx={{ fontStyle: 'italic' }} 
                     >
                       Add New Vendor +
                     </MenuItem>

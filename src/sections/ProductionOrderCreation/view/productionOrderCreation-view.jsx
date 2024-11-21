@@ -31,14 +31,14 @@ export function ProductionOrderCreationView () {
   const table = useTable()
   const [update, setUpdate] = useState(false)
   const [productionOrders, setProductionOrders] = useState([])
-  const [batches, setBatches] = useState([])
+  const [materials, setMaterials] = useState([])
   const fetchProductionOrders = async () => {
     try {
       const result = await axiosInstance.get('/productionOrderCreation')
       if (result.data.data) {
         console.log(result.data)
         setProductionOrders(result.data.data)
-        setBatches(result.data.batches)
+        setMaterials(result.data.materials)
       }
     } catch (err) {
       console.error(
@@ -74,7 +74,7 @@ export function ProductionOrderCreationView () {
           New user
         </Button> */}
 
-        <ProductionOrderCreationForm setUpdate={setUpdate} batches={batches} />
+        <ProductionOrderCreationForm setUpdate={setUpdate} materials={materials} />
       </Box>
 
       <Card>
@@ -106,7 +106,7 @@ export function ProductionOrderCreationView () {
                 headLabel={[
                   { id: 'processOrder', label: 'Process Order Number' },
                   { id: 'plant', label: 'Plant' },
-                  { id: 'materialCode', label: 'Material Code' },
+                  { id: 'materialName', label: 'Material Name' },
                   { id: 'productDescription', label: 'Product Description' },
                   { id: 'ProductName', label: 'Product Name' },
 
@@ -125,7 +125,7 @@ export function ProductionOrderCreationView () {
                   )
                   .map((row, index) => (
                     <ProductionOrderCreationTableRow
-                      batches={batches}
+                    materials={materials}
                       setUpdate={setUpdate}
                       key={index}
                       row={row}

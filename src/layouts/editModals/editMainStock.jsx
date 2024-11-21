@@ -42,7 +42,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
   const [formData, setFormData] = useState({
     authPassword: '',
     mainStockId: mainStockData.mainStockId,
-    productName: mainStockData.productName,
+    materialName: mainStockData.materialName,
     quantity: mainStockData.quantity,
     price: mainStockData.price,
     storageLocation: mainStockData.storageLocation,
@@ -56,9 +56,13 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
     const newErrors = {}
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
-    if (!formData.productName)
-      newErrors.productName = 'Product Name is required'
-    if (!formData.quantity) newErrors.quantity = 'quantity is required'
+    if (!formData.materialName)
+      newErrors.materialName = 'Material Name is required'
+    if (!formData.quantity) {
+        newErrors.quantity = 'Quantity is required'
+      } else if (!/^\d+$/.test(formData.quantity)) {
+        newErrors.quantity = 'Quantity must be a number only'
+      }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
       newErrors.storageLocation = 'Storage Location is required'
@@ -88,7 +92,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
         handleClose()
         setFormData({
           authPassword: '',
-          productName: '',
+          materialName: '',
           quantity: '',
           price: '',
           vendorName: '',
@@ -166,12 +170,12 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Product Name'
-                    name='productName'
-                    value={formData.productName}
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
                     onChange={handleChange}
-                    error={!!errors.productName}
-                    helperText={errors.productName}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
@@ -179,7 +183,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Quantity'
+                    label='Quantity In KG'
                     name='quantity'
                     value={formData.quantity}
                     onChange={handleChange}

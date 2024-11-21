@@ -25,7 +25,8 @@ const style = {
 
 export default function EditProductionOrderCreationOutputForm ({
   setUpdate,
-  productionOrderOutputData
+  productionOrderOutputData,
+  products
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -38,6 +39,7 @@ export default function EditProductionOrderCreationOutputForm ({
   const [formData, setFormData] = useState({
     authPassword: '',
     productionOrderoutputId: productionOrderOutputData.productionOrderoutputId,
+    productName: productionOrderOutputData.productName,
     producedQuantity: productionOrderOutputData.producedQuantity,
     productionCompletionDate: formattedDate,
     // qualityCheckStatus: productionOrderOutputData.qualityCheckStatus,
@@ -59,6 +61,8 @@ export default function EditProductionOrderCreationOutputForm ({
       newErrors.authPassword = 'Authorization Password is required'
     if (!formData.producedQuantity)
       newErrors.producedQuantity = 'Produced Quantity is required'
+        if (!formData.productName)
+      newErrors.productName = 'Product Name is required'
     if (!formData.productionCompletionDate)
       newErrors.productionCompletionDate =
         'Production Completion Date is required'
@@ -102,6 +106,7 @@ export default function EditProductionOrderCreationOutputForm ({
           setFormData({
             authPassword: '',
             productionOrderOutputId: '',
+            productName:'',
             producedQuantity: '',
             productionCompletionDate: '',
             // qualityCheckStatus: '',
@@ -171,6 +176,32 @@ export default function EditProductionOrderCreationOutputForm ({
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
+              <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Product Name'
+                    name='productName'
+                    value={formData.productName}
+                    onChange={handleChange}
+                    error={!!errors.productName}
+                    helperText={errors.productName}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {products.map((product, index) => (
+                      <MenuItem key={index} value={product}>
+                        {product}
+                      </MenuItem>
+                    ))}
+                    <MenuItem
+                      onClick={() => navigate('/production-order-creation')}
+                      sx={{ fontStyle: 'italic' }} 
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

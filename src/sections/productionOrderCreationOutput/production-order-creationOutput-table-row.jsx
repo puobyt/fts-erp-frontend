@@ -19,6 +19,7 @@ import EditProductionOrderCreationOutputForm from '../../layouts/editModals/edit
 // ----------------------------------------------------------------------
 
 export function ProductionOrderCreationOutputTableRow ({
+  products,
   setUpdate,
   index,
   row,
@@ -28,6 +29,7 @@ export function ProductionOrderCreationOutputTableRow ({
   const [openPopover, setOpenPopover] = useState(null)
   const productionOrderOutputData = {
     productionOrderoutputId: row._id,
+    productName: row.productName,
     producedQuantity: row.producedQuantity,
     productionCompletionDate: row.productionCompletionDate,
     // qualityCheckStatus: row.qualityCheckStatus,
@@ -99,6 +101,7 @@ export function ProductionOrderCreationOutputTableRow ({
           
           </Box>
         </TableCell> */}
+        <TableCell> {row.productName}</TableCell>
         <TableCell> {row.producedQuantity}</TableCell>
         <TableCell>
           {new Date(row.productionCompletionDate).toLocaleDateString()}
@@ -144,6 +147,7 @@ export function ProductionOrderCreationOutputTableRow ({
           <EditProductionOrderCreationOutputForm
             setUpdate={setUpdate}
             productionOrderOutputData={productionOrderOutputData}
+            products={products}
           />
 
           <MenuItem

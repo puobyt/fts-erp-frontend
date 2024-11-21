@@ -25,7 +25,8 @@ const style = {
 
 export default function EditProductionOrderCreationForm ({
   setUpdate,
-  productionOrderData
+  productionOrderData,
+  materials
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -41,7 +42,7 @@ export default function EditProductionOrderCreationForm ({
     productionOrderId: productionOrderData.productionOrderId,
     processOrder: productionOrderData.processOrder,
     plant: productionOrderData.plant,
-    materialCode: productionOrderData.materialCode,
+    materialName: productionOrderData.materialName,
     productDescription: productionOrderData.productDescription,
     productName:productionOrderData.productName,
     batch: productionOrderData.batch,
@@ -59,8 +60,8 @@ export default function EditProductionOrderCreationForm ({
     // if (!formData.processOrder)
     //   newErrors.processOrder = 'Process Order is required'
     if (!formData.plant) newErrors.plant = 'Plant is required'
-    if (!formData.materialCode)
-      newErrors.materialCode = 'Material Code is required'
+    if (!formData.materialName)
+      newErrors.materialName = 'Material Name is required'
         if (!formData.productName)
       newErrors.productName = 'ProductName is required'
     if (!formData.productDescription)
@@ -99,7 +100,7 @@ export default function EditProductionOrderCreationForm ({
             productionOrderId: '',
             processOrder: '',
             plant: '',
-            materialCode: '',
+            materialName: '',
             productDescription: '',
             productName:'',
             batch: '',
@@ -224,18 +225,33 @@ export default function EditProductionOrderCreationForm ({
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
+                <TextField
                     fullWidth
-                    label='Material Code'
-                    name='materialCode'
-                    value={formData.materialCode}
+                    select
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
                     onChange={handleChange}
-                    error={!!errors.materialCode}
-                    helperText={errors.materialCode}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
+                  >
+                    {materials.map((material, index) => (
+                      <MenuItem key={index} value={material}>
+                        {material}
+                      </MenuItem>
+                    ))}
+
+                  
+                    <MenuItem
+                      onClick={() => navigate('/main-stock')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Material +
+                    </MenuItem>
+                  </TextField>
+                </Grid> 
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -259,7 +275,10 @@ export default function EditProductionOrderCreationForm ({
                     error={!!errors.batch}
                     helperText={errors.batch}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{ style: { borderRadius: 8 },placeholder:'Auto-Generate' }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>

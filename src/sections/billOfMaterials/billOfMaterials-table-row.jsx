@@ -29,8 +29,8 @@ export function BillOfMaterialsTableRow ({
     billOfMaterialsId: row._id,
     bomNumber: row.bomNumber,
     productName: row.productName,
-    materialsList: row.materialsList,
-    quantity: row.quantity
+    materials: row.materials,
+
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)

@@ -64,7 +64,11 @@ export default function EditCurrentStockForm ({
       newErrors.authPassword = 'Authorization Password is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
-    if (!formData.quantity) newErrors.quantity = 'quantity is required'
+    if (!formData.quantity) {
+      newErrors.quantity = 'Quantity is required'
+    } else if (!/^\d+$/.test(formData.quantity)) {
+      newErrors.quantity = 'Quantity must be a number only'
+    }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
       newErrors.storageLocation = 'Storage Location is required'
@@ -219,7 +223,7 @@ export default function EditCurrentStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Quantity'
+                    label='Quantity In Quantity'
                     name='quantity'
                     value={formData.quantity}
                     onChange={handleChange}

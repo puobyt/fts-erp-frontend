@@ -33,13 +33,15 @@ export function ProductionOrderCreationOutputView() {
   const [productionOrderOutputCreations,setProductionOrderOutputCreations] = useState([]);
   const [batches,setBatches] = useState([]);
   const [tableRows,setTableRows] = useState([]);
+  const [products,setProducts] = useState([]);
 const fetchPurchaseOrderCreation = async ()=>{
 try{
 const result = await axiosInstance.get('/productionOrderCreationOutput');
 if(result.data.data){
   console.log('populated',result.data.data);
   setProductionOrderOutputCreations(result.data.data);
-  setBatches(result.data.batches)
+  setBatches(result.data.batches);
+  setProducts(result.data.products);
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -74,8 +76,8 @@ useEffect(()=>{
           startIcon={<Iconify icon="mingcute:add-line" />}
         >
           New user
-        </Button> */} 
-        <ProductionOrderCreationOutputForm setUpdate={setUpdate}  batches={batches}  nextBatchNumber={nextBatchNumber}/>
+        </Button> */}  
+        <ProductionOrderCreationOutputForm setUpdate={setUpdate}  batches={batches}  nextBatchNumber={nextBatchNumber} products={products}/>
       </Box>
 
       <Card>
@@ -105,6 +107,7 @@ useEffect(()=>{
                   )
                 }
                 headLabel={[
+                  { id: 'productName', label: 'Product Name' },
                   { id: 'producedQuantity', label: 'Produced Quantity' },
                   { id: 'productionCompletionDate', label: 'Production Completion Date' },
                   // { id: 'qualityCheckStatus', label: 'Quality Check Status' },
@@ -125,6 +128,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <ProductionOrderCreationOutputTableRow
+                    products={products}
                     setUpdate={setUpdate}
                     index={index}
                       key={row.id}

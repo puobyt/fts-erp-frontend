@@ -193,7 +193,7 @@ export default function MaterialAssignmentForm ({
                       </MenuItem>
                     ))}
                     <MenuItem
-                      onClick={() => navigate('/vendor-management')}
+                      onClick={() => navigate('/current-stock')}
                       sx={{ fontStyle: 'italic' }}
                     >
                       Add New Material +

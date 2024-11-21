@@ -31,6 +31,7 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
     authPassword: '',
     invoiceId: invoiceData.invoiceId,
     invoiceNumber: invoiceData.invoiceNumber,
+    customerId: invoiceData.customerId,
     invoiceDate: invoiceData.invoiceDate,
     customerName: invoiceData.customerName,
     customerAddress: invoiceData.customerAddress,
@@ -44,8 +45,8 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
     const newErrors = {}
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
-    if (!formData.invoiceNumber)
-      newErrors.invoiceNumber = 'Invoice Number is required'
+    // if (!formData.invoiceNumber)
+    //   newErrors.invoiceNumber = 'Invoice Number is required'
     if (!formData.invoiceDate)
       newErrors.invoiceDate = 'Invoice Date is required'
     if (!formData.customerName)
@@ -81,6 +82,7 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
             authPassword: '',
             invoiceId: '',
             invoiceNumber: '',
+            customerId: '',
             invoiceDate: '',
             customerName: '',
             customerAddress: '',
@@ -147,7 +149,7 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-              <Grid item xs={6}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Auth Password'
@@ -171,7 +173,32 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
                     error={!!errors.invoiceNumber}
                     helperText={errors.invoiceNumber}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='customer ID'
+                    name='customerId'
+                    value={formData.customerId}
+                    onChange={handleChange}
+                    error={!!errors.customerId}
+                    helperText={errors.customerId}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>

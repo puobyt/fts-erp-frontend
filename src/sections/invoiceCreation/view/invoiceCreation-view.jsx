@@ -102,6 +102,7 @@ useEffect(()=>{
                 // }
                 headLabel={[
                   { id: 'invoiceNumber', label: 'Invoice Number' },
+                  { id: 'customerId', label: 'Customer ID' },
                   { id: 'invoiceDate', label: 'Invoice Date' },
                   { id: 'customerName', label: 'Customer Name' },
                   { id: 'customerAddress', label: 'Customer Address' },

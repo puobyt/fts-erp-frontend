@@ -35,7 +35,8 @@ const generatePDF = (row) => {
 
   doc.text('Invoice Number:', 14, 40);
   doc.text('Customer Name:', 14, 50);
-  doc.text('Customer Address:', 14, 60);
+  doc.text('Customer ID:', 14, 60);
+  doc.text('Customer Address:', 14, 70);
 
   doc.setFont('times', 'normal');
 
@@ -43,10 +44,11 @@ const generatePDF = (row) => {
 
   doc.text(row.invoiceNumber, xValues, 40);
   doc.text(row.customerName, xValues, 50);
-  doc.text(row.customerAddress, xValues, 60);
+  doc.text(row.customerId, xValues, 60);
+  doc.text(row.customerAddress, xValues, 70);
 
   doc.autoTable({
-    startY: 70,
+    startY: 80,
     head: [['Item Name', 'Quantity', 'Price']],
     body: [[row.itemName, row.quantity, row.price]],
     theme: 'grid',

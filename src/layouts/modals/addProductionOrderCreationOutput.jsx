@@ -26,12 +26,14 @@ const style = {
 export default function ProductionOrderCreationOutputForm ({
   setUpdate,
   batches,
-  nextBatchNumber
+  nextBatchNumber,
+  products
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
+    productName:'',
     producedQuantity: '',
     productionCompletionDate: '',
     // qualityCheckStatus: '',
@@ -91,6 +93,7 @@ export default function ProductionOrderCreationOutputForm ({
         toast.success(result.data.message)
         handleClose()
         setFormData({
+            productName:'',
           producedQuantity: '',
           productionCompletionDate: '',
           //   qualityCheckStatus: '',
@@ -158,6 +161,32 @@ export default function ProductionOrderCreationOutputForm ({
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
+              <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Product Name'
+                    name='productName'
+                    value={formData.productName}
+                    onChange={handleChange}
+                    error={!!errors.productName}
+                    helperText={errors.productName}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {products.map((product, index) => (
+                      <MenuItem key={index} value={product}>
+                        {product}
+                      </MenuItem>
+                    ))}
+                    <MenuItem
+                      onClick={() => navigate('/production-order-creation')}
+                      sx={{ fontStyle: 'italic' }} 
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
