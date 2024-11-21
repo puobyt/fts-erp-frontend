@@ -36,7 +36,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     date: '',
     address: '',
     nameOfTheFirm: '',
-    contact: '',
+    contactNumber: '',
     contactPersonName: '',
     contactPersonDetails: '',
     vendorId: '',
@@ -59,7 +59,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
       setFormData({
         ...formData,
         nameOfTheFirm: selectedFirm.nameOfTheFirm,
-        contact: selectedFirm.contact,
+        contactNumber: selectedFirm.contactNumber,
         pan: selectedFirm.pan,
         gst: selectedFirm.gst,
         address: selectedFirm.address,
@@ -81,7 +81,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     if (!formData.nameOfTheFirm)
       newErrors.nameOfTheFirm = 'Name Of The Firm is required'
     if (!formData.address) newErrors.address = 'Address is required'
-    if (!formData.contact) newErrors.contact = 'Contact is required'
+    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required'
     if (!formData.contactPersonName)
       newErrors.contactPersonName = 'Contact Person Name is required'
     if (!formData.contactPersonDetails)
@@ -129,7 +129,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
           date: '',
           address: '',
           nameOfTheFirm: '',
-          contact: '',
+          contactNumber: '',
           contactPersonName: '',
           contactPersonDetails: '',
           vendorId: '',
@@ -150,6 +150,23 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
         err.message
       )
     }
+  }
+
+  const handleMaterialChange = (e, index) => {
+    const { name, value } = e.target
+    const updatedMaterials = [...formData.materials]
+    updatedMaterials[index][name] = value
+    setFormData({ ...formData, materials: updatedMaterials })
+  }
+
+  const addMaterial = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      materials: [
+        ...prevFormData.materials,
+        { materialsList: '', quantity: '' }
+      ]
+    }))
   }
   return (
     <div>
@@ -277,12 +294,12 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Contact'
-                    name='contact'
-                    value={formData.contact}
+                    label='Contact Number'
+                    name='contactNumber'
+                    value={formData.contactNumber}
                     onChange={handleChange}
-                    error={!!errors.contactPercontactsonName}
-                    helperText={errors.contact}
+                    error={!!errors.contactNumber}
+                    helperText={errors.contactNumber}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

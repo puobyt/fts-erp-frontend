@@ -26,7 +26,7 @@ const style = {
 export default function EditProductionOrderCreationForm ({
   setUpdate,
   productionOrderData,
-  materials
+  materialNames
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -42,11 +42,10 @@ export default function EditProductionOrderCreationForm ({
     productionOrderId: productionOrderData.productionOrderId,
     processOrder: productionOrderData.processOrder,
     plant: productionOrderData.plant,
-    materialName: productionOrderData.materialName,
     productDescription: productionOrderData.productDescription,
-    productName:productionOrderData.productName,
+    productName: productionOrderData.productName,
     batch: productionOrderData.batch,
-    requiredQuantity: productionOrderData.requiredQuantity,
+    materials: productionOrderData.materials,
     instructions: productionOrderData.instructions,
     startDate: formattedStartDate,
     endDate: formattedEndDate
@@ -60,15 +59,23 @@ export default function EditProductionOrderCreationForm ({
     // if (!formData.processOrder)
     //   newErrors.processOrder = 'Process Order is required'
     if (!formData.plant) newErrors.plant = 'Plant is required'
-    if (!formData.materialName)
-      newErrors.materialName = 'Material Name is required'
-        if (!formData.productName)
-      newErrors.productName = 'ProductName is required'
+    if (!formData.productName) newErrors.productName = 'ProductName is required'
     if (!formData.productDescription)
       newErrors.productDescription = 'Product Description is required'
     if (!formData.batch) newErrors.batch = 'Batch is required'
-    if (!formData.requiredQuantity)
-      newErrors.requiredQuantity = 'Required Quantityis required'
+    if (
+      formData.materials.some(
+        mat => !mat.materialsList || !mat.requiredQuantity
+      )
+    ) {
+      newErrors.materials = 'All material fields must be filled'
+    } else if (
+      formData.materials.some(
+        mat => !Number.isFinite(Number(mat.requiredQuantity))
+      )
+    ) {
+      newErrors.requiredQuantity = 'Required Quantity must be a number'
+    }
     if (!formData.instructions)
       newErrors.instructions = 'Instructions is required'
     if (!formData.startDate) newErrors.startDate = 'Start Date is required'
@@ -100,11 +107,10 @@ export default function EditProductionOrderCreationForm ({
             productionOrderId: '',
             processOrder: '',
             plant: '',
-            materialName: '',
             productDescription: '',
-            productName:'',
+            productName: '',
             batch: '',
-            requiredQuantity: '',
+            materials: [{ materialsList: '', requiredQuantity: '' }],
             instructions: '',
             startDate: '',
             endDate: ''
@@ -124,6 +130,28 @@ export default function EditProductionOrderCreationForm ({
         err.message
       )
     }
+  }
+
+  const handleMaterialChange = (e, index) => {
+    const { name, value } = e.target
+    const updatedMaterials = [...formData.materials]
+    updatedMaterials[index][name] = value
+    setFormData({ ...formData, materials: updatedMaterials })
+  }
+
+  const addMaterial = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      materials: [
+        ...prevFormData.materials,
+        { materialsList: '', requiredQuantity: '' }
+      ]
+    }))
+  }
+
+  const removeMaterial = index => {
+    const updatedMaterials = formData.materials.filter((_, i) => i !== index)
+    setFormData({ ...formData, materials: updatedMaterials })
   }
   return (
     <div>
@@ -166,7 +194,15 @@ export default function EditProductionOrderCreationForm ({
                 Production Order Creation Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box
+              component='form'
+              onSubmit={handleSubmit}
+              sx={{
+                maxHeight: '65vh',
+                overflowY: 'auto',
+                paddingRight: 2
+              }}
+            >
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
@@ -224,75 +260,82 @@ export default function EditProductionOrderCreationForm ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                <TextField
-                    fullWidth
-                    select
-                    label='Material Name'
-                    name='materialName'
-                    value={formData.materialName}
-                    onChange={handleChange}
-                    error={!!errors.materialName}
-                    helperText={errors.materialName}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    {materials.map((material, index) => (
-                      <MenuItem key={index} value={material}>
-                        {material}
-                      </MenuItem>
-                    ))}
+                {formData.materials.map((material, index) => (
+                  <React.Fragment key={index}>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Materials List'
+                        name='materialsList'
+                        value={material.materialsList}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.materials}
+                        helperText={errors.materials}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {materialNames.map((materialName, index) => (
+                          <MenuItem key={index} value={materialName}>
+                            {materialName}
+                          </MenuItem>
+                        ))}
 
-                  
-                    <MenuItem
-                      onClick={() => navigate('/main-stock')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
+                        {/* This item only triggers navigation, not a form selection */}
+                        <MenuItem
+                          onClick={() => navigate('/main-stock')}
+                          sx={{ fontStyle: 'italic' }} // Optional styling
+                        >
+                          Add New materialName +
+                        </MenuItem>
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label='Required Quantity In KG'
+                        name='requiredQuantity'
+                        error={!!errors.requiredQuantity}
+                        value={material.requiredQuantity}
+                        helperText={errors.requiredQuantity}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end', // Align to the right
+                        alignItems: 'center' // Vertically center the content if needed
+                      }}
                     >
-                      Add New Material +
-                    </MenuItem>
-                  </TextField>
-                </Grid> 
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Product Description'
-                    name='productDescription'
-                    value={formData.productDescription}
-                    onChange={handleChange}
-                    error={!!errors.productDescription}
-                    helperText={errors.productDescription}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Batch'
-                    name='batch'
-                    value={formData.batch}
-                    onChange={handleChange}
-                    error={!!errors.batch}
-                    helperText={errors.batch}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 },placeholder:'Auto-Generate' }}
-                    InputLabelProps={{
-                      shrink: true // Keeps the label above the field to avoid overlap
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Required Quantity'
-                    name='requiredQuantity'
-                    value={formData.requiredQuantity}
-                    onChange={handleChange}
-                    error={!!errors.requiredQuantity}
-                    helperText={errors.requiredQuantity}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                      <Button
+                        variant='text'
+                        color='error'
+                        onClick={() => removeMaterial(index)}
+                        size='small'
+                        sx={{
+                          textTransform: 'none',
+                          padding: 0,
+                          minWidth: 'auto'
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  </React.Fragment>
+                ))}
+                <Grid item xs={12}>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={addMaterial}
+                  >
+                    Add Material
+                  </Button>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

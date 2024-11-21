@@ -98,7 +98,7 @@ export default function EditBillOfMaterialsForm ({
             billOfMaterialsId: '',
             bomNumber: '',
             productName: '',
-          materials:''
+            materials: [{ materialsList: '', quantity: '' }]
           })
           setUpdate(prev => !prev);
         })

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://fts-server-alpha.vercel.app',
+  baseURL: 'https://fts-server-indol.vercel.app',
   headers: {
     'Content-Type': 'application/json',
   },

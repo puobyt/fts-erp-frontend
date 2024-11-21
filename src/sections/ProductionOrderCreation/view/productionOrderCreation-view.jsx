@@ -31,14 +31,14 @@ export function ProductionOrderCreationView () {
   const table = useTable()
   const [update, setUpdate] = useState(false)
   const [productionOrders, setProductionOrders] = useState([])
-  const [materials, setMaterials] = useState([])
+  const [materialNames, setMaterialNames] = useState([])
   const fetchProductionOrders = async () => {
     try {
       const result = await axiosInstance.get('/productionOrderCreation')
       if (result.data.data) {
         console.log(result.data)
         setProductionOrders(result.data.data)
-        setMaterials(result.data.materials)
+        setMaterialNames(result.data.materials)
       }
     } catch (err) {
       console.error(
@@ -74,7 +74,7 @@ export function ProductionOrderCreationView () {
           New user
         </Button> */}
 
-        <ProductionOrderCreationForm setUpdate={setUpdate} materials={materials} />
+        <ProductionOrderCreationForm setUpdate={setUpdate} materialNames={materialNames} />
       </Box>
 
       <Card>
@@ -106,11 +106,12 @@ export function ProductionOrderCreationView () {
                 headLabel={[
                   { id: 'processOrder', label: 'Process Order Number' },
                   { id: 'plant', label: 'Plant' },
-                  { id: 'materialName', label: 'Material Name' },
+         
                   { id: 'productDescription', label: 'Product Description' },
                   { id: 'ProductName', label: 'Product Name' },
 
                   { id: 'batch', label: 'Batch' },
+                  { id: 'materialList', label: 'Material List' },
                   { id: 'requiredQuantity', label: 'Required Quantity' },
                   { id: 'instructions', label: 'Instructions' },
                   { id: 'startDate', label: 'Start Date' },
@@ -125,7 +126,7 @@ export function ProductionOrderCreationView () {
                   )
                   .map((row, index) => (
                     <ProductionOrderCreationTableRow
-                    materials={materials}
+                    materialNames={materialNames}
                       setUpdate={setUpdate}
                       key={index}
                       row={row}

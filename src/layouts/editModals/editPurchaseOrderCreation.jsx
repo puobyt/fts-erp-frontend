@@ -44,7 +44,7 @@ export default function EditPurchaseOrderCreationForm ({
     date: formattedDate,
     address: orderData.address,
     nameOfTheFirm: orderData.nameOfTheFirm,
-    contact: orderData.contact,
+    contactNumber: orderData.contactNumber,
     contactPersonName: orderData.contactPersonName,
     contactPersonDetails: orderData.contactPersonDetails,
     vendorId: orderData.vendorId,
@@ -68,7 +68,7 @@ export default function EditPurchaseOrderCreationForm ({
       setFormData({
         ...formData,
         nameOfTheFirm: selectedFirm.nameOfTheFirm,
-        contact: selectedFirm.contact,
+        contactNumber: selectedFirm.contactNumber,
         pan: selectedFirm.pan,
         gst: selectedFirm.gst,
         address: selectedFirm.address,
@@ -89,7 +89,7 @@ export default function EditPurchaseOrderCreationForm ({
     if (!formData.nameOfTheFirm)
       newErrors.nameOfTheFirm = 'Name Of The Firm is required'
     if (!formData.address) newErrors.address = 'Address is required'
-    if (!formData.contact) newErrors.contact = 'Contact is required'
+    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required'
     if (!formData.contactPersonName)
       newErrors.contactPersonName = 'Contact Person Name is required'
     if (!formData.contactPersonDetails)
@@ -137,7 +137,7 @@ export default function EditPurchaseOrderCreationForm ({
             date: '',
             address: '',
             nameOfTheFirm: '',
-            contact: '',
+            contactNumber: '',
             contactPersonName: '',
             contactPersonDetails: '',
             vendorId: '',
@@ -297,12 +297,12 @@ export default function EditPurchaseOrderCreationForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Contact'
-                    name='contact'
-                    value={formData.contact}
+                    label='Contact Number'
+                    name='contactNumber'
+                    value={formData.contactNumber}
                     onChange={handleChange}
-                    error={!!errors.contact}
-                    helperText={errors.contact}
+                    error={!!errors.contactNumber}
+                    helperText={errors.contactNumber}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

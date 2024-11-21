@@ -28,7 +28,7 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
     date:row.date,
     nameOfTheFirm:row.nameOfTheFirm,
     address:row.address,
-    contact:row.contact,
+    contactNumber:row.contactNumber,
     contactPersonName:row.contactPersonName,
     contactPersonDetails:row.contactPersonDetails,
     vendorId:row.vendorId,
