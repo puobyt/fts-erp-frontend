@@ -106,7 +106,7 @@ useEffect(()=>{
                   { id: 'quantity', label: 'Quantity' },
                   { id: 'price', label: 'Price' },
                   { id: 'storageLocation', label: 'Storage Location' },
-                  { id: 'supplier', label: 'Supplier' },
+                  { id: 'vendorName', label: 'vendorName' },
                   { id: 'dateRecieved', label: 'Date Recieved' },
                   { id: 'expiryDate', label: 'Expiry' },
                 ]}

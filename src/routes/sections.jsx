@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react'
 import { Outlet, Navigate, useRoutes } from 'react-router-dom'
-
+import * as React from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import ProtectedLayout from '../utils/protectedRoute'
 import Box from '@mui/material/Box'
 import LinearProgress, {
   linearProgressClasses
@@ -46,7 +48,6 @@ export const SignUpPage = lazy(() => import('src/pages/signUp'))
 export const ProductsPage = lazy(() => import('src/pages/products'))
 export const Page404 = lazy(() => import('src/pages/page-not-found'))
 
-// ----------------------------------------------------------------------
 
 const renderFallback = (
   <Box
@@ -71,14 +72,18 @@ export function Router () {
   return useRoutes([
     {
       element: (
-        <DashboardLayout>
-          <Suspense fallback={renderFallback}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
+        <ProtectedLayout>
+          <DashboardLayout>
+            <Suspense fallback={renderFallback}>
+              <Outlet />
+            </Suspense>
+          </DashboardLayout>
+        </ProtectedLayout>
       ),
       children: [
-        { element: <HomePage />, index: true },
+        { element: ( <Suspense fallback={<CircularProgress/>}>
+          <HomePage />
+        </Suspense>), index: true },
         { path: 'vendor-management', element: <VendorManagement /> },
         { path: 'purchase-order-creation', element: <PurhcaseOrderCreation /> },
         { path: 'gate-entry', element: <GateEntry /> },

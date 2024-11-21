@@ -25,7 +25,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
     quantity: row.quantity,
     price: row.price,
     storageLocation: row.storageLocation,
-    supplier: row.supplier,
+    vendorName: row.vendorName,
     dateRecieved: row.dateRecieved,
     expiryDate: row.expiryDate
   }
@@ -94,7 +94,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
         <TableCell>{row.quantity}</TableCell>
 
         <TableCell>{row.price}</TableCell>
-        <TableCell>{row.supplier}</TableCell>
+        <TableCell>{row.vendorName}</TableCell>
         <TableCell>{row.storageLocation}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>

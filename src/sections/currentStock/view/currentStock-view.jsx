@@ -33,6 +33,7 @@ export function CurrentStockView() {
   const [currentStocks,setCurrentStocks] = useState([]);
   const [purchaseOrderData,setPurchaseOrderData] = useState([]);
   const [materials,setMaterials] = useState([]);
+  const [vendors,setVendors] = useState([]);
 const fetchCurrentStock = async ()=>{
 try{
 const result = await axiosInstance.get('/currentStock');
@@ -42,6 +43,7 @@ if(result.data.data){
   setCurrentStocks(result.data.data);
   setPurchaseOrderData(result.data.purchaseOrderCreationData);
   setMaterials(result.data.materials);
+  setVendors(result.data.vendors)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -75,7 +77,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <CurrentStockForm setUpdate={setUpdate} purchaseOrderData={purchaseOrderData} materials={materials}/>
+        <CurrentStockForm setUpdate={setUpdate} purchaseOrderData={purchaseOrderData} materials={materials} vendors={vendors}/>
     
       </Box>
 
@@ -111,7 +113,7 @@ useEffect(()=>{
                   { id: 'quantity', label: 'Quantity' },
                   { id: 'price', label: 'Price' },
                   { id: 'storageLocation', label: 'Storage Location'},
-                  { id: 'supplier', label: 'Supplier' },
+                  { id: 'vendorName', label: 'Vendor Name' },
                   { id: 'dateRecieved', label: 'Date Recieved' },
                   { id: 'expiryDate', label: 'Expiry' },
                 ]}
@@ -124,6 +126,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <CurrentStockTableRow
+                    vendors={vendors}
                     purchaseOrderData={purchaseOrderData}
                     materials={materials}
                     setUpdate={setUpdate}

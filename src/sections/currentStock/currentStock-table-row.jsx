@@ -18,6 +18,7 @@ import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 export function CurrentStockTableRow ({
+  vendors,
   purchaseOrderData,
   materials,
   setUpdate,
@@ -33,7 +34,7 @@ export function CurrentStockTableRow ({
     quantity: row.quantity,
     price: row.price,
     storageLocation:row.storageLocation,
-    supplier: row.supplier,
+    vendorName: row.vendorName,
     dateRecieved: row.dateRecieved,
     expiryDate: row.expiryDate
   }
@@ -103,7 +104,7 @@ export function CurrentStockTableRow ({
         <TableCell>{row.quantity}</TableCell>
         <TableCell>{row.price}</TableCell>
         <TableCell>{row.storageLocation}</TableCell>
-        <TableCell>{row.supplier}</TableCell>
+        <TableCell>{row.vendorName}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>
 
@@ -142,6 +143,7 @@ export function CurrentStockTableRow ({
             materials={materials}
             setUpdate={setUpdate}
             currentStockData={currentStockData}
+            vendors={vendors}
           />
 
           <MenuItem

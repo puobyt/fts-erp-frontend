@@ -36,7 +36,7 @@ export default function MainStockForm ({
     quantity: '',
     price: '',
     storageLocation: '',
-    supplier: '',
+    vendorName: '',
     dateRecieved: '',
     expiryDate: ''
   })
@@ -49,7 +49,7 @@ export default function MainStockForm ({
     if (!formData.quantity) newErrors.quantity = 'quantity is required'
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation) newErrors.storageLocation = 'Storage Location is required'
-    if (!formData.supplier) newErrors.supplier = 'Supplier is required'
+    if (!formData.vendorName) newErrors.vendorName = 'Vendor Name is required'
     if (!formData.dateRecieved)
       newErrors.dateRecieved = 'Date Recieved is required'
     if (!formData.expiryDate) newErrors.expiryDate = 'Expiry is required'
@@ -79,7 +79,7 @@ export default function MainStockForm ({
           quantity: '',
           price: '',
           storageLocation: '',
-          supplier: '',
+          vendorName: '',
           dateRecieved: '',
           expiryDate: ''
         })
@@ -195,12 +195,12 @@ export default function MainStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Supplier'
-                    name='supplier'
-                    value={formData.supplier}
+                    label='Vendor Name'
+                    name='vendorName'
+                    value={formData.vendorName}
                     onChange={handleChange}
-                    error={!!errors.supplier}
-                    helperText={errors.supplier}
+                    error={!!errors.vendorName}
+                    helperText={errors.vendorName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

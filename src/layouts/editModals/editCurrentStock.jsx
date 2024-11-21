@@ -52,7 +52,7 @@ export default function EditCurrentStockForm ({
     quantity: currentStockData.quantity,
     price: currentStockData.price,
     storageLocation: currentStockData.storageLocation,
-    supplier: currentStockData.supplier,
+    vendorName: currentStockData.vendorName,
     dateRecieved: formattedDate,
     expiryDate: formattedExpDate
   })
@@ -68,7 +68,7 @@ export default function EditCurrentStockForm ({
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
       newErrors.storageLocation = 'Storage Location is required'
-    if (!formData.supplier) newErrors.supplier = 'Supplier is required'
+    if (!formData.vendorName) newErrors.vendorName = 'Vendor Name is required'
     if (!formData.dateRecieved)
       newErrors.dateRecieved = 'Date Recieved is required'
     if (!formData.expiryDate) newErrors.expiryDate = 'Expiry is required'
@@ -98,7 +98,7 @@ export default function EditCurrentStockForm ({
           quantity: '',
           price: '',
           storageLocation: '',
-          supplier: '',
+          vendorName: '',
           dateRecieved: '',
           expiryDate: ''
         })
@@ -259,12 +259,12 @@ export default function EditCurrentStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Supplier'
-                    name='supplier'
-                    value={formData.supplier}
+                    label='Vendor Name'
+                    name='vendorName'
+                    value={formData.vendorName}
                     onChange={handleChange}
-                    error={!!errors.supplier}
-                    helperText={errors.supplier}
+                    error={!!errors.vendorName}
+                    helperText={errors.vendorName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

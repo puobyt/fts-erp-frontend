@@ -26,7 +26,8 @@ const style = {
 export default function CurrentStockForm ({
   setUpdate,
   purchaseOrderData,
-  materials
+  materials,
+  vendors
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -37,7 +38,7 @@ export default function CurrentStockForm ({
     quantity: '',
     price: '',
     storageLocation: '',
-    supplier: '',
+    vendorName: '',
     dateRecieved: '',
     expiryDate: ''
   })
@@ -55,7 +56,7 @@ export default function CurrentStockForm ({
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
       newErrors.storageLocation = 'Storage Location is required'
-    if (!formData.supplier) newErrors.supplier = 'Supplier is required'
+    if (!formData.vendorName) newErrors.vendorName = 'Vendor Name is required'
     if (!formData.dateRecieved)
       newErrors.dateRecieved = 'Date Recieved is required'
     if (!formData.expiryDate) newErrors.expiryDate = 'Expiry is required'
@@ -86,7 +87,7 @@ export default function CurrentStockForm ({
           quantity: '',
           price: '',
           storageLocation: '',
-          supplier: '',
+          vendorName: '',
           dateRecieved: '',
           expiryDate: ''
         })
@@ -167,7 +168,7 @@ export default function CurrentStockForm ({
                     ))}
 
                     <MenuItem
-                      onClick={() => navigate('/vendor-management')}
+                      onClick={() => navigate('/purchase-order-creation')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Material +
@@ -235,15 +236,29 @@ export default function CurrentStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Supplier'
-                    name='supplier'
-                    value={formData.supplier}
+                    select
+                    label='Vendor Name'
+                    name='vendorName'
+                    value={formData.vendorName}
                     onChange={handleChange}
-                    error={!!errors.supplier}
-                    helperText={errors.supplier}
+                    error={!!errors.vendorName}
+                    helperText={errors.vendorName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {vendors.map((vendor, index) => (
+                      <MenuItem key={index} value={vendor}>
+                        {vendor}
+                      </MenuItem>
+                    ))}
+
+                    <MenuItem
+                      onClick={() => navigate('/purchase-order-creation')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Vendor +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
