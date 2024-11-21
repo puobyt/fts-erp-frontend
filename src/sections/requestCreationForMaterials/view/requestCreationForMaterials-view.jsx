@@ -31,7 +31,7 @@ export function RequestCreationForMaterialsView () {
   const table = useTable()
   const [update, setUpdate] = useState(false)
   const [requestMaterials, setRequestMaterials] = useState([])
-  const [materials, setMaterials] = useState([])
+  const [materialNames, setMaterialNames] = useState([])
   const [finishedGoods, setFinishedGoods] = useState([])
   const fetchRequestCreationMaterials = async () => {
     try {
@@ -39,7 +39,7 @@ export function RequestCreationForMaterialsView () {
       if (result.data.data) {
         console.log(result.data)
         setRequestMaterials(result.data.data)
-        setMaterials(result.data.materials)
+        setMaterialNames(result.data.materials)
         setFinishedGoods(result.data.finishedGoods)
       }
     } catch (err) {
@@ -78,8 +78,8 @@ export function RequestCreationForMaterialsView () {
 
         <RequestCreationForMaterialsForm
           setUpdate={setUpdate}
-          materials={materials}
           finishedGoods={finishedGoods}
+          materialNames={materialNames}
         />
       </Box>
 
@@ -112,7 +112,7 @@ export function RequestCreationForMaterialsView () {
                 headLabel={[
                   { id: 'requestNumber', label: 'Request Number' },
                   { id: 'batchNumber', label: 'Batch Number' },
-                  { id: 'materialName', label: 'Material Name' },
+                  { id: 'materialsList', label: 'Materials List' },
                   { id: 'quantity', label: 'quantity' },
                   { id: 'requiredDate', label: 'Required Date' },
                 
@@ -126,7 +126,7 @@ export function RequestCreationForMaterialsView () {
                   )
                   .map((row, index) => (
                     <RequestCreationForMaterialsTableRow
-                    materials={materials}
+                    materialNames={materialNames}
                     finishedGoods={finishedGoods}
                       setUpdate={setUpdate}
                       key={index}

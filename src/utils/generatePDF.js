@@ -37,18 +37,19 @@ const generatePDF = (row) => {
   doc.text('Customer Name:', 14, 50);
   doc.text('Customer ID:', 14, 60);
   doc.text('Customer Address:', 14, 70);
+  doc.text('Invoice Prepared By:', 14, 80);
 
   doc.setFont('times', 'normal');
 
   const xValues = 55;
-
+  
   doc.text(row.invoiceNumber, xValues, 40);
   doc.text(row.customerName, xValues, 50);
   doc.text(row.customerId, xValues, 60);
   doc.text(row.customerAddress, xValues, 70);
-
+  doc.text(row.invoicePreparedBy, xValues, 80);
   doc.autoTable({
-    startY: 80,
+    startY: 90,
     head: [['Item Name', 'Quantity', 'Price']],
     body: [[row.itemName, row.quantity, row.price]],
     theme: 'grid',

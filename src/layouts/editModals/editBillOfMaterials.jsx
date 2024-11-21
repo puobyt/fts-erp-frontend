@@ -38,7 +38,7 @@ export default function EditBillOfMaterialsForm ({
     billOfMaterialsId: billOfMaterialsData.billOfMaterialsId,
     bomNumber: billOfMaterialsData.bomNumber,
     productName: billOfMaterialsData.productName,
-    materials:billOfMaterialsData.materials ,
+    materials: billOfMaterialsData.materials
   })
   const [errors, setErrors] = useState({})
 
@@ -100,7 +100,7 @@ export default function EditBillOfMaterialsForm ({
             productName: '',
             materials: [{ materialsList: '', quantity: '' }]
           })
-          setUpdate(prev => !prev);
+          setUpdate(prev => !prev)
         })
         .catch(err => {
           toast.error(err.response.data.message)
@@ -144,7 +144,7 @@ export default function EditBillOfMaterialsForm ({
             elevation={4}
             sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}
           >
-              <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Typography
                 component='h1'
                 variant='h5'
@@ -158,9 +158,17 @@ export default function EditBillOfMaterialsForm ({
                 Bill Of Material Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box
+              component='form'
+              onSubmit={handleSubmit}
+              sx={{
+                maxHeight: '65vh',
+                overflowY: 'auto',
+                paddingRight: 2
+              }}
+            >
               <Grid container spacing={2}>
-              <Grid item xs={12}>
+                <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label='Authorization Password'
@@ -222,59 +230,60 @@ export default function EditBillOfMaterialsForm ({
                   </TextField>
                 </Grid>
 
-                {formData.materials&&formData.materials.map((material, index) => (
-                  <React.Fragment key={index}>
-                    <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        label='Materials List'
-                        name='materialsList'
-                        value={material.materialsList}
-                        onChange={e => handleMaterialChange(e, index)}
-                        variant='outlined'
-                        error={!!errors.materials}
-                        helperText={errors.materials}
-                        InputProps={{ style: { borderRadius: 8 } }}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        label='Quantity'
-                        name='quantity'
-                        error={!!errors.materials}
-                        value={material.quantity}
-                        helperText={errors.materials}
-                        onChange={e => handleMaterialChange(e, index)}
-                        variant='outlined'
-                        InputProps={{ style: { borderRadius: 8 } }}
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end', // Align to the right
-                        alignItems: 'center' // Vertically center the content if needed
-                      }}
-                    >
-                      <Button
-                        variant='text'
-                        color='error'
-                        onClick={() => removeMaterial(index)}
-                        size='small'
+                {formData.materials &&
+                  formData.materials.map((material, index) => (
+                    <React.Fragment key={index}>
+                      <Grid item xs={6}>
+                        <TextField
+                          fullWidth
+                          label='Materials List'
+                          name='materialsList'
+                          value={material.materialsList}
+                          onChange={e => handleMaterialChange(e, index)}
+                          variant='outlined'
+                          error={!!errors.materials}
+                          helperText={errors.materials}
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextField
+                          fullWidth
+                          label='Quantity'
+                          name='quantity'
+                          error={!!errors.materials}
+                          value={material.quantity}
+                          helperText={errors.materials}
+                          onChange={e => handleMaterialChange(e, index)}
+                          variant='outlined'
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
                         sx={{
-                          textTransform: 'none',
-                          padding: 0,
-                          minWidth: 'auto'
+                          display: 'flex',
+                          justifyContent: 'flex-end', // Align to the right
+                          alignItems: 'center' // Vertically center the content if needed
                         }}
                       >
-                        Remove
-                      </Button>
-                    </Grid>
-                  </React.Fragment>
-                ))}
+                        <Button
+                          variant='text'
+                          color='error'
+                          onClick={() => removeMaterial(index)}
+                          size='small'
+                          sx={{
+                            textTransform: 'none',
+                            padding: 0,
+                            minWidth: 'auto'
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </Grid>
+                    </React.Fragment>
+                  ))}
                 <Grid item xs={12}>
                   <Button
                     variant='contained'

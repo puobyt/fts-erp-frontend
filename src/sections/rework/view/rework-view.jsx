@@ -31,12 +31,14 @@ export function ReworkView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [reworks,setReworks] = useState([]);
+  const [batches,setBatches] = useState([]);
 const fetchReworks = async ()=>{
 try{
 const result = await axiosInstance.get('/rework');
 if(result.data.data){
   console.log(result.data);
   setReworks(result.data.data);
+  setBatches(result.data.batches)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -70,7 +72,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <ReworkForm setUpdate={setUpdate}/>
+        <ReworkForm setUpdate={setUpdate} batches={batches}/>
     
       </Box>
 
@@ -122,6 +124,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <ReworkTableRow
+                    batches={batches}
                     setUpdate={setUpdate}
                       key={index}
                       row={row}

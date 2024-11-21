@@ -19,6 +19,7 @@ import EditInvoiceCreationForm from '../../layouts/editModals/editInvoiceCreatio
 // ----------------------------------------------------------------------
 
 export function InvoiceCreationTableRow ({
+  itemNames,
   setUpdate,
   row,
   selected,
@@ -34,7 +35,8 @@ export function InvoiceCreationTableRow ({
     customerAddress: row.customerAddress,
     itemName: row.itemName,
     quantity: row.quantity,
-    price: row.price
+    price: row.price,
+    invoicePreparedBy:row.invoicePreparedBy
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -105,7 +107,7 @@ export function InvoiceCreationTableRow ({
         <TableCell> {row.itemName} </TableCell>
         <TableCell>{row.quantity}</TableCell>
         <TableCell> {row.price} </TableCell>
-
+        <TableCell> {row.invoicePreparedBy} </TableCell>
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon='eva:more-vertical-fill' />
@@ -139,6 +141,7 @@ export function InvoiceCreationTableRow ({
           <EditInvoiceCreationForm
             setUpdate={setUpdate}
             invoiceData={invoiceData}
+            itemNames={itemNames}
           />
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}

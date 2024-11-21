@@ -47,6 +47,10 @@ export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
       newErrors.productName = 'Product Name is required'
     if (formData.materials.some(mat => !mat.materialsList || !mat.quantity)) {
       newErrors.materials = 'All material fields must be filled'
+    } else if (
+      formData.materials.some(mat => !Number.isFinite(Number(mat.quantity)))
+    ) {
+      newErrors.quantity = 'Quantity must be a number'
     }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
@@ -152,7 +156,11 @@ export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
                 Bill Of Material Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box component='form' onSubmit={handleSubmit}    sx={{
+                maxHeight: '65vh',
+                overflowY: 'auto',
+                paddingRight: 2
+              }}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
@@ -220,7 +228,7 @@ export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
                     <Grid item xs={6}>
                       <TextField
                         fullWidth
-                        label='Quantity'
+                        label='Quantity In KG'
                         name='quantity'
                         error={!!errors.materials}
                         value={material.quantity}

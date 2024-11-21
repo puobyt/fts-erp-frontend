@@ -19,7 +19,7 @@ import toast, { Toaster } from 'react-hot-toast'
 
 
  
-export function ReworkTableRow({setUpdate, row, selected, onSelectRow }) {
+export function ReworkTableRow({batches,setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
   const reworkData = {
     reworkId:row._id,
@@ -142,7 +142,7 @@ export function ReworkTableRow({setUpdate, row, selected, onSelectRow }) {
           }}
         >
       
-<EditReworkForm setUpdate={setUpdate} reworkData={reworkData} />
+<EditReworkForm setUpdate={setUpdate} reworkData={reworkData} batches={batches}/>
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 

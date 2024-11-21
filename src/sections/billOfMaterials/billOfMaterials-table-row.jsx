@@ -100,14 +100,14 @@ export function BillOfMaterialsTableRow ({
         <TableCell>
           {row.materials.map((material, index) => (
             <div key={index}>
-              <strong>{material.materialsList}</strong>: {material.quantity}
+              <strong>{material.materialsList}</strong>: {`${material.quantity} KG`}
             </div>
           ))}
         </TableCell>
 
         <TableCell>
           {row.materials.map((material, index) => (
-            <div key={index}>{material.quantity}</div>
+            <div key={index}>{`${material.quantity} KG`}</div>
           ))}
         </TableCell>
         <TableCell align='right'>

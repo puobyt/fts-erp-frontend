@@ -19,7 +19,7 @@ import toast, { Toaster } from 'react-hot-toast'
 
 export function MaterialAssignmentTableRow ({
   processOrderNumbers,
-  materials,
+  materialNames,
   finishedGoods,
   setUpdate,
   row,
@@ -32,8 +32,7 @@ export function MaterialAssignmentTableRow ({
     assignmentNumber: row.assignmentNumber,
     batchNumber:row.batchNumber,
     processOrderNumber:row.processOrderNumber,
-    materialName: row.materialName,
-    assignedQuantity: row.assignedQuantity,
+    materials: row.materials,
     assignedTo: row.assignedTo
   }
   const handleOpenPopover = useCallback(event => {
@@ -101,9 +100,29 @@ export function MaterialAssignmentTableRow ({
         <TableCell> {row.assignmentNumber}</TableCell>
         <TableCell> {row.batchNumber}</TableCell>
         <TableCell> {row.processOrderNumber}</TableCell>
-        <TableCell>{row.materialName}</TableCell>
+        <TableCell
+          style={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
+        >
+          {row.materials.map((material, index) => (
+            <div
+              key={index}
+              style={{ marginRight: '10px' }}
+            >
+              <strong>{material.materialsList}</strong>:{' '}
+              {`${material.assignedQuantity} KG`}
+            </div>
+            
+          ))}
+        </TableCell>
 
-        <TableCell>{row.assignedQuantity}</TableCell>
+        <TableCell>
+          {row.materials.map((material, index) => (
+            <div key={index}>{`${material.assignedQuantity} KG`}</div>
+          ))}
+        </TableCell>
         <TableCell>{row.assignedTo}</TableCell>
 
         <TableCell align='right'>
@@ -136,7 +155,7 @@ export function MaterialAssignmentTableRow ({
             }
           }}
         >
-          <EditMaterialAssignmentForm setUpdate={setUpdate} materialAssignmentData={materialAssignmentData} materials={materials} finishedGoods={finishedGoods} processOrderNumbers={processOrderNumbers}/>
+          <EditMaterialAssignmentForm setUpdate={setUpdate} materialAssignmentData={materialAssignmentData} materialNames={materialNames} finishedGoods={finishedGoods} processOrderNumbers={processOrderNumbers}/>
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon='solar:trash-bin-trash-bold' />
             Delete

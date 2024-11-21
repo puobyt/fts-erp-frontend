@@ -19,14 +19,13 @@ import toast, { Toaster } from 'react-hot-toast'
 
 
  
-export function RequestCreationForMaterialsTableRow({materials,finishedGoods,setUpdate, row, selected, onSelectRow }) {
+export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods,setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
   const requestMaterialsData = {
     requestMaterialsId:row._id,
     requestNumber:row.requestNumber,
     batchNumber:row.batchNumber,
-    materialName:row.materialName,
-    quantity:row.quantity,
+    materials:row.materials,
     requiredDate:row.requiredDate
   }
   const handleOpenPopover = useCallback((event) => {
@@ -93,9 +92,29 @@ export function RequestCreationForMaterialsTableRow({materials,finishedGoods,set
         </TableCell> */}
         <TableCell>  {row.requestNumber}</TableCell>
         <TableCell>  {row.batchNumber}</TableCell>
-        <TableCell>{row.materialName}</TableCell>
+        <TableCell
+          style={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
+        >
+          {row.materials.map((material, index) => (
+            <div
+              key={index}
+              style={{ marginRight: '10px' }}
+            >
+              <strong>{material.materialsList}</strong>:{' '}
+              {`${material.quantity} KG`}
+            </div>
+            
+          ))}
+        </TableCell>
 
-        <TableCell>{row.quantity}</TableCell>
+        <TableCell>
+          {row.materials.map((material, index) => (
+            <div key={index}>{`${material.quantity} KG`}</div>
+          ))}
+        </TableCell>
         <TableCell>{new Date(row.requiredDate).toLocaleDateString()}</TableCell>
 
         <TableCell align="right">
@@ -128,7 +147,7 @@ export function RequestCreationForMaterialsTableRow({materials,finishedGoods,set
             },
           }}
         >
-        <EditRequestCreationForMaterialsForm setUpdate={setUpdate} requestMaterialsData={requestMaterialsData} materials={materials} finishedGoods={finishedGoods} />
+        <EditRequestCreationForMaterialsForm setUpdate={setUpdate} requestMaterialsData={requestMaterialsData} materialNames={materialNames} finishedGoods={finishedGoods} />
 
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />

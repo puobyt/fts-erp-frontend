@@ -29,6 +29,7 @@ export function InvoiceCreationView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [invoiceCreations,setInvoiceCreations] = useState([]);
+  const [itemNames,setItemNames] = useState([]);
   // const [firmNames,setfirmNames] = useState([]);
 const fetchInvoiceCreations = async ()=>{
 try{
@@ -36,6 +37,7 @@ const result = await axiosInstance.get('/invoiceCreations');
 if(result.data.data){
   console.log(result.data);
   setInvoiceCreations(result.data.data);
+  setItemNames(result.data.itemNames);
   // setfirmNames(result.data.firmNames);
 }
 }catch(err){
@@ -70,7 +72,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <InvoiceCreationForm setUpdate={setUpdate}/>
+        <InvoiceCreationForm setUpdate={setUpdate} itemNames={itemNames}/>
     
       </Box>
 
@@ -109,6 +111,7 @@ useEffect(()=>{
                   { id: 'itemName', label: 'Item Name' },
                   { id: 'quantity', label: 'Quantity' },
                   { id: 'price', label: 'Price' },
+                  { id: 'invoicePreparedBy', label: 'Invoice Prepared By:' },
                 ]}
               />
               <TableBody>
@@ -119,6 +122,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <InvoiceCreationTableRow
+                    itemNames={itemNames}
                     setUpdate={setUpdate}
                       key={index}
                       row={row}

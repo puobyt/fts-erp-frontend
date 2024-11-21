@@ -23,7 +23,7 @@ const style = {
   p: 4
 }
 
-export default function EditReworkForm ({ setUpdate,reworkData }) {
+export default function EditReworkForm ({ setUpdate,reworkData,batches }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -64,8 +64,11 @@ export default function EditReworkForm ({ setUpdate,reworkData }) {
       newErrors.reworkStartDate = 'Rework Start Date is required'
     if (!formData.reworkCompletionDate)
       newErrors.reworkCompletionDate = 'Rework Completio nDate is required'
-    if (!formData.quantityForRework)
-      newErrors.quantityForRework = 'Quantity For Rework is required'
+    if (!formData.quantityForRework) {
+      newErrors.quantityForRework = 'Quantity is required'
+    } else if (!/^\d+$/.test(formData.quantityForRework)) {
+      newErrors.quantityForRework = 'Quantity must be a number only'
+    }
     if (!formData.reworkStatus)
       newErrors.reworkStatus = 'Rework Status is required'
     if (!formData.comments) newErrors.comments = 'Comments is required'
@@ -77,6 +80,36 @@ export default function EditReworkForm ({ setUpdate,reworkData }) {
   const handleChange = e => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleMaterialChange = event => {
+    const selectedMaterial = event.target.value
+    const isSelectedMaterial = batches.find(
+      batch => selectedMaterial === batch.materialName
+    )
+
+    if (isSelectedMaterial) {
+      setFormData({
+        ...formData,
+        materialName: selectedMaterial,
+        batchNumber: isSelectedMaterial.batchNumber
+      })
+    }
+  }
+
+  const handleBatchChange = event => {
+    const selectedBatch = event.target.value
+    const isSelectedBatch = batches.find(
+      batch => selectedBatch === batch.batchNumber
+    )
+
+    if (isSelectedBatch) {
+      setFormData({
+        ...formData,
+        materialName: isSelectedBatch.materialName,
+        batchNumber: selectedBatch
+      })
+    }
   }
 
   const handleSubmit = async e => {
@@ -175,28 +208,57 @@ export default function EditReworkForm ({ setUpdate,reworkData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Batch Number'
                     name='batchNumber'
                     value={formData.batchNumber}
-                    onChange={handleChange}
+                    onChange={handleBatchChange}
                     error={!!errors.batchNumber}
                     helperText={errors.batchNumber}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch.batchNumber}>
+                        {batch.batchNumber}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/current-stock')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Batch +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Material Name'
                     name='materialName'
                     value={formData.materialName}
-                    onChange={handleChange}
+                    onChange={handleMaterialChange}
                     error={!!errors.materialName}
                     helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch.materialName}>
+                        {batch.materialName}
+                      </MenuItem>
+                    ))}
+
+                    <MenuItem
+                      onClick={() => navigate('/current-stock')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Material In Current Stock +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -291,7 +353,7 @@ export default function EditReworkForm ({ setUpdate,reworkData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Quantity For Rework'
+                    label='Quantity For Rework In KG'
                     name='quantityForRework'
                     value={formData.quantityForRework}
                     onChange={handleChange}

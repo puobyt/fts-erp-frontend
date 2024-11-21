@@ -9,6 +9,7 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
@@ -23,10 +24,11 @@ const style = {
   p: 4
 }
 
-export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
+export default function EditInvoiceCreationForm ({ setUpdate, invoiceData,itemNames }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     authPassword: '',
     invoiceId: invoiceData.invoiceId,
@@ -37,7 +39,8 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
     customerAddress: invoiceData.customerAddress,
     itemName: invoiceData.itemName,
     quantity: invoiceData.quantity,
-    price: invoiceData.price
+    price: invoiceData.price,
+     invoicePreparedBy:invoiceData.invoicePreparedBy
   })
   const [errors, setErrors] = useState({})
 
@@ -56,6 +59,8 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
     if (!formData.itemName) newErrors.itemName = 'Item Name is required'
     if (!formData.quantity) newErrors.quantity = 'Quantity is required'
     if (!formData.price) newErrors.price = 'Price is required'
+          if (!formData.invoicePreparedBy)
+      newErrors.invoicePreparedBy = 'Invoice Prepared By is required'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
@@ -88,7 +93,8 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
             customerAddress: '',
             itemName: '',
             quantity: '',
-            price: ''
+            price: '',
+            invoicePreparedBy:''
           })
           setUpdate(prev => !prev)
         })
@@ -245,8 +251,9 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
+                <TextField
                     fullWidth
+                    select
                     label='Item Name'
                     name='itemName'
                     value={formData.itemName}
@@ -255,7 +262,20 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
                     helperText={errors.itemName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    {itemNames.map((itemName, index) => (
+                      <MenuItem key={index} value={itemName}>
+                        {itemName}
+                      </MenuItem>
+                    ))}
+
+                    <MenuItem
+                      onClick={() => navigate('/finished-goods')}
+                      sx={{ fontStyle: 'italic' }} 
+                    >
+                      Add New ItemName +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -281,6 +301,20 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData }) {
                     helperText={errors.price}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Invoice Prepared By:'
+                    name='invoicePreparedBy'
+                    value={formData.invoicePreparedBy}
+                    onChange={handleChange}
+                    error={!!errors.invoicePreparedBy}
+                    helperText={errors.invoicePreparedBy}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+              
                   />
                 </Grid>
               </Grid>

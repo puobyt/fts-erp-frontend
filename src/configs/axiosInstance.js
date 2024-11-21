@@ -10,3 +10,4 @@ const axiosInstance = axios.create({
 export default axiosInstance;
 
 // http://localhost:5000
+// https://fts-server-indol.vercel.app

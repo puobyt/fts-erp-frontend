@@ -31,7 +31,7 @@ export function MaterialAssignmentView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
   const [materialAssignments,setMaterialAssignments] = useState([]);
-  const [materials,setMaterials] = useState([]);
+  const [materialNames,setMaterialNames] = useState([]);
   const [finishedGoods,setFinishedGoods] = useState([]);
   const [batches,setBatches] = useState([]);
   const [processOrderNumbers,setProcessOrderNumbers] = useState([]);
@@ -41,7 +41,7 @@ const result = await axiosInstance.get('/materialAssignment');
 if(result.data.data){
   console.log(result.data);
   setMaterialAssignments(result.data.data);
-  setMaterials(result.data.materials);
+  setMaterialNames(result.data.materials);
   setFinishedGoods(result.data.finishedGoods);
   setBatches(result.data.batchNumber);
   setProcessOrderNumbers(result.data.processOrderNumber)
@@ -78,7 +78,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <MaterialAssignmentForm setUpdate={setUpdate} materials={materials} finishedGoods={finishedGoods} batches={batches} processOrderNumbers={processOrderNumbers}/>
+        <MaterialAssignmentForm setUpdate={setUpdate} materialNames={materialNames} finishedGoods={finishedGoods} batches={batches} processOrderNumbers={processOrderNumbers}/>
     
       </Box>
 
@@ -112,7 +112,7 @@ useEffect(()=>{
                   { id: 'assignmentNumber', label: 'Assignment Number' },
                   { id: 'batchNumber', label: 'Batch Number' },
                   { id: 'processOrderNubmer', label: 'Process Order Nubmer' },
-                  { id: 'materialName', label: 'Material Name' },
+                  { id: 'materialsList', label: 'Materials List' },
                   { id: 'assignedQuantity', label: 'Assigned Quantity' },
                   { id: 'assignedTo', label: 'Assigned To' },
                 ]}
@@ -126,7 +126,7 @@ useEffect(()=>{
                   .map((row,index) => (
                     <MaterialAssignmentTableRow
                     processOrderNumbers={processOrderNumbers}
-                    materials={materials}
+                    materialNames={materialNames}
                     finishedGoods={finishedGoods}
                     setUpdate={setUpdate}
                       key={index}
