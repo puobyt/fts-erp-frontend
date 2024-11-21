@@ -18,7 +18,7 @@ const ProtectedLayout = ({ children }) => {
 
   if (loading) {
    
-    return <div>Loading...</div>;
+    return <CircularProgress/>;
   }
   return <>{children}</>;
 };
