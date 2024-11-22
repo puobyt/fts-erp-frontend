@@ -61,9 +61,9 @@ export default function ReworkForm ({ setUpdate, batches }) {
     if (!formData.reworkCompletionDate)
       newErrors.reworkCompletionDate = 'Rework Completio nDate is required'
     if (!formData.quantityForRework) {
-      newErrors.quantityForRework = 'Quantity is required'
-    } else if (!/^\d+$/.test(formData.quantityForRework)) {
-      newErrors.quantityForRework = 'Quantity must be a number only'
+      newErrors.quantityForRework = 'Quantity for rework is required';
+    } else if (!/^\d+(\.\d+)?$/.test(formData.quantityForRework)) {
+      newErrors.quantityForRework = 'Quantity for rework must be a valid number';
     }
     if (!formData.reworkStatus)
       newErrors.reworkStatus = 'Rework Status is required'

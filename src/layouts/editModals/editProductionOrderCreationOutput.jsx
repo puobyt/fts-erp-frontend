@@ -59,8 +59,11 @@ export default function EditProductionOrderCreationOutputForm ({
     const newErrors = {}
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
-    if (!formData.producedQuantity)
-      newErrors.producedQuantity = 'Produced Quantity is required'
+    if (!formData.producedQuantity) {
+      newErrors.producedQuantity = 'Produced Quantity is required';
+    } else if (!/^\d+(\.\d+)?$/.test(formData.producedQuantity)) {
+      newErrors.producedQuantity = 'Produced Quantity must be a valid number';
+    }
         if (!formData.productName)
       newErrors.productName = 'Product Name is required'
     if (!formData.productionCompletionDate)
@@ -75,7 +78,11 @@ export default function EditProductionOrderCreationOutputForm ({
     //   newErrors.batchNumberforOutput = 'Batch Number for Output is required'
     if (!formData.productionNotes)
       newErrors.productionNotes = 'Production Notes is required'
-    if (!formData.Yield) newErrors.Yield = 'Yield is required'
+    if (!formData.Yield) {
+      newErrors.Yield = 'Yield is required';
+    } else if (!/^\d+(\.\d+)?$/.test(formData.Yield)) {
+      newErrors.Yield = 'Yield must be a valid number';
+    }
     if (!formData.outputQualityRating)
       newErrors.outputQualityRating = 'Output Quality Rating is required'
     if (!formData.outputHandlingInstructions)

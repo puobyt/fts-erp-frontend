@@ -18,6 +18,7 @@ import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
 export function BillOfMaterialsTableRow ({
+  materialNames,
   productNames,
   setUpdate,
   row,
@@ -144,6 +145,7 @@ export function BillOfMaterialsTableRow ({
             setUpdate={setUpdate}
             billOfMaterialsData={billOfMaterialsData}
             productNames={productNames}
+            materialNames={materialNames}
           />
 
           <MenuItem

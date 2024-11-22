@@ -30,10 +30,10 @@ export function CurrentStockTableRow ({
   const currentStockData = {
     currentStockId: row._id,
     materialName: row.materialName,
-    batchNumber:row.batchNumber,
+    batchNumber: row.batchNumber,
     quantity: row.quantity,
     price: row.price,
-    storageLocation:row.storageLocation,
+    storageLocation: row.storageLocation,
     vendorName: row.vendorName,
     dateRecieved: row.dateRecieved,
     expiryDate: row.expiryDate
@@ -102,7 +102,7 @@ export function CurrentStockTableRow ({
         <TableCell> {row.materialName}</TableCell>
         <TableCell>{row.batchNumber}</TableCell>
         <TableCell>{row.quantity}</TableCell>
-        <TableCell>{row.price}</TableCell>
+        <TableCell style={{ whiteSpace: 'nowrap' }}>{row.price}</TableCell>
         <TableCell>{row.storageLocation}</TableCell>
         <TableCell>{row.vendorName}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>

@@ -48,8 +48,12 @@ export default function ProductionOrderCreationOutputForm ({
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.producedQuantity)
-      newErrors.producedQuantity = 'Produced Quantity is required'
+
+    if (!formData.producedQuantity) {
+      newErrors.producedQuantity = 'Produced Quantity is required';
+    } else if (!/^\d+(\.\d+)?$/.test(formData.producedQuantity)) {
+      newErrors.producedQuantity = 'Produced Quantity must be a valid number';
+    }
     if (!formData.productionCompletionDate)
       newErrors.productionCompletionDate =
         'Production Completion Date is required'
@@ -62,6 +66,11 @@ export default function ProductionOrderCreationOutputForm ({
     //   newErrors.batchNumberforOutput = 'Batch Number for Output is required'
     if (!formData.productionNotes)
       newErrors.productionNotes = 'Production Notes is required'
+    if (!formData.Yield) {
+      newErrors.Yield = 'Yield is required';
+    } else if (!/^\d+(\.\d+)?$/.test(formData.Yield)) {
+      newErrors.Yield = 'Yield must be a valid number';
+    }
     if (!formData.Yield) newErrors.Yield = 'Yield is required'
     if (!formData.outputQualityRating)
       newErrors.outputQualityRating = 'Output Quality Rating is required'
@@ -283,7 +292,7 @@ export default function ProductionOrderCreationOutputForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Yield'
+                    label='Yield In %'
                     name='Yield'
                     value={formData.Yield}
                     onChange={handleChange}

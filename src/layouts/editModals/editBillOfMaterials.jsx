@@ -27,7 +27,8 @@ const style = {
 export default function EditBillOfMaterialsForm ({
   setUpdate,
   billOfMaterialsData,
-  productNames
+  productNames,
+  materialNames
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -168,7 +169,7 @@ export default function EditBillOfMaterialsForm ({
               }}
             >
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{mt:1}}>
                   <TextField
                     fullWidth
                     label='Authorization Password'
@@ -234,17 +235,32 @@ export default function EditBillOfMaterialsForm ({
                   formData.materials.map((material, index) => (
                     <React.Fragment key={index}>
                       <Grid item xs={6}>
-                        <TextField
-                          fullWidth
-                          label='Materials List'
-                          name='materialsList'
-                          value={material.materialsList}
-                          onChange={e => handleMaterialChange(e, index)}
-                          variant='outlined'
-                          error={!!errors.materials}
-                          helperText={errors.materials}
-                          InputProps={{ style: { borderRadius: 8 } }}
-                        />
+                      <TextField
+                        fullWidth
+                        select
+                        label='Materials List'
+                        name='materialsList'
+                        value={material.materialsList}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.materials}
+                        helperText={errors.materials}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {materialNames.map((materialName, index) => (
+                          <MenuItem key={index} value={materialName}>
+                            {materialName}
+                          </MenuItem>
+                        ))}
+
+                        {/* This item only triggers navigation, not a form selection */}
+                        <MenuItem
+                          onClick={() => navigate('/main-stock')}
+                          sx={{ fontStyle: 'italic' }} // Optional styling
+                        >
+                          Add New materialName +
+                        </MenuItem>
+                      </TextField>
                       </Grid>
                       <Grid item xs={6}>
                         <TextField

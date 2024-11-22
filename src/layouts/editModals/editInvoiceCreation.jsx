@@ -158,7 +158,7 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData,itemNa
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Auth Password'
+                    label='Authorization Password'
                     name='authPassword'
                     type='password'
                     value={formData.authPassword}

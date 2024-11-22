@@ -47,10 +47,10 @@ export default function MainStockForm ({
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
     if (!formData.quantity) {
-        newErrors.quantity = 'Quantity is required'
-      } else if (!/^\d+$/.test(formData.quantity)) {
-        newErrors.quantity = 'Quantity must be a number only'
-      }
+      newErrors.quantity = 'Quantity is required';
+    } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
+      newErrors.quantity = 'Quantity must be a valid number';
+    }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation) newErrors.storageLocation = 'Storage Location is required'
     if (!formData.vendorName) newErrors.vendorName = 'Vendor Name is required'

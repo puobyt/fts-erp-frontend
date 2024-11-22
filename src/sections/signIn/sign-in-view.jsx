@@ -54,6 +54,8 @@ export function SignInView () {
             toast.success(res.data.message)
             if (res.data.adminToken) {
               localStorage.setItem('adminToken', res.data.adminToken)
+              console.log('resData admin info',res.data.adminData)
+              localStorage.setItem('admin', JSON.stringify(res.data.adminData));
               router.replace('/')
             }
           })

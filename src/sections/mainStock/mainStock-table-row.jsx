@@ -93,7 +93,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
         <TableCell> {row.materialName}</TableCell>
         <TableCell>{row.quantity}</TableCell>
 
-        <TableCell>{row.price}</TableCell>
+        <TableCell style={{ whiteSpace: 'nowrap' }}>{row.price}</TableCell>
         <TableCell>{row.vendorName}</TableCell>
         <TableCell>{row.storageLocation}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>

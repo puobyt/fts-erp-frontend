@@ -29,14 +29,14 @@ export function InvoiceCreationTableRow ({
   const invoiceData = {
     invoiceId: row._id,
     invoiceNumber: row.invoiceNumber,
-    customerId:row.customerId,
+    customerId: row.customerId,
     invoiceDate: row.invoiceDate,
     customerName: row.customerName,
     customerAddress: row.customerAddress,
     itemName: row.itemName,
     quantity: row.quantity,
     price: row.price,
-    invoicePreparedBy:row.invoicePreparedBy
+    invoicePreparedBy: row.invoicePreparedBy
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -106,7 +106,7 @@ export function InvoiceCreationTableRow ({
         <TableCell>{row.customerAddress}</TableCell>
         <TableCell> {row.itemName} </TableCell>
         <TableCell>{row.quantity}</TableCell>
-        <TableCell> {row.price} </TableCell>
+        <TableCell style={{ whiteSpace: 'nowrap' }}> {row.price} </TableCell>
         <TableCell> {row.invoicePreparedBy} </TableCell>
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
@@ -151,7 +151,7 @@ export function InvoiceCreationTableRow ({
             Delete
           </MenuItem>
           <MenuItem
-            sx={{ color: 'primary.main' }} 
+            sx={{ color: 'primary.main' }}
             onClick={() => generatePDF(row)}
           >
             <Iconify icon='solar:download-bold' />

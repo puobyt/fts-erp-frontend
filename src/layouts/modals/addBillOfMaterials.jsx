@@ -27,11 +27,16 @@ const style = {
   p: 4
 }
 
-export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
+export default function BillOfMaterialsForm ({
+  setUpdate,
+  productNames,
+  materialNames
+}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate()
   const handleClose = () => setOpen(false)
+  console.log('materialNames... listing',materialNames)
   const [formData, setFormData] = useState({
     bomNumber: '',
     productName: '',
@@ -137,7 +142,7 @@ export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
           </Typography>
         </Box> */}
 
-        <Container maxWidth='sm' sx={{ mt: 8 }}>
+        <Container maxWidth='sm' sx={{ mt: 8 }} >
           <Paper
             elevation={4}
             sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}
@@ -156,13 +161,17 @@ export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
                 Bill Of Material Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}    sx={{
+            <Box
+              component='form'
+              onSubmit={handleSubmit}
+              sx={{
                 maxHeight: '65vh',
                 overflowY: 'auto',
                 paddingRight: 2
-              }}>
+              }}
+            >
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={6} sx={{mt:1}}>
                   <TextField
                     fullWidth
                     label='Bom Number'
@@ -202,7 +211,7 @@ export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/production-order-creation-output')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Product +
@@ -215,15 +224,30 @@ export default function BillOfMaterialsForm ({ setUpdate, productNames }) {
                     <Grid item xs={6}>
                       <TextField
                         fullWidth
+                        select
                         label='Materials List'
                         name='materialsList'
                         value={material.materialsList}
                         onChange={e => handleMaterialChange(e, index)}
-                        variant='outlined'
                         error={!!errors.materials}
                         helperText={errors.materials}
+                        variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
-                      />
+                      >
+                        {materialNames.map((materialName, index) => (
+                          <MenuItem key={index} value={materialName}>
+                            {materialName}
+                          </MenuItem>
+                        ))}
+
+                        {/* This item only triggers navigation, not a form selection */}
+                        <MenuItem
+                          onClick={() => navigate('/main-stock')}
+                          sx={{ fontStyle: 'italic' }} // Optional styling
+                        >
+                          Add New materialName +
+                        </MenuItem>
+                      </TextField>
                     </Grid>
                     <Grid item xs={6}>
                       <TextField

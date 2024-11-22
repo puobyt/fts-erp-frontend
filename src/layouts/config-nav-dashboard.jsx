@@ -58,11 +58,7 @@ export const navData = [
     path: '/production-order-creation',
     icon: icon('ic-cart'),
   },
-  {
-    title: 'Production Order Creation-Output',
-    path: '/production-order-creation-output',
-    icon: icon('ic-cart'),
-  },
+
   {
     title: 'Request Creation For Materials',
     path: '/request-creation-for-materials',
@@ -71,6 +67,11 @@ export const navData = [
   {
     title: 'Material Assignment',
     path: '/material-assignment',
+    icon: icon('ic-cart'),
+  },
+  {
+    title: 'Production Order Creation-Output',
+    path: '/production-order-creation-output',
     icon: icon('ic-cart'),
   },
   {

@@ -110,7 +110,8 @@ export function ProductionOrderCreationOutputTableRow ({
         <TableCell>{row.storageLocationforOutput}</TableCell>
         <TableCell>{row.batchNumberforOutput}</TableCell>
         <TableCell>{row.productionNotes}</TableCell>
-        <TableCell>{row.Yield}</TableCell>
+        <TableCell style={{ whiteSpace: 'nowrap' }}>{row.Yield}</TableCell>
+
         <TableCell>{row.outputQualityRating}</TableCell>
         <TableCell>{row.outputHandlingInstructions}</TableCell>
 
