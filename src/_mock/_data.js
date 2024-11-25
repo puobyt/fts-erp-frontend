@@ -22,7 +22,7 @@ console.log('adminData',adminData); // { email: "admin@example.com", userName: "
 export const _myAccount = {
   displayName:`${adminData?.userName}`,
   email: `${adminData?.email}`,
-  photoURL: '/assets/images/avatar/avatar-25.webp',
+  photoURL: 'https://static.vecteezy.com/system/resources/previews/012/210/707/non_2x/worker-employee-businessman-avatar-profile-icon-vector.jpg',
 };
 
 // ----------------------------------------------------------------------

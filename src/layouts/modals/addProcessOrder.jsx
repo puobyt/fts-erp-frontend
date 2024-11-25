@@ -9,6 +9,7 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
@@ -23,32 +24,27 @@ const style = {
   p: 4
 }
 
-export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData }) {
+export default function ProcessOrderForm ({ setUpdate }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
+  const navigate = useNavigate()
   const handleClose = () => setOpen(false)
-  const formattedDate = gateEntryData.date
-    ? new Date(gateEntryData.date).toISOString().split('T')[0]
-    : ''
   const [formData, setFormData] = useState({
-    authPassword: '',
-    gateEntryId: gateEntryData.gateEntryId,
-    entryTime:gateEntryData.entryTime,
-    vehicleNumber: gateEntryData.vehicleNumber,
-    vendorName: gateEntryData.vendorName,
-    date: formattedDate
+    processOrderNumber: '',
+    description: '',
+    productName: ''
   })
   const [errors, setErrors] = useState({})
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.authPassword)
-      newErrors.authPassword = 'Authorization Password is required'
-     if (!formData.entryTime) newErrors.entryTime = 'Entry Time is required'
-    if (!formData.vehicleNumber)
-      newErrors.vehicleNumber = 'Vehicle Number is required'
-    if (!formData.vendorName) newErrors.vendorName = 'Vendor Name is required'
-    if (!formData.date) newErrors.date = 'Date is required'
+    if (!formData.processOrderNumber)
+      newErrors.processOrderNumber = 'Process Order is required'
+
+    if (!formData.productName)
+      newErrors.productName = 'Product Name is required'
+    if (!formData.description)
+      newErrors.description = 'Product Description is required'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
@@ -66,40 +62,40 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
       return
     }
     try {
-      const result = await axiosInstance
-        .put('/editGateEntry', formData)
-        .then(result => {
-          toast.success(result.data.message)
-          handleClose()
-          setFormData({
-            entryTime:'',
-            vehicleNumber: '',
-            vendorName: '',
-            date: ''
-          })
-          setUpdate(prev => !prev)
+      const result = await axiosInstance.post(
+        '/newProcessOrder',
+        formData
+      )
+      if (result) {
+        toast.success(result.data.message)
+        handleClose()
+        setFormData({
+          processOrderNumber: '',
+          description: '',
+          productName: ''
         })
-        .catch(err => {
-          toast.error(err.response.data.message)
-          console.error(
-            'Error occured in adding vendor management client side',
-            err.message
-          )
-        })
+        setUpdate(prev => !prev)
+      }
     } catch (err) {
+      toast.success(err.response.data.message)
       console.error(
-        'Error occured in adding vendor management client side',
+        'Error occured in adding Current stock in client side',
         err.message
       )
     }
   }
+
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
-      <MenuItem onClick={handleOpen}>
-        <Iconify icon='solar:pen-bold' />
-        Edit
-      </MenuItem>
+      <Button
+        onClick={handleOpen}
+        variant='contained'
+        color='inherit'
+        startIcon={<Iconify icon='mingcute:add-line' />}
+      >
+        New Process Order 
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -128,99 +124,62 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
                 color='primary'
                 gutterBottom
               >
-                Edit Gate Entry Details
+                Add New Process Order
               </Typography>
               <Typography variant='body2' color='textSecondary'>
-                Gate Entry Management
+                Process order Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box
+              component='form'
+              onSubmit={handleSubmit}
+              sx={{
+                maxHeight: '65vh',
+                overflowY: 'auto',
+                paddingRight: 2
+              }}
+            >
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={12} sx={{ mt: 2 }}>
                   <TextField
                     fullWidth
-                    label='Authorization Password'
-                    name='authPassword'
-                    type='password'
-                    value={formData.authPassword}
+                    label='Process Order Number'
+                    name='processOrderNumber'
+                    value={formData.processOrderNumber}
                     onChange={handleChange}
-                    error={!!errors.authPassword}
-                    helperText={errors.authPassword}
+                    error={!!errors.processOrderNumber}
+                    helperText={errors.processOrderNumber}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Entry Time'
-                    name='entryTime'
-                    value={formData.entryTime}
+                    label='Product Name'
+                    name='productName'
+                    value={formData.productName}
                     onChange={handleChange}
-                    error={!!errors.entryTime}
-                    helperText={errors.entryTime}
+                    error={!!errors.productName}
+                    helperText={errors.productName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Vehicle Number'
-                    name='vehicleNumber'
-                    value={formData.vehicleNumber}
-                    onChange={handleChange}
-                    error={!!errors.vehicleNumber}
-                    helperText={errors.vehicleNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                <TextField
-                    fullWidth
-                    select
-                    label='Vendor Name'
-                    name='vendorName'
-                    value={formData.vendorName}
-                    onChange={handleChange}
-                    error={!!errors.vendorName}
-                    helperText={errors.vendorName}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    {firmNames.map((firm, index) => (
-                      <MenuItem key={index} value= {firm}>
-                   {firm}
-                      </MenuItem>
-                    ))}
 
-                    {/* This item only triggers navigation, not a form selection */}
-                    <MenuItem
-                      onClick={() => navigate('/vendor-management')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
-                    >
-                      Add New Firm +
-                    </MenuItem>
-                  </TextField>
-                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Date'
-                    name='date'
-                    type='date'
-                    value={formData.date}
+                    label='Description'
+                    name='description'
+                    value={formData.description}
                     onChange={handleChange}
-                    error={!!errors.date}
-                    helperText={errors.date}
+                    error={!!errors.description}
+                    helperText={errors.description}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
                   />
                 </Grid>
+             
               </Grid>
               <Button
                 type='submit'

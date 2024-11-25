@@ -105,7 +105,7 @@ export function ProductionOrderCreationTableRow ({
         <TableCell>{row.batch}</TableCell>
         <TableCell
           style={{
-          
+            whiteSpace: "nowrap" ,
             overflow: 'hidden',
             textOverflow: 'ellipsis'
           }}

@@ -105,7 +105,7 @@ export function ReworkTableRow({batches,setUpdate, row, selected, onSelectRow })
         <TableCell>{row.proposedReworkAction}</TableCell>
         <TableCell>{new Date(row.reworkStartDate).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(row.reworkCompletionDate).toLocaleDateString()}</TableCell>
-        <TableCell>{row.quantityForRework}</TableCell>
+        <TableCell>{`${row.quantityForRework} KG`}</TableCell>
         <TableCell>{row.reworkStatus}</TableCell>
         <TableCell>{row.comments}</TableCell>
 

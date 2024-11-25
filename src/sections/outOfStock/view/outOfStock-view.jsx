@@ -16,28 +16,26 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { TableNoData } from '../table-no-data';
 
 import { TableEmptyRows } from '../table-empty-rows';
-
-import { GateEntryTableHead } from '../gateEntry-table-head';
-import { GateEntryTableRow } from '../gateEntry-table-row';
-import { GateEntryTableToolbar } from '../gateEntry-table-toolbar';
+import { OutOfStockTableHead } from '../outOfStock-table-head';
+import { OutOfStockTableToolbar } from '../outOfStock-table-toolbar';
+import { OutOfStockTableRow } from '../outOfStock-table-row';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import GateEntryForm from '../../../layouts/modals/addGateEntry';
+import MainStockForm from '../../../layouts/modals/addMainStock';
 import axiosInstance from 'src/configs/axiosInstance';
+
 
 // ----------------------------------------------------------------------
 
-export function GateEntryView() {
+export function OutOfStockView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
-  const [gateEntries,setGateEntries] = useState([]);
-  const [firmNames,setfirmNames] = useState([]);
-const fetchGateEntry = async ()=>{
+  const [outOfStocks,setOutOfStocks] = useState([]);
+const fetchOutOfStocks = async ()=>{
 try{
-const result = await axiosInstance.get('/gateEntry');
+const result = await axiosInstance.get('/outOfStock');
 if(result.data.data){
-  console.log(result.data);
-  setGateEntries(result.data.data);
-  setfirmNames(result.data.firmNames);
+  setOutOfStocks(result.data.data);
+
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -45,12 +43,12 @@ if(result.data.data){
 }
   const [filterName, setFilterName] = useState('');
 useEffect(()=>{
-  fetchGateEntry();
+  fetchOutOfStocks();
 },[update]);
 
 
   const dataFiltered= applyFilter({
-    inputData: gateEntries,
+    inputData: outOfStocks,
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
@@ -61,7 +59,7 @@ useEffect(()=>{
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-       Gate Entry
+      Out Of Stock Management
         </Typography>
         {/* <Button
           variant="contained"
@@ -71,13 +69,13 @@ useEffect(()=>{
           New user
         </Button> */}
 
-        <GateEntryForm setUpdate={setUpdate} firmNames={firmNames}/>
+      <MainStockForm setUpdate={setUpdate}/>
     
       </Box>
 
       <Card>
-        <GateEntryTableToolbar
-         sort={table.onSort}
+        <OutOfStockTableToolbar
+           sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {
@@ -89,11 +87,10 @@ useEffect(()=>{
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <GateEntryTableHead
-              
+              <OutOfStockTableHead
                 order={table.order}
                 orderBy={table.orderBy}
-                rowCount={gateEntries.length}
+                rowCount={outOfStocks.length}
                 numSelected={table.selected.length}
                 onSort={table.onSort}
                 // onSelectAllRows={(checked) =>
@@ -103,10 +100,13 @@ useEffect(()=>{
                 //   )
                 // }
                 headLabel={[
-                  { id: 'entryTime', label: 'Entry Time' },
-                  { id: 'vehicleNumber', label: 'Vehicle Number' },
-                  { id: 'vendorName', label: 'Vendor Name' },
-                  { id: 'date', label: 'Date' },
+                  { id: 'materialName', label: 'Material Name' },
+                  { id: 'quantity', label: 'Quantity' },
+                  { id: 'price', label: 'Price' },
+                  { id: 'storageLocation', label: 'Storage Location' },
+                  { id: 'vendorName', label: 'vendorName' },
+                  { id: 'dateRecieved', label: 'Date Recieved' },
+                  { id: 'expiryDate', label: 'Expiry' },
                 ]}
               />
               <TableBody>
@@ -116,8 +116,8 @@ useEffect(()=>{
                     table.page * table.rowsPerPage + table.rowsPerPage
                   )
                   .map((row,index) => (
-                    <GateEntryTableRow
-                    firmNames={firmNames}
+                    <OutOfStockTableRow
+                    outOfStocks={outOfStocks}
                     setUpdate={setUpdate}
                       key={index}
                       row={row}
@@ -128,7 +128,7 @@ useEffect(()=>{
 
                 <TableEmptyRows
                   height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, gateEntries.length)}
+                  emptyRows={emptyRows(table.page, table.rowsPerPage, outOfStocks.length)}
                 />
 
                 {notFound && <TableNoData searchQuery={filterName} />}
@@ -140,7 +140,7 @@ useEffect(()=>{
         <TablePagination
           component="div"
           page={table.page}
-          count={gateEntries.length}
+          count={outOfStocks.length}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
           rowsPerPageOptions={[5, 10, 25]}

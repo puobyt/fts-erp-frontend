@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Outlet, Navigate, useRoutes } from 'react-router-dom'
-import * as React from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
+import * as React from 'react'
+import CircularProgress from '@mui/material/CircularProgress'
 import ProtectedLayout from '../utils/protectedRoute'
 import Box from '@mui/material/Box'
 import LinearProgress, {
@@ -23,10 +23,12 @@ export const PurhcaseOrderCreation = lazy(() =>
 export const GateEntry = lazy(() => import('src/pages/gateEntry'))
 export const CurrentStock = lazy(() => import('src/pages/currentStock'))
 export const MainStock = lazy(() => import('src/pages/mainStock'))
+export const OutOfStock = lazy(() => import('src/pages/outOfStock'))
 export const QualityCheck = lazy(() => import('src/pages/qualityCheck'))
 export const ProductionOrderCreation = lazy(() =>
   import('src/pages/productionOrderCreation')
 )
+export const ProcessOrder = lazy(() => import('src/pages/processOrder'))
 export const RequestCreationForMaterials = lazy(() =>
   import('src/pages/requestCreationForMaterials')
 )
@@ -47,7 +49,6 @@ export const SignInPage = lazy(() => import('src/pages/signIn'))
 export const SignUpPage = lazy(() => import('src/pages/signUp'))
 export const ProductsPage = lazy(() => import('src/pages/products'))
 export const Page404 = lazy(() => import('src/pages/page-not-found'))
-
 
 const renderFallback = (
   <Box
@@ -81,9 +82,14 @@ export function Router () {
         </ProtectedLayout>
       ),
       children: [
-        { element: ( <Suspense fallback={<CircularProgress/>}>
-          <HomePage />
-        </Suspense>), index: true },
+        {
+          element: (
+            <Suspense fallback={<CircularProgress />}>
+              <HomePage />
+            </Suspense>
+          ),
+          index: true
+        },
         { path: 'vendor-management', element: <VendorManagement /> },
         { path: 'purchase-order-creation', element: <PurhcaseOrderCreation /> },
         { path: 'gate-entry', element: <GateEntry /> },
@@ -110,7 +116,9 @@ export function Router () {
           element: <FinalQualityInspection />
         },
         { path: 'finished-goods', element: <FinishedGoods /> },
-        { path: 'invoice-creations', element: <InvoiceCreations /> }
+        { path: 'invoice-creations', element: <InvoiceCreations /> },
+        { path: 'out-of-stock', element: <OutOfStock /> },
+        { path: 'process-order', element: <ProcessOrder /> }
       ]
     },
     {

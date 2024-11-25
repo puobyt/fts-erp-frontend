@@ -9,6 +9,13 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import {
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel
+} from '@mui/material'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
@@ -31,6 +38,7 @@ export default function MainStockForm ({
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const [batchNumberType, setBatchNumberType] = useState('')
   const [formData, setFormData] = useState({
     materialName: '',
     quantity: '',
@@ -51,6 +59,14 @@ export default function MainStockForm ({
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
       newErrors.quantity = 'Quantity must be a valid number';
     }
+
+    if (batchNumberType == 'manual') {
+      if (!formData.batchNumber)
+        newErrors.batchNumber = 'Batch Number is required'
+    }
+    if (!batchNumberType) {
+      newErrors.batchNumberType = 'Please select a batch number type'
+    }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation) newErrors.storageLocation = 'Storage Location is required'
     if (!formData.vendorName) newErrors.vendorName = 'Vendor Name is required'
@@ -62,6 +78,10 @@ export default function MainStockForm ({
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
 
+
+    const handleRadioChange = event => {
+      setBatchNumberType(event.target.value)
+    }
   const handleChange = e => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
@@ -144,6 +164,33 @@ export default function MainStockForm ({
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
+              <Grid item xs={12}>
+                  <FormControl error={!!errors.batchNumberType}>
+                    <FormLabel>Batch Number Type</FormLabel>
+                    <RadioGroup
+                      row
+                      name='batchNumberType'
+                      value={formData.batchNumberType}
+                      onChange={handleRadioChange}
+                    >
+                      <FormControlLabel
+                        value='manual'
+                        control={<Radio />}
+                        label='Manual Batch Number'
+                      />
+                      <FormControlLabel
+                        value='automated'
+                        control={<Radio />}
+                        label='Automated Batch Number'
+                      />
+                    </RadioGroup>
+                    {errors.batchNumberType && (
+                      <Typography variant='body2' color='error'>
+                        {errors.batchNumberType}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Grid>
               <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -155,6 +202,22 @@ export default function MainStockForm ({
                     helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
+                    disabled={batchNumberType !== 'manual'}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -173,7 +236,7 @@ export default function MainStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Price'
+                    label='Price/Kg'
                     name='price'
                     value={formData.price}
                     onChange={handleChange}

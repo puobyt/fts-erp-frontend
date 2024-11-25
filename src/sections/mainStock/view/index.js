@@ -1,1 +1,1 @@
-export * from './gateEntry-view';
+export * from './mainStock-view';

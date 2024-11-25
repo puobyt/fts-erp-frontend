@@ -51,7 +51,7 @@ const generatePDF = (row) => {
   doc.autoTable({
     startY: 90,
     head: [['Item Name', 'Quantity', 'Price']],
-    body: [[row.itemName, row.quantity, row.price]],
+    body: [[row.itemName, row.quantity, `Rs.${row.price}`]],
     theme: 'grid',
     styles: { fontSize: 10 },
   });

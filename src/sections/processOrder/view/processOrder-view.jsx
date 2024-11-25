@@ -17,30 +17,28 @@ import { TableNoData } from '../table-no-data'
 
 import { TableEmptyRows } from '../table-empty-rows'
 
-import { ProductionOrderCreationTableHead } from '../productionOrderCreation-table-head'
-import { ProductionOrderCreationTableRow } from '../productionOrderCreation-row'
-import { ProductionOrderCreationTableToolbar } from '../productionOrderCreation-table-toolbar'
-import ProductionOrderCreationForm from '../../../layouts/modals/addProductionOrderCreation'
+import { ProcessOrderTableHead } from '../processOrder-table-head'
+import { ProcessOrderTableRow } from '../processOrder-row'
+import { ProcessOrderToolbar } from '../processOrder-table-toolbar'
+import ProcessOrderForm from '../../../layouts/modals/addProcessOrder'
 import { emptyRows, applyFilter, getComparator } from '../utils'
 
 import axiosInstance from 'src/configs/axiosInstance'
 
 // ----------------------------------------------------------------------
 
-export function ProductionOrderCreationView () {
+export function ProcessOrderView () {
   const table = useTable()
-  const [update, setUpdate] = useState(false);
-  const [productionOrders, setProductionOrders] = useState([]);
-  const [materialNames, setMaterialNames] = useState([]);
-  const [processOrderNumbers, setProcessOrderNumbers] = useState([]);
-  const fetchProductionOrders = async () => {
+  const [update, setUpdate] = useState(false)
+  const [processOrders, setProcessOrders] = useState([])
+  // const [materialNames, setMaterialNames] = useState([])
+  const fetchprocessOrders = async () => {
     try {
-      const result = await axiosInstance.get('/productionOrderCreation')
+      const result = await axiosInstance.get('/processOrder');
       if (result.data.data) {
         console.log(result.data)
-        setProductionOrders(result.data.data)
-        setMaterialNames(result.data.materials);
-        setProcessOrderNumbers(result.data.processOrderNumbers);
+        setProcessOrders(result.data.data)
+        // setMaterialNames(result.data.materials)
       }
     } catch (err) {
       console.error(
@@ -51,11 +49,11 @@ export function ProductionOrderCreationView () {
   }
   const [filterName, setFilterName] = useState('')
   useEffect(() => {
-    fetchProductionOrders()
+    fetchprocessOrders()
   }, [update])
 
   const dataFiltered = applyFilter({
-    inputData: productionOrders,
+    inputData: processOrders,
     comparator: getComparator(table.order, table.orderBy),
     filterName
   })
@@ -66,7 +64,7 @@ export function ProductionOrderCreationView () {
     <DashboardContent>
       <Box display='flex' alignItems='center' mb={5}>
         <Typography variant='h4' flexGrow={1}>
-          Production Order Creation
+         Process Order Details
         </Typography>
         {/* <Button
           variant="contained"
@@ -76,11 +74,11 @@ export function ProductionOrderCreationView () {
           New user
         </Button> */}
 
-        <ProductionOrderCreationForm setUpdate={setUpdate} materialNames={materialNames} processOrderNumbers={processOrderNumbers} />
+        <ProcessOrderForm setUpdate={setUpdate} />
       </Box>
 
       <Card>
-        <ProductionOrderCreationTableToolbar
+        <ProcessOrderToolbar
           sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
@@ -93,10 +91,10 @@ export function ProductionOrderCreationView () {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <ProductionOrderCreationTableHead
+              <ProcessOrderTableHead
                 order={table.order}
                 orderBy={table.orderBy}
-                rowCount={productionOrders.length}
+                rowCount={processOrders.length}
                 numSelected={table.selected.length}
                 onSort={table.onSort}
                 // onSelectAllRows={(checked) =>
@@ -106,18 +104,10 @@ export function ProductionOrderCreationView () {
                 //   )
                 // }
                 headLabel={[
-                  { id: 'processOrder', label: 'Process Order Number' },
-                  { id: 'plant', label: 'Plant' },
+                  { id: 'processOrderNumber', label: 'Process Order Number' },
+                  { id: 'productName', label: 'Product Name' },
          
-                  { id: 'productDescription', label: 'Product Description' },
-                  { id: 'ProductName', label: 'Product Name' },
-
-                  { id: 'batch', label: 'Batch' },
-                  { id: 'materialList', label: 'Material List' },
-                  { id: 'requiredQuantity', label: 'Required Quantity' },
-                  { id: 'instructions', label: 'Instructions' },
-                  { id: 'startDate', label: 'Start Date' },
-                  { id: 'endDate', label: 'End Date' }
+                  { id: 'Description', label: ' Description' },
                 ]}
               />
               <TableBody>
@@ -127,8 +117,7 @@ export function ProductionOrderCreationView () {
                     table.page * table.rowsPerPage + table.rowsPerPage
                   )
                   .map((row, index) => (
-                    <ProductionOrderCreationTableRow
-                    materialNames={materialNames}
+                    <ProcessOrderTableRow
                       setUpdate={setUpdate}
                       key={index}
                       row={row}
@@ -142,7 +131,7 @@ export function ProductionOrderCreationView () {
                   emptyRows={emptyRows(
                     table.page,
                     table.rowsPerPage,
-                    productionOrders.length
+                    processOrders.length
                   )}
                 />
 
@@ -155,7 +144,7 @@ export function ProductionOrderCreationView () {
         <TablePagination
           component='div'
           page={table.page}
-          count={productionOrders.length}
+          count={processOrders.length}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
           rowsPerPageOptions={[5, 10, 25]}

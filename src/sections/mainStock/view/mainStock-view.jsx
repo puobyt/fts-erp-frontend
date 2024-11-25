@@ -103,6 +103,7 @@ useEffect(()=>{
                 // }
                 headLabel={[
                   { id: 'materialName', label: 'Material Name' },
+                  { id: 'batchNumber', label: 'Batch Number' },
                   { id: 'quantity', label: 'Quantity' },
                   { id: 'price', label: 'Price' },
                   { id: 'storageLocation', label: 'Storage Location' },

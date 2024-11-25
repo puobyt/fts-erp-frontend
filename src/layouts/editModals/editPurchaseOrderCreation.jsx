@@ -405,7 +405,7 @@ export default function EditPurchaseOrderCreationForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Price'
+                    label='Price/Kg'
                     name='price'
                     value={formData.price}
                     onChange={handleChange}

@@ -23,6 +23,7 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
   const [openPopover, setOpenPopover] = useState(null);
   const gateEntryData= {
     gateEntryId:row._id,
+    entryTime:row.entryTime,
     vendorName:row.vendorName,
     vehicleNumber:row.vehicleNumber,
     date:row.date,
@@ -89,6 +90,7 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
           
           </Box>
         </TableCell> */}
+        <TableCell>  {row.entryTime}</TableCell>
         <TableCell>  {row.vehicleNumber}</TableCell>
         <TableCell>{row.vendorName}</TableCell>
         <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>

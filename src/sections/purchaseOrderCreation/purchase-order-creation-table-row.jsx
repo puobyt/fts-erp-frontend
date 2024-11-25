@@ -112,8 +112,8 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
         <TableCell>{row.materialName}</TableCell>
         {/* <TableCell>{row.batchNumber}</TableCell> */}
         <TableCell>{new Date(row.mfgDate).toLocaleDateString()}</TableCell>
-        <TableCell>{row.quantity}</TableCell>
-        <TableCell style={{ whiteSpace: 'nowrap' }}>{row.price}</TableCell>
+        <TableCell>{`${row.quantity} KG`}</TableCell>
+        <TableCell style={{ whiteSpace: 'nowrap' }}>₹ {`${row.price}`}</TableCell>
         <TableCell>{row.pan}</TableCell>
         <TableCell>{row.gst}</TableCell>
    

@@ -10,7 +10,13 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import { parse, isValid } from 'date-fns'
-
+import {
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel
+} from '@mui/material'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
@@ -34,6 +40,7 @@ export default function EditCurrentStockForm ({
 }) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const [batchNumberType, setBatchNumberType] = useState('')
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const formattedDate = currentStockData.dateRecieved
@@ -61,6 +68,10 @@ export default function EditCurrentStockForm ({
   const validateForm = () => {
     const newErrors = {}
     if (!formData.authPassword)
+      if (batchNumberType == 'manual') {
+        if (!formData.batchNumber)
+          newErrors.batchNumber = 'Batch Number is required'
+      }
       newErrors.authPassword = 'Authorization Password is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
@@ -68,6 +79,9 @@ export default function EditCurrentStockForm ({
       newErrors.quantity = 'Quantity is required';
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
       newErrors.quantity = 'Quantity must be a valid number';
+    }
+    if (!batchNumberType) {
+      newErrors.batchNumberType = 'Please select a batch number type'
     }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
@@ -85,6 +99,12 @@ export default function EditCurrentStockForm ({
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+
+
+    const handleRadioChange = event => {
+      setBatchNumberType(event.target.value)
+    }
+  
   const handleSubmit = async e => {
     e.preventDefault()
 
@@ -159,6 +179,33 @@ export default function EditCurrentStockForm ({
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
+              <Grid item xs={12}>
+                  <FormControl error={!!errors.batchNumberType}>
+                    <FormLabel>Batch Number Type</FormLabel>
+                    <RadioGroup
+                      row
+                      name='batchNumberType'
+                      value={formData.batchNumberType}
+                      onChange={handleRadioChange}
+                    >
+                      <FormControlLabel
+                        value='manual'
+                        control={<Radio />}
+                        label='Manual Batch Number'
+                      />
+                      <FormControlLabel
+                        value='automated'
+                        control={<Radio />}
+                        label='Automated Batch Number'
+                      />
+                    </RadioGroup>
+                    {errors.batchNumberType && (
+                      <Typography variant='body2' color='error'>
+                        {errors.batchNumberType}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -215,9 +262,7 @@ export default function EditCurrentStockForm ({
                       style: { borderRadius: 8 },
                       placeholder: 'Auto-Generate'
                     }}
-                    InputLabelProps={{
-                      shrink: true // Keeps the label above the field to avoid overlap
-                    }}
+                    disabled={batchNumberType !== 'manual'}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -236,7 +281,7 @@ export default function EditCurrentStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Price'
+                    label='Price/Kg'
                     name='price'
                     value={formData.price}
                     onChange={handleChange}

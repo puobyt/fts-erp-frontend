@@ -4,6 +4,13 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { Input } from '@nextui-org/react'
+import {
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel
+} from '@mui/material'
 import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
@@ -33,29 +40,39 @@ export default function CurrentStockForm ({
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const [batchNumberType, setBatchNumberType] = useState('')
   const [formData, setFormData] = useState({
     materialName: '',
-    batchNumber: '',
     quantity: '',
     price: '',
+    batchNumber: '',
     storageLocation: '',
     vendorName: '',
     dateRecieved: '',
     expiryDate: ''
   })
   const [errors, setErrors] = useState({})
-console.log('vendors listing...',vendors);
+  console.log('vendors listing...', vendors)
   const validateForm = () => {
     const newErrors = {}
+
+    if (batchNumberType == 'manual') {
+      if (!formData.batchNumber)
+        newErrors.batchNumber = 'Batch Number is required'
+    }
+
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
-    if (!formData.quantity) {
-      newErrors.quantity = 'Quantity is required';
-    } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
-      newErrors.quantity = 'Quantity must be a valid number';
+    if (!batchNumberType) {
+      newErrors.batchNumberType = 'Please select a batch number type'
     }
-    
+    if (!formData.quantity) {
+      newErrors.quantity = 'Quantity is required'
+    } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
+      newErrors.quantity = 'Quantity must be a valid number'
+    }
+
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
       newErrors.storageLocation = 'Storage Location is required'
@@ -71,6 +88,10 @@ console.log('vendors listing...',vendors);
   const handleChange = e => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleRadioChange = event => {
+    setBatchNumberType(event.target.value)
   }
 
   const handleSubmit = async e => {
@@ -151,6 +172,33 @@ console.log('vendors listing...',vendors);
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <FormControl error={!!errors.batchNumberType}>
+                    <FormLabel>Batch Number Type</FormLabel>
+                    <RadioGroup
+                      row
+                      name='batchNumberType'
+                      value={formData.batchNumberType}
+                      onChange={handleRadioChange}
+                    >
+                      <FormControlLabel
+                        value='manual'
+                        control={<Radio />}
+                        label='Manual Batch Number'
+                      />
+                      <FormControlLabel
+                        value='automated'
+                        control={<Radio />}
+                        label='Automated Batch Number'
+                      />
+                    </RadioGroup>
+                    {errors.batchNumberType && (
+                      <Typography variant='body2' color='error'>
+                        {errors.batchNumberType}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -178,6 +226,7 @@ console.log('vendors listing...',vendors);
                     </MenuItem>
                   </TextField>
                 </Grid>
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -189,14 +238,12 @@ console.log('vendors listing...',vendors);
                     helperText={errors.batchNumber}
                     variant='outlined'
                     InputProps={{
-                      style: { borderRadius: 8 },
-                      placeholder: 'Auto-Generate'
+                      style: { borderRadius: 8 }
                     }}
-                    InputLabelProps={{
-                      shrink: true // Keeps the label above the field to avoid overlap
-                    }}
+                    disabled={batchNumberType !== 'manual'}
                   />
                 </Grid>
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -213,7 +260,7 @@ console.log('vendors listing...',vendors);
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Price'
+                    label='Price/Kg'
                     name='price'
                     value={formData.price}
                     onChange={handleChange}
@@ -257,7 +304,7 @@ console.log('vendors listing...',vendors);
 
                     <MenuItem
                       onClick={() => navigate('/purchase-order-creation')}
-                      sx={{ fontStyle: 'italic' }} 
+                      sx={{ fontStyle: 'italic' }}
                     >
                       Add New Vendor +
                     </MenuItem>

@@ -9,34 +9,26 @@ import MenuList from '@mui/material/MenuList'
 import TableCell from '@mui/material/TableCell'
 import IconButton from '@mui/material/IconButton'
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem'
-import EditCurrentStockForm from '../../layouts/editModals/editCurrentStock'
 import { Label } from 'src/components/label'
 import { Iconify } from 'src/components/iconify'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import EditProcessOrderForm from '../../layouts/editModals/editProcessOrder'
 // ----------------------------------------------------------------------
 
-export function CurrentStockTableRow ({
-  vendors,
-  purchaseOrderData,
-  materials,
+export function ProcessOrderTableRow ({
   setUpdate,
   row,
   selected,
   onSelectRow
 }) {
   const [openPopover, setOpenPopover] = useState(null)
-  const currentStockData = {
-    currentStockId: row._id,
-    materialName: row.materialName,
-    batchNumber: row.batchNumber,
-    quantity: row.quantity,
-    price: row.price,
-    storageLocation: row.storageLocation,
-    vendorName: row.vendorName,
-    dateRecieved: row.dateRecieved,
-    expiryDate: row.expiryDate
+  const processOrderData = {
+    processOrderId: row._id,
+    processOrderNumber:row.processOrderNumber,
+    productName: row.productName,
+   description: row.description,
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -47,9 +39,9 @@ export function CurrentStockTableRow ({
   }, [])
   const handleDelete = async () => {
     try {
-      const currentStockId = row._id
+      const processOrderId = row._id
       const result = await axiosInstance.delete(
-        `/removeCurrentStock?currentStockId=${currentStockId}`
+        `/removeProcessOrder?processOrderId=${processOrderId}`
       )
       if (result) {
         toast.success(result.data.message)
@@ -57,7 +49,7 @@ export function CurrentStockTableRow ({
     } catch (err) {
       toast.success(err.response.data.message)
       console.error(
-        'Error occured in removing current Stock in client side',
+        'Error occured in removing production order in client side',
         err.message
       )
     }
@@ -99,14 +91,11 @@ export function CurrentStockTableRow ({
           
           </Box>
         </TableCell> */}
-        <TableCell> {row.materialName}</TableCell>
-        <TableCell>{row.batchNumber}</TableCell>
-        <TableCell>{`${row.quantity} KG`}</TableCell>
-        <TableCell style={{ whiteSpace: 'nowrap' }}>{`₹ ${row.price}`}</TableCell>
-        <TableCell>{row.storageLocation}</TableCell>
-        <TableCell>{row.vendorName}</TableCell>
-        <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
-        <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>
+        <TableCell> {row.processOrderNumber}</TableCell>
+        <TableCell>{row.productName}</TableCell>
+        <TableCell>{row.description}</TableCell>
+  
+        <TableCell>{row.instructions}</TableCell>
 
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
@@ -138,14 +127,7 @@ export function CurrentStockTableRow ({
             }
           }}
         >
-          <EditCurrentStockForm
-            purchaseOrderData={purchaseOrderData}
-            materials={materials}
-            setUpdate={setUpdate}
-            currentStockData={currentStockData}
-            vendors={vendors}
-          />
-
+         <EditProcessOrderForm setUpdate={setUpdate} processOrderData={processOrderData}/>
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}
             sx={{ color: 'error.main' }}

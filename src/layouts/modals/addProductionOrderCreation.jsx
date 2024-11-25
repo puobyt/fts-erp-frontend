@@ -26,11 +26,12 @@ const style = {
 
 export default function ProductionOrderCreationForm ({
   setUpdate,
-  materialNames
+  materialNames,
+  processOrderNumbers
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     processOrder: '',
@@ -85,6 +86,21 @@ export default function ProductionOrderCreationForm ({
   const handleChange = e => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleProcessOrderChange = event => {
+    const selectedNumber = event.target.value
+    const isSelectedNumber = processOrderNumbers.find(
+      processOrder => selectedNumber === processOrder.processOrderNumber
+    )
+
+    if (isSelectedNumber) {
+      setFormData({
+        ...formData,
+        processOrder: selectedNumber,
+        productName: isSelectedNumber.productName
+      })
+    }
   }
 
   const handleSubmit = async e => {
@@ -214,24 +230,32 @@ export default function ProductionOrderCreationForm ({
               }}
             >
               <Grid container spacing={2}>
-                <Grid item xs={12} sx={{ mt: 2 }}>
+              <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Process Order'
                     name='processOrder'
                     value={formData.processOrder}
-                    onChange={handleChange}
+                    onChange={handleProcessOrderChange}
                     error={!!errors.processOrder}
                     helperText={errors.processOrder}
                     variant='outlined'
-                    InputProps={{
-                      style: { borderRadius: 8 },
-                      placeholder: 'Auto-Generate'
-                    }}
-                    InputLabelProps={{
-                      shrink: true // Keeps the label above the field to avoid overlap
-                    }}
-                  />
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {processOrderNumbers.map((processOrder, index) => (
+                      <MenuItem key={index} value={processOrder.processOrderNumber}>
+                        {processOrder.processOrderNumber}
+                      </MenuItem>
+                    ))}
+
+                    <MenuItem
+                      onClick={() => navigate('/process-order')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Material In Current Stock +
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

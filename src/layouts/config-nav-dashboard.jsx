@@ -49,8 +49,19 @@ export const navData = [
     icon: icon('ic-cart'),
   },
   {
+    title: 'Out Of Stock',
+    path: '/out-of-stock',
+    icon: icon('ic-cart'),
+  },
+
+  {
     title: 'Rework',
     path: '/rework',
+    icon: icon('ic-cart'),
+  },
+  {
+    title: 'Process Order',
+    path: '/process-order',
     icon: icon('ic-cart'),
   },
   {

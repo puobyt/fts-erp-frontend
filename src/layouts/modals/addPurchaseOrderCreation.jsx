@@ -30,7 +30,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
   const navigate = useNavigate()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-
+  // const [materials, setMaterials] = useState([])
   const [formData, setFormData] = useState({
     purchaseOrderNumber: '',
     date: '',
@@ -51,6 +51,18 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
 
   const handleFirmChange = event => {
     const selectedFirmName = event.target.value
+
+    // const matchingFirms = firms.filter(
+    //   firm => firm.nameOfTheFirm === selectedFirmName
+    // )
+
+    // if (matchingFirms.length > 0) {
+    //   const aggregatedMaterials = matchingFirms.flatMap(
+    //     firm => firm.material || []
+    //   )
+
+    //   setMaterials(aggregatedMaterials)
+    // }
     const selectedFirm = firms.find(
       firm => firm.nameOfTheFirm === selectedFirmName
     )
@@ -62,8 +74,8 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
         contactNumber: selectedFirm.contactNumber,
         pan: selectedFirm.pan,
         gst: selectedFirm.gst,
+        materialName:selectedFirm.material,
         address: selectedFirm.address,
-        materialName: selectedFirm.material,
         contactPersonName: selectedFirm.contactPersonName,
         contactPersonDetails: selectedFirm.contactPersonDetails,
         vendorId: selectedFirm._id
@@ -81,7 +93,8 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     if (!formData.nameOfTheFirm)
       newErrors.nameOfTheFirm = 'Name Of The Firm is required'
     if (!formData.address) newErrors.address = 'Address is required'
-    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required'
+    if (!formData.contactNumber)
+      newErrors.contactNumber = 'Contact Number is required'
     if (!formData.contactPersonName)
       newErrors.contactPersonName = 'Contact Person Name is required'
     if (!formData.contactPersonDetails)
@@ -93,9 +106,9 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     // if (!formData.batchNumber)
     //   newErrors.batchNumber = 'Batch Number is required'
     if (!formData.quantity) {
-      newErrors.quantity = 'Quantity is required';
+      newErrors.quantity = 'Quantity is required'
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
-      newErrors.quantity = 'Quantity must be a valid number';
+      newErrors.quantity = 'Quantity must be a valid number'
     }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.pan) newErrors.pan = 'PAN is required'
@@ -343,8 +356,9 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid> */}
+           
                 <Grid item xs={6}>
-                  <TextField
+                <TextField
                     fullWidth
                     label='Material Name'
                     name='materialName'
@@ -356,6 +370,33 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
+                {/* <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
+                    onChange={handleFirmChange}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {materials?.map((material, index) => (
+                      <MenuItem key={index} value={material}>
+                        {material}
+                      </MenuItem>
+                    ))}
+
+                    <MenuItem
+                      onClick={() => navigate('/vendor-management')}
+                      sx={{ fontStyle: 'italic' }}
+                    >
+                      Add New Material +
+                    </MenuItem>
+                  </TextField> 
+                </Grid>*/}
                 {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -402,7 +443,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Price'
+                    label='Price/Kg'
                     name='price'
                     value={formData.price}
                     onChange={handleChange}

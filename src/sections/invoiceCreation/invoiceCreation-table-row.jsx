@@ -105,7 +105,7 @@ export function InvoiceCreationTableRow ({
         <TableCell> {row.customerName} </TableCell>
         <TableCell>{row.customerAddress}</TableCell>
         <TableCell> {row.itemName} </TableCell>
-        <TableCell>{row.quantity}</TableCell>
+        <TableCell>{`${row.quantity} KG`}</TableCell>
         <TableCell style={{ whiteSpace: 'nowrap' }}> {row.price} </TableCell>
         <TableCell> {row.invoicePreparedBy} </TableCell>
         <TableCell align='right'>

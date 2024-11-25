@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-
+import { generateTraceabilityReport } from '../../utils/finishedGoodsPDF';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
@@ -126,6 +126,13 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 
+          </MenuItem>
+          <MenuItem
+            sx={{ color: 'primary.main' }}
+            onClick={() => generateTraceabilityReport(row)}
+          >
+            <Iconify icon='solar:download-bold' />
+            Download PDF
           </MenuItem>
         </MenuList>
       </Popover>
