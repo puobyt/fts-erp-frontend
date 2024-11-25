@@ -51,7 +51,8 @@ export function AccountPopover ({ data = [], sx, ...other }) {
   )
   const handleLogout = () => {
     try {
-      localStorage.removeItem('adminToken')
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('admin')
       router.replace('/sign-in')
     } catch (err) {
       console.error('Error during logout:', err)
