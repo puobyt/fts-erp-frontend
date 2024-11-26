@@ -69,7 +69,7 @@ useEffect(()=>{
           New user
         </Button> */}
 
-      <MainStockForm setUpdate={setUpdate}/>
+      {/* <MainStockForm setUpdate={setUpdate}/> */}
     
       </Box>
 

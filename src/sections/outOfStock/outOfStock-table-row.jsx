@@ -129,10 +129,10 @@ export function OutOfStockTableRow ({outOfStocks, setUpdate, row, selected, onSe
             }
           }}
         >
-          <EditMainStockForm
+          {/* <EditMainStockForm
             setUpdate={setUpdate}
             mainStockData={mainStockData}
-          />
+          /> */}
 
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}

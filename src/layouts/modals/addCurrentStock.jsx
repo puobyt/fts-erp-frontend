@@ -178,7 +178,7 @@ export default function CurrentStockForm ({
                     <RadioGroup
                       row
                       name='batchNumberType'
-                      value={formData.batchNumberType}
+                      value={batchNumberType}
                       onChange={handleRadioChange}
                     >
                       <FormControlLabel

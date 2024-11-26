@@ -67,18 +67,20 @@ export default function EditCurrentStockForm ({
 
   const validateForm = () => {
     const newErrors = {}
+    if (batchNumberType == 'manual') {
+      if (!formData.batchNumber)
+        newErrors.batchNumber = 'Batch Number is required'
+    }
     if (!formData.authPassword)
-      if (batchNumberType == 'manual') {
-        if (!formData.batchNumber)
-          newErrors.batchNumber = 'Batch Number is required'
-      }
       newErrors.authPassword = 'Authorization Password is required'
+
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
+
     if (!formData.quantity) {
-      newErrors.quantity = 'Quantity is required';
+      newErrors.quantity = 'Quantity is required'
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
-      newErrors.quantity = 'Quantity must be a valid number';
+      newErrors.quantity = 'Quantity must be a valid number'
     }
     if (!batchNumberType) {
       newErrors.batchNumberType = 'Please select a batch number type'
@@ -99,12 +101,10 @@ export default function EditCurrentStockForm ({
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  const handleRadioChange = event => {
+    setBatchNumberType(event.target.value)
+  }
 
-
-    const handleRadioChange = event => {
-      setBatchNumberType(event.target.value)
-    }
-  
   const handleSubmit = async e => {
     e.preventDefault()
 
@@ -117,6 +117,7 @@ export default function EditCurrentStockForm ({
         toast.success(result.data.message)
         handleClose()
         setFormData({
+          authPassword: '',
           materialName: '',
           batchNumber: '',
           quantity: '',
@@ -179,13 +180,13 @@ export default function EditCurrentStockForm ({
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-              <Grid item xs={12}>
+                <Grid item xs={12}>
                   <FormControl error={!!errors.batchNumberType}>
                     <FormLabel>Batch Number Type</FormLabel>
                     <RadioGroup
                       row
                       name='batchNumberType'
-                      value={formData.batchNumberType}
+                      value={batchNumberType}
                       onChange={handleRadioChange}
                     >
                       <FormControlLabel
