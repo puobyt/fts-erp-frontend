@@ -277,6 +277,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    label='Date'
                     name='date'
                     type='date'
                     value={formData.date}

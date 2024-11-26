@@ -95,10 +95,10 @@ export function ProcessOrderTableRow ({
         <TableCell>{row.productName}</TableCell>
         <TableCell
           style={{
-            maxWidth: '200px', // Set a maximum width for the cell
+            maxWidth: '300px', // Set a maximum width for the cell
             overflow: 'hidden', // Hide content that overflows the width
             textOverflow: 'ellipsis', // Add ellipsis for overflowed text
-            // Prevent text from wrapping to the next line
+           // Prevent text from wrapping to the next line
           }}
         >
           {row.description}

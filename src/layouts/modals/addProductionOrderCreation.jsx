@@ -31,7 +31,7 @@ export default function ProductionOrderCreationForm ({
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     processOrder: '',
@@ -59,20 +59,17 @@ export default function ProductionOrderCreationForm ({
     // if (!formData.batch) newErrors.batch = 'Batch is required'
     if (
       formData.materials.some(
-        mat => 
-          !mat.materialsList || 
-          !mat.requiredQuantity
+        mat => !mat.materialsList || !mat.requiredQuantity
       )
     ) {
-      newErrors.materials = 'All material fields must be filled';
+      newErrors.materials = 'All material fields must be filled'
     } else if (
       formData.materials.some(
         mat => !Number.isFinite(Number(mat.requiredQuantity))
       )
     ) {
-      newErrors.requiredQuantity = 'Required Quantity must be a number';
+      newErrors.requiredQuantity = 'Required Quantity must be a number'
     }
-    
 
     if (!formData.instructions)
       newErrors.instructions = 'Instructions is required'
@@ -230,7 +227,7 @@ export default function ProductionOrderCreationForm ({
               }}
             >
               <Grid container spacing={2}>
-              <Grid item xs={6}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     select
@@ -244,7 +241,10 @@ export default function ProductionOrderCreationForm ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
                     {processOrderNumbers.map((processOrder, index) => (
-                      <MenuItem key={index} value={processOrder.processOrderNumber}>
+                      <MenuItem
+                        key={index}
+                        value={processOrder.processOrderNumber}
+                      >
                         {processOrder.processOrderNumber}
                       </MenuItem>
                     ))}
@@ -284,33 +284,6 @@ export default function ProductionOrderCreationForm ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                {/* <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Material Name'
-                    name='materialName'
-                    value={formData.materialName}
-                    onChange={handleChange}
-                    error={!!errors.materialName}
-                    helperText={errors.materialName}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid> */}
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Product Description'
-                    name='productDescription'
-                    value={formData.productDescription}
-                    onChange={handleChange}
-                    error={!!errors.productDescription}
-                    helperText={errors.productDescription}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -330,6 +303,47 @@ export default function ProductionOrderCreationForm ({
                     }}
                   />
                 </Grid>
+                {/* <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Material Name'
+                    name='materialName'
+                    value={formData.materialName}
+                    onChange={handleChange}
+                    error={!!errors.materialName}
+                    helperText={errors.materialName}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid> */}
+                <Grid item xs={12}>
+                  <Box
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                  >
+                    <label htmlFor='description'>Product Description</label>
+                    <textarea
+                      id='productDescription'
+                      name='productDescription'
+                      value={formData.productDescription}
+                      onChange={handleChange}
+                      rows='6'
+                      style={{
+                        width: '100%',
+                        border: '1px solid #ccc',
+                        borderRadius: '8px',
+                        padding: '8px',
+                        fontSize: '16px',
+                        fontFamily: 'inherit'
+                      }}
+                    />
+                    {errors.productDescription && (
+                      <Typography variant='body2' color='error'>
+                        {errors.productDescription}
+                      </Typography>
+                    )}
+                  </Box>
+                </Grid>
+
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
                     <Grid item xs={6}>
@@ -407,18 +421,32 @@ export default function ProductionOrderCreationForm ({
                     Add Material
                   </Button>
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Instructions'
-                    name='instructions'
-                    value={formData.instructions}
-                    onChange={handleChange}
-                    error={!!errors.instructions}
-                    helperText={errors.instructions}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                <Grid item xs={12}>
+                  <Box
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                  >
+                    <label htmlFor='description'>Instructions</label>
+                    <textarea
+                      id='instructions'
+                      name='instructions'
+                      value={formData.instructions}
+                      onChange={handleChange}
+                      rows='6'
+                      style={{
+                        width: '100%',
+                        border: '1px solid #ccc',
+                        borderRadius: '8px',
+                        padding: '8px',
+                        fontSize: '16px',
+                        fontFamily: 'inherit'
+                      }}
+                    />
+                    {errors.instructions && (
+                      <Typography variant='body2' color='error'>
+                        {errors.instructions}
+                      </Typography>
+                    )}
+                  </Box>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

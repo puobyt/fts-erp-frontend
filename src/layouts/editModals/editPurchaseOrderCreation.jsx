@@ -72,7 +72,7 @@ export default function EditPurchaseOrderCreationForm ({
         pan: selectedFirm.pan,
         gst: selectedFirm.gst,
         address: selectedFirm.address,
-        materialName:selectedFirm.material,
+        materialName: selectedFirm.material,
         contactPersonName: selectedFirm.contactPersonName,
         contactPersonDetails: selectedFirm.contactPersonDetails,
         vendorId: selectedFirm._id
@@ -89,7 +89,8 @@ export default function EditPurchaseOrderCreationForm ({
     if (!formData.nameOfTheFirm)
       newErrors.nameOfTheFirm = 'Name Of The Firm is required'
     if (!formData.address) newErrors.address = 'Address is required'
-    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required'
+    if (!formData.contactNumber)
+      newErrors.contactNumber = 'Contact Number is required'
     if (!formData.contactPersonName)
       newErrors.contactPersonName = 'Contact Person Name is required'
     if (!formData.contactPersonDetails)
@@ -101,9 +102,9 @@ export default function EditPurchaseOrderCreationForm ({
     // if (!formData.batchNumber)
     //   newErrors.batchNumber = 'Batch Number is required'
     if (!formData.quantity) {
-      newErrors.quantity = 'Quantity is required';
+      newErrors.quantity = 'Quantity is required'
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
-      newErrors.quantity = 'Quantity must be a valid number';
+      newErrors.quantity = 'Quantity must be a valid number'
     }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.pan) newErrors.pan = 'PAN is required'
@@ -240,6 +241,7 @@ export default function EditPurchaseOrderCreationForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    label='Date'
                     name='date'
                     type='date'
                     value={formData.date}

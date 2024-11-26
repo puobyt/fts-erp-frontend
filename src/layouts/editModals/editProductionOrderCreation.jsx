@@ -260,6 +260,33 @@ export default function EditProductionOrderCreationForm ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                  >
+                    <label htmlFor='description'>Product Description</label>
+                    <textarea
+                      id='productDescription'
+                      name='productDescription'
+                      value={formData.productDescription}
+                      onChange={handleChange}
+                      rows='6'
+                      style={{
+                        width: '100%',
+                        border: '1px solid #ccc',
+                        borderRadius: '8px',
+                        padding: '8px',
+                        fontSize: '16px',
+                        fontFamily: 'inherit'
+                      }}
+                    />
+                    {errors.productDescription && (
+                      <Typography variant='body2' color='error'>
+                        {errors.productDescription}
+                      </Typography>
+                    )}
+                  </Box>
+                </Grid>
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
                     <Grid item xs={6}>
@@ -337,18 +364,32 @@ export default function EditProductionOrderCreationForm ({
                     Add Material
                   </Button>
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Instructions'
-                    name='instructions'
-                    value={formData.instructions}
-                    onChange={handleChange}
-                    error={!!errors.instructions}
-                    helperText={errors.instructions}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                <Grid item xs={12}>
+                  <Box
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                  >
+                    <label htmlFor='description'>Instructions</label>
+                    <textarea
+                      id='instructions'
+                      name='instructions'
+                      value={formData.instructions}
+                      onChange={handleChange}
+                      rows='6'
+                      style={{
+                        width: '100%',
+                        border: '1px solid #ccc',
+                        borderRadius: '8px',
+                        padding: '8px',
+                        fontSize: '16px',
+                        fontFamily: 'inherit'
+                      }}
+                    />
+                    {errors.instructions && (
+                      <Typography variant='body2' color='error'>
+                        {errors.instructions}
+                      </Typography>
+                    )}
+                  </Box>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

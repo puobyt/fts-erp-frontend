@@ -40,7 +40,7 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
 
   const validateForm = () => {
     const newErrors = {}
-        if (!formData.authPassword)
+    if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
     if (!formData.processOrderNumber)
       newErrors.processOrderNumber = 'Process Order is required'
@@ -178,18 +178,34 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                   />
                 </Grid>
 
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Description'
-                    name='description'
-                    value={formData.description}
-                    onChange={handleChange}
-                    error={!!errors.description}
-                    helperText={errors.description}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                <Grid item xs={12}>
+                  <Box
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                  >
+                    <label htmlFor='description' style={{ fontWeight: 'bold' }}>
+                      Description
+                    </label>
+                    <textarea
+                      id='description'
+                      name='description'
+                      value={formData.description}
+                      onChange={handleChange}
+                      rows='6'
+                      style={{
+                        width: '100%',
+                        border: '1px solid #ccc',
+                        borderRadius: '8px',
+                        padding: '8px',
+                        fontSize: '16px',
+                        fontFamily: 'inherit'
+                      }}
+                    />
+                    {errors.description && (
+                      <Typography variant='body2' color='error'>
+                        {errors.description}
+                      </Typography>
+                    )}
+                  </Box>
                 </Grid>
               </Grid>
               <Button

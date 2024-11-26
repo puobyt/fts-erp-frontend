@@ -100,12 +100,24 @@ export function ProductionOrderCreationTableRow ({
         </TableCell> */}
         <TableCell> {row.processOrder}</TableCell>
         <TableCell>{row.plant}</TableCell>
-        <TableCell>{row.productDescription}</TableCell>
+        <TableCell>
+          <div
+            style={{
+              minWidth: '400px', // Ensures a minimum width of 400px
+              maxWidth: '800px', // Optional: Restrict the maximum width if needed
+              overflow: 'visible', // Allow content to overflow vertically
+              whiteSpace: 'normal', // Enable wrapping for multiline content
+              wordWrap: 'break-word' // Break long words to fit within the width
+            }}
+          >
+            {row.productDescription}
+          </div>
+        </TableCell>
         <TableCell>{row.productName}</TableCell>
         <TableCell>{row.batch}</TableCell>
         <TableCell
           style={{
-            whiteSpace: "nowrap" ,
+            whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis'
           }}
@@ -118,7 +130,6 @@ export function ProductionOrderCreationTableRow ({
               <strong>{material.materialsList}</strong>:{' '}
               {`${material.requiredQuantity} KG`}
             </div>
-            
           ))}
         </TableCell>
 
@@ -127,7 +138,17 @@ export function ProductionOrderCreationTableRow ({
             <div key={index}>{`${material.requiredQuantity} KG`}</div>
           ))}
         </TableCell>
-        <TableCell>{row.instructions}</TableCell>
+        <TableCell
+          style={{
+            minWidth: '400px', // Ensures a minimum width of 400px
+            maxWidth: '800px',
+            overflow: 'visible', // Allow content to overflow vertically
+            whiteSpace: 'normal', // Enable wrapping for multiline content
+            wordWrap: 'break-word' // Break long words to fit within the width
+          }}
+        >
+          {row.instructions}
+        </TableCell>
         <TableCell>{new Date(row.startDate).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(row.endDate).toLocaleDateString()}</TableCell>
 
