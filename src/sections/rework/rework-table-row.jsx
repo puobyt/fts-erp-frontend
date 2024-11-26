@@ -49,7 +49,8 @@ export function ReworkTableRow({batches,setUpdate, row, selected, onSelectRow })
           const reworkId = row._id;
           const result = await axiosInstance.delete(`/removeRework?reworkId=${reworkId}`);
           if (result) {
-            toast.success(result.data.message)
+            toast.success(result.data.message);
+            setUpdate(prev => !prev)
         
           }
         } catch (err) {
@@ -74,7 +75,6 @@ export function ReworkTableRow({batches,setUpdate, row, selected, onSelectRow })
         }).then((result) => {
           if (result.isConfirmed) {
             handleDelete();
-            setUpdate(prev=>!prev);
           }
         });
       }

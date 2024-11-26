@@ -51,7 +51,8 @@ export function QualityCheckTableRow ({
         `/removeQualityCheck?qualityCheckId=${qualityCheckId}`
       )
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -75,7 +76,6 @@ export function QualityCheckTableRow ({
     }).then(result => {
       if (result.isConfirmed) {
         handleDelete()
-        setUpdate(prev => !prev)
       }
     })
   }

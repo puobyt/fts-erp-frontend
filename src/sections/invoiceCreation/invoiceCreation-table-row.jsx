@@ -52,7 +52,8 @@ export function InvoiceCreationTableRow ({
         `/removeInvoiceCreation?invoiceId=${invoiceId}`
       )
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
       }
     } catch (err) {
       toast.error(err.response.data.message)
@@ -76,7 +77,7 @@ export function InvoiceCreationTableRow ({
     }).then(result => {
       if (result.isConfirmed) {
         handleDelete()
-        setUpdate(prev => !prev)
+
       }
     })
   }

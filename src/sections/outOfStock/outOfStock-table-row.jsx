@@ -43,7 +43,8 @@ export function OutOfStockTableRow ({outOfStocks, setUpdate, row, selected, onSe
         `/removeMainStock?mainStockId=${mainStockId}`
       )
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -67,7 +68,6 @@ export function OutOfStockTableRow ({outOfStocks, setUpdate, row, selected, onSe
     }).then(result => {
       if (result.isConfirmed) {
         handleDelete()
-        setUpdate(prev => !prev)
       }
     })
   }

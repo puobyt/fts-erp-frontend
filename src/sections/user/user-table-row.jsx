@@ -52,7 +52,8 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
       console.log('vendorId... client',vendorId);
       const result = await axiosInstance.delete(`/removeVendorManagement?vendorId=${vendorId}`);
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
     
       }
     } catch (err) {
@@ -77,7 +78,6 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
     }).then((result) => {
       if (result.isConfirmed) {
         handleDelete();
-        setUpdate(prev=>!prev);
       }
     });
   }

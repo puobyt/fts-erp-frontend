@@ -43,7 +43,7 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
       const result = await axiosInstance.delete(`/removeGateEntry?gateEntryId=${gateEntryId}`);
       if (result) {
         toast.success(result.data.message)
-    
+        setUpdate(prev => !prev)
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -67,7 +67,6 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
     }).then((result) => {
       if (result.isConfirmed) {
         handleDelete();
-        setUpdate(prev=>!prev);
       }
     });
   }

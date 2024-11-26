@@ -53,7 +53,8 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
       const purchaseOrderId = row._id;
       const result = await axiosInstance.delete(`/removePurchaseOrderCreation?purchaseOrderId=${purchaseOrderId}`);
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
     
       }
     } catch (err) {
@@ -78,7 +79,6 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
     }).then((result) => {
       if (result.isConfirmed) {
         handleDelete();
-        setUpdate(prev=>!prev);
       }
     });
   }

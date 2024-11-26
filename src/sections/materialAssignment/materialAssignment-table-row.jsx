@@ -49,7 +49,8 @@ export function MaterialAssignmentTableRow ({
         const materialAssignmentId = row._id;
         const result = await axiosInstance.delete(`/removeMaterialAssignment?materialAssignmentId=${materialAssignmentId}`);
         if (result) {
-          toast.success(result.data.message)
+          toast.success(result.data.message);
+          setUpdate(prev => !prev)
       
         }
       } catch (err) {
@@ -74,7 +75,6 @@ export function MaterialAssignmentTableRow ({
       }).then((result) => {
         if (result.isConfirmed) {
           handleDelete();
-          setUpdate(prev=>!prev);
         }
       });
     }

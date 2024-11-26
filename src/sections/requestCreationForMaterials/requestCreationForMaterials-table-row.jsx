@@ -42,7 +42,8 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
           const requestCreationId = row._id;
           const result = await axiosInstance.delete(`/removeRequestCreationForMaterials?requestCreationId=${requestCreationId}`);
           if (result) {
-            toast.success(result.data.message)
+            toast.success(result.data.message);
+            setUpdate(prev => !prev)
         
           }
         } catch (err) {
@@ -67,7 +68,6 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
         }).then((result) => {
           if (result.isConfirmed) {
             handleDelete();
-            setUpdate(prev=>!prev);
           }
         });
       }

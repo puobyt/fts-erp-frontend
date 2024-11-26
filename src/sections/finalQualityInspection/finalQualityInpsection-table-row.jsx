@@ -47,7 +47,8 @@ export function FinalQualityInpsectionTableRow ({
         `/removeFinalQualityInspection?qualityInspectionId=${qualityInspectionId}`
       )
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -71,7 +72,6 @@ export function FinalQualityInpsectionTableRow ({
     }).then(result => {
       if (result.isConfirmed) {
         handleDelete()
-        setUpdate(prev => !prev)
       }
     })
   }

@@ -48,7 +48,8 @@ export function BillOfMaterialsTableRow ({
         `/removeBillOfMaterials?billOfMaterialsId=${billOfMaterialsId}`
       )
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -72,7 +73,6 @@ export function BillOfMaterialsTableRow ({
     }).then(result => {
       if (result.isConfirmed) {
         handleDelete()
-        setUpdate(prev => !prev)
       }
     })
   }

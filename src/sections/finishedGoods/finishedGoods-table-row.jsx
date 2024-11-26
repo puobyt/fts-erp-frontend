@@ -40,7 +40,8 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
       const finishedGoodsId = row._id;
       const result = await axiosInstance.delete(`/removeFinishedGoods?finishedGoodsId=${finishedGoodsId}`);
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -64,7 +65,7 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
     }).then((result) => {
       if (result.isConfirmed) {
         handleDelete();
-        setUpdate(prev=>!prev);
+       
       }
     });
   }
