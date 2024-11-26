@@ -26,9 +26,9 @@ export function ProcessOrderTableRow ({
   const [openPopover, setOpenPopover] = useState(null)
   const processOrderData = {
     processOrderId: row._id,
-    processOrderNumber:row.processOrderNumber,
+    processOrderNumber: row.processOrderNumber,
     productName: row.productName,
-   description: row.description,
+    description: row.description
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -93,8 +93,17 @@ export function ProcessOrderTableRow ({
         </TableCell> */}
         <TableCell> {row.processOrderNumber}</TableCell>
         <TableCell>{row.productName}</TableCell>
-        <TableCell>{row.description}</TableCell>
-  
+        <TableCell
+          style={{
+            maxWidth: '200px', // Set a maximum width for the cell
+            overflow: 'hidden', // Hide content that overflows the width
+            textOverflow: 'ellipsis', // Add ellipsis for overflowed text
+            // Prevent text from wrapping to the next line
+          }}
+        >
+          {row.description}
+        </TableCell>
+
         <TableCell>{row.instructions}</TableCell>
 
         <TableCell align='right'>
@@ -127,7 +136,10 @@ export function ProcessOrderTableRow ({
             }
           }}
         >
-         <EditProcessOrderForm setUpdate={setUpdate} processOrderData={processOrderData}/>
+          <EditProcessOrderForm
+            setUpdate={setUpdate}
+            processOrderData={processOrderData}
+          />
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}
             sx={{ color: 'error.main' }}

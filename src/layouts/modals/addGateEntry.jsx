@@ -126,6 +126,7 @@ export default function GateEntryForm ({ setUpdate, firmNames }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    type='time'
                     label='entryTime'
                     name='entryTime'
                     value={formData.entryTime}

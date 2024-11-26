@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-
+import moment from "moment";
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
@@ -71,7 +71,8 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
       }
     });
   }
-
+  const formatTo12Hour = (time24) => moment(time24, "HH:mm").format("h:mm A");
+  const formattedTime = formatTo12Hour(row.entryTime);
   const handleMenuCloseAndConfirmDelete = () => {
     handleClosePopover(); // Close the popover or menu first
     setTimeout(() => {
@@ -90,7 +91,7 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
           
           </Box>
         </TableCell> */}
-        <TableCell>  {row.entryTime}</TableCell>
+        <TableCell>  {formattedTime}</TableCell>
         <TableCell>  {row.vehicleNumber}</TableCell>
         <TableCell>{row.vendorName}</TableCell>
         <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>

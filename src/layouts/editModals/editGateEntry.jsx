@@ -155,6 +155,7 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
                     fullWidth
                     label='Entry Time'
                     name='entryTime'
+                    type='time'
                     value={formData.entryTime}
                     onChange={handleChange}
                     error={!!errors.entryTime}

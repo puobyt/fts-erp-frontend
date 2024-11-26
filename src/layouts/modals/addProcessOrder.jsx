@@ -62,10 +62,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
       return
     }
     try {
-      const result = await axiosInstance.post(
-        '/newProcessOrder',
-        formData
-      )
+      const result = await axiosInstance.post('/newProcessOrder', formData)
       if (result) {
         toast.success(result.data.message)
         handleClose()
@@ -94,7 +91,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
         color='inherit'
         startIcon={<Iconify icon='mingcute:add-line' />}
       >
-        New Process Order 
+        New Process Order
       </Button>
       <Modal
         open={open}
@@ -152,7 +149,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
                     variant='outlined'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label='Product Name'
@@ -166,20 +163,35 @@ export default function ProcessOrderForm ({ setUpdate }) {
                   />
                 </Grid>
 
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Description'
-                    name='description'
-                    value={formData.description}
-                    onChange={handleChange}
-                    error={!!errors.description}
-                    helperText={errors.description}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                <Grid item xs={12}>
+                  <Box
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                  >
+                    <label htmlFor='description' style={{ fontWeight: 'bold' }}>
+                      Description
+                    </label>
+                    <textarea
+                      id='description'
+                      name='description'
+                      value={formData.description}
+                      onChange={handleChange}
+                      rows='6'
+                      style={{
+                        width: '100%',
+                        border: '1px solid #ccc',
+                        borderRadius: '8px',
+                        padding: '8px',
+                        fontSize: '16px',
+                        fontFamily: 'inherit'
+                      }}
+                    />
+                    {errors.description && (
+                      <Typography variant='body2' color='error'>
+                        {errors.description}
+                      </Typography>
+                    )}
+                  </Box>
                 </Grid>
-             
               </Grid>
               <Button
                 type='submit'
