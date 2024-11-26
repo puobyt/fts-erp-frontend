@@ -44,7 +44,8 @@ export function ProcessOrderTableRow ({
         `/removeProcessOrder?processOrderId=${processOrderId}`
       )
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -68,16 +69,15 @@ export function ProcessOrderTableRow ({
     }).then(result => {
       if (result.isConfirmed) {
         handleDelete()
-        setUpdate(prev => !prev)
       }
     })
   }
 
   const handleMenuCloseAndConfirmDelete = () => {
-    handleClosePopover() // Close the popover or menu first
+    handleClosePopover()
     setTimeout(() => {
       confirmDelete()
-    }, 0) // Optional delay to ensure the popover is fully closed
+    }, 0)
   }
   return (
     <>
@@ -97,8 +97,8 @@ export function ProcessOrderTableRow ({
           style={{
             maxWidth: '300px', // Set a maximum width for the cell
             overflow: 'hidden', // Hide content that overflows the width
-            textOverflow: 'ellipsis', // Add ellipsis for overflowed text
-           // Prevent text from wrapping to the next line
+            textOverflow: 'ellipsis' // Add ellipsis for overflowed text
+            // Prevent text from wrapping to the next line
           }}
         >
           {row.description}
