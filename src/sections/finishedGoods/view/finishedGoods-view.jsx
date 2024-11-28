@@ -7,7 +7,7 @@ import TableBody from '@mui/material/TableBody'
 import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-
+import LinearProgress from '@mui/material/LinearProgress';
 import { DashboardContent } from 'src/layouts/dashboard'
 import { _users } from 'src/_mock'
 import { Iconify } from 'src/components/iconify'
@@ -155,7 +155,7 @@ export function FinishedGoodsView () {
         <Backdrop
           sx={{
             color: '#fff',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
             zIndex: theme => theme.zIndex.drawer + 1, // Ensure it overlays other components
             display: 'flex',
             justifyContent: 'center',
@@ -163,7 +163,8 @@ export function FinishedGoodsView () {
           }}
           open={loading}
         >
-          <CircularProgress size={60} />
+         
+          <CircularProgress  sx={{ color: 'success.main' }} size={40} />
         </Backdrop>
       )}
     </DashboardContent>

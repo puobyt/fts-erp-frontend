@@ -75,7 +75,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
         contactNumber: selectedFirm.contactNumber,
         pan: selectedFirm.pan,
         gst: selectedFirm.gst,
-        materialName:selectedFirm.material,
+        materialName: selectedFirm.material,
         address: selectedFirm.address,
         contactPersonName: selectedFirm.contactPersonName,
         contactPersonDetails: selectedFirm.contactPersonDetails,
@@ -131,14 +131,14 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
       return
     }
     try {
-      setLoading(true);
+      setLoading(true)
       const result = await axiosInstance.post(
         '/newPurchaseOrderCreation',
         formData
       )
       if (result) {
         toast.success(result.data.message)
-        handleClose()
+
         setFormData({
           purchaseOrderNumber: '',
           date: '',
@@ -156,10 +156,12 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
           pan: '',
           gst: ''
         })
-          setUpdate(prev => !prev);
-          setLoading(false);
 
-       
+        handleClose()
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000)
+        setUpdate(prev => !prev)
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -188,21 +190,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
   }
   return (
     <div>
-        {loading && (
-        <Backdrop
-          sx={{
-            color: '#fff',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: theme => theme.zIndex.drawer + 1, // Ensure it overlays other components
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-          open={loading}
-        >
-          <CircularProgress size={60} />
-        </Backdrop>
-      )}
       <Toaster position='top-center' reverseOrder={false} />
       <Button
         onClick={handleOpen}
@@ -377,9 +364,9 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid> */}
-           
+
                 <Grid item xs={6}>
-                <TextField
+                  <TextField
                     fullWidth
                     label='Material Name'
                     name='materialName'
@@ -505,6 +492,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                 type='submit'
                 fullWidth
                 variant='contained'
+                onClick={handleSubmit}
                 sx={{
                   mt: 4,
                   py: 1.5,
@@ -518,10 +506,18 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     transform: 'scale(1.05)',
                     boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.3)',
                     background: 'linear-gradient(90deg, #3b5998, #4a90e2)'
-                  }
+                  },
+                  position: 'relative'
                 }}
               >
-                Submit
+                {loading ? (
+                  <CircularProgress
+                    size={24}
+                    sx={{ color: 'white', position: 'absolute' }}
+                  />
+                ) : (
+                  'Submit'
+                )}
               </Button>
             </Box>
           </Paper>
