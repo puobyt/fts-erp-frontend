@@ -75,6 +75,8 @@ export async  function generateTraceabilityReport(row) {
     material.vendorId || "N/A",
   ]);
 
+  console.log('sanitize data',sanitizedData);
+
   doc.autoTable({
     startY: 110,
     head: [['Material Name', 'Batch Number', 'Quantity Used', 'Vendor ID']], 
