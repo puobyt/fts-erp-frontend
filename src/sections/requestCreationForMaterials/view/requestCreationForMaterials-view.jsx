@@ -111,7 +111,6 @@ export function RequestCreationForMaterialsView () {
                 // }
                 headLabel={[
                   { id: 'requestNumber', label: 'Request Number' },
-                  { id: 'batchNumber', label: 'Batch Number' },
                   { id: 'materialsList', label: 'Materials List' },
                   { id: 'quantity', label: 'quantity' },
                   { id: 'requiredDate', label: 'Required Date' },

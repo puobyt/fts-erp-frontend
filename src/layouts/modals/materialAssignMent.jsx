@@ -36,7 +36,7 @@ export default function MaterialAssignmentForm ({
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     assignmentNumber: '',
-    batchNumber: '',
+    // batchNumber: '',
     processOrderNumber: '',
     materials: [{ materialsList: '', assignedQuantity: '' }],
     assignedTo: ''
@@ -47,8 +47,8 @@ export default function MaterialAssignmentForm ({
     const newErrors = {}
     // if (!formData.assignmentNumber)
     //   newErrors.assignMentNumber = 'Assignment Number is required'
-    if (!formData.batchNumber)
-      newErrors.batchNumber = 'Batch Number is required'
+    // if (!formData.batchNumber)
+    //   newErrors.batchNumber = 'Batch Number is required'
     if (!formData.processOrderNumber)
       newErrors.processOrderNumber = 'Process Order Number is required'
     if (
@@ -88,7 +88,7 @@ export default function MaterialAssignmentForm ({
         handleClose()
         setFormData({
           assignmentNumber: '',
-          batchNumber: '',
+          // batchNumber: '',
           processOrderNumber: '',
           materials: [{ materialsList: '', assignedQuantity: '' }],
           assignedTo: ''
@@ -318,7 +318,7 @@ export default function MaterialAssignmentForm ({
                     }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Batch Number'
@@ -330,7 +330,7 @@ export default function MaterialAssignmentForm ({
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

@@ -54,7 +54,7 @@ export function ProductionOrderCreationOutputTableRow ({
         `/removeProductionOrderCreationOutput?productionOrderoutputId=${productionOrderoutputId}`
       )
       if (result) {
-        toast.success(result.data.message);
+        toast.success(result.data.message)
         setUpdate(prev => !prev)
       }
     } catch (err) {
@@ -102,7 +102,7 @@ export function ProductionOrderCreationOutputTableRow ({
           </Box>
         </TableCell> */}
         <TableCell> {row.productName}</TableCell>
-        <TableCell> {row.producedQuantity}</TableCell>
+        <TableCell> {`${row.producedQuantity} KG`}</TableCell>
         <TableCell>
           {new Date(row.productionCompletionDate).toLocaleDateString()}
         </TableCell>
@@ -110,7 +110,9 @@ export function ProductionOrderCreationOutputTableRow ({
         <TableCell>{row.storageLocationforOutput}</TableCell>
         <TableCell>{row.batchNumberforOutput}</TableCell>
         <TableCell>{row.productionNotes}</TableCell>
-        <TableCell style={{ whiteSpace: 'nowrap' }}>{row.Yield}</TableCell>
+        <TableCell
+          style={{ whiteSpace: 'nowrap' }}
+        >{`${row.Yield} %`}</TableCell>
 
         <TableCell>{row.outputQualityRating}</TableCell>
         <TableCell>{row.outputHandlingInstructions}</TableCell>

@@ -98,7 +98,7 @@ export function MaterialAssignmentTableRow ({
           </Box>
         </TableCell> */}
         <TableCell> {row.assignmentNumber}</TableCell>
-        <TableCell> {row.batchNumber}</TableCell>
+        {/* <TableCell> {row.batchNumber}</TableCell> */}
         <TableCell> {row.processOrderNumber}</TableCell>
         <TableCell
           style={{

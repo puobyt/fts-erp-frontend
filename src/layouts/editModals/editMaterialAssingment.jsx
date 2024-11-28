@@ -39,7 +39,7 @@ export default function EditMaterialAssignmentForm ({
     authPassword: '',
     materialAssignmentId: materialAssignmentData.materialAssignmentId,
     assignmentNumber: materialAssignmentData.assignmentNumber,
-    batchNumber: materialAssignmentData.batchNumber,
+    // batchNumber: materialAssignmentData.batchNumber,
     processOrderNumber: materialAssignmentData.processOrderNumber,
     materials: materialAssignmentData.materials,
     assignedTo: materialAssignmentData.assignedTo
@@ -50,8 +50,8 @@ export default function EditMaterialAssignmentForm ({
     const newErrors = {}
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
-    if (!formData.batchNumber)
-      newErrors.batchNumber = 'Batch Number is required'
+    // if (!formData.batchNumber)
+    //   newErrors.batchNumber = 'Batch Number is required'
     if (!formData.processOrderNumber)
       newErrors.processOrderNumber = 'Process Order Number is required'
     // if (!formData.assignmentNumber)
@@ -90,7 +90,7 @@ export default function EditMaterialAssignmentForm ({
             authPassword: '',
             materialAssignmentId: '',
             assignmentNumber: '',
-            batchNumber: '',
+            // batchNumber: '',
             processOrderNumber: '',
             materials: [{ materialsList: '', assignedQuantity: '' }],
             assignedTo: ''
@@ -325,7 +325,7 @@ export default function EditMaterialAssignmentForm ({
                     }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Batch Number'
@@ -337,7 +337,7 @@ export default function EditMaterialAssignmentForm ({
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

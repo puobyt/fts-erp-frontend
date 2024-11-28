@@ -35,7 +35,7 @@ export default function RequestCreationForMaterialsForm ({
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     requestNumber: '',
-    batchNumber: '',
+    // batchNumber: '',
     materials: [{ materialsList: '', quantity: '' }],
     requiredDate: ''
   })
@@ -45,8 +45,8 @@ export default function RequestCreationForMaterialsForm ({
     const newErrors = {}
     // if (!formData.requestNumber)
     //   newErrors.requestNumber = 'Request Number is required'
-    if (!formData.batchNumber)
-      newErrors.batchNumber = 'Batch Number is required'
+    // if (!formData.batchNumber)
+    //   newErrors.batchNumber = 'Batch Number is required'
     if (formData.materials.some(mat => !mat.materialsList || !mat.quantity)) {
       newErrors.materials = 'All material fields must be filled'
     } else if (
@@ -82,7 +82,7 @@ export default function RequestCreationForMaterialsForm ({
         handleClose()
         setFormData({
           requestNumber: '',
-          batchNumber: '',
+          // batchNumber: '',
           materials: [{ materialsList: '', quantity: '' }],
           requiredDate: ''
         })
@@ -101,17 +101,17 @@ export default function RequestCreationForMaterialsForm ({
     const updatedMaterials = [...formData.materials]
     updatedMaterials[index][name] = value
     setFormData({ ...formData, materials: updatedMaterials })
-    const selectedMaterialName = e.target.value
+    // const selectedMaterialName = e.target.value
 
-    const selectedMaterial = materialNames.find(
-      material => material.materialName === selectedMaterialName
-    )
-    if (selectedMaterial) {
-      setFormData({
-        ...formData,
-        batchNumber: selectedMaterial?.batchNumber || ''
-      })
-    }
+    // const selectedMaterial = materialNames.find(
+    //   material => material.materialName === selectedMaterialName
+    // )
+    // if (selectedMaterial) {
+    //   setFormData({
+    //     ...formData,
+    //     batchNumber: selectedMaterial?.batchNumber || ''
+    //   })
+    // }
   }
 
   const addMaterial = () => {
@@ -287,7 +287,7 @@ export default function RequestCreationForMaterialsForm ({
                     Add Material
                   </Button>
                 </Grid>
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Batch Number'
@@ -299,7 +299,7 @@ export default function RequestCreationForMaterialsForm ({
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

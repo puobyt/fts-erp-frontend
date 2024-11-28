@@ -91,7 +91,7 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
         <TableCell>  {row.finishedGoodsName}</TableCell>
         <TableCell>{row.batchNumber}</TableCell>
         <TableCell>{new Date(row.productionDate).toLocaleDateString()}</TableCell>
-        <TableCell>{row.quantityProduced}</TableCell>
+        <TableCell>{`${row.quantityProduced} KG`}</TableCell>
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />

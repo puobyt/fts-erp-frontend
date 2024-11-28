@@ -91,7 +91,7 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
           </Box>
         </TableCell> */}
         <TableCell>  {row.requestNumber}</TableCell>
-        <TableCell>  {row.batchNumber}</TableCell>
+        {/* <TableCell>  {row.batchNumber}</TableCell> */}
         <TableCell
           style={{
             overflow: 'hidden',

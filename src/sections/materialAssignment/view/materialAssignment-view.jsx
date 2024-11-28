@@ -110,7 +110,6 @@ useEffect(()=>{
                 // }
                 headLabel={[
                   { id: 'assignmentNumber', label: 'Assignment Number' },
-                  { id: 'batchNumber', label: 'Batch Number' },
                   { id: 'processOrderNubmer', label: 'Process Order Nubmer' },
                   { id: 'materialsList', label: 'Materials List' },
                   { id: 'assignedQuantity', label: 'Assigned Quantity' },
