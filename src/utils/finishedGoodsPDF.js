@@ -1,7 +1,10 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
-export function generateTraceabilityReport(row) {
+export async  function generateTraceabilityReport(row) {
+
+
+
   const doc = new jsPDF();
   doc.addFont('Roboto-Black.ttf', 'Roboto', 'bold');
 

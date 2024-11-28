@@ -13,6 +13,7 @@ import EditFinishedGoodsForm from '../../layouts/editModals/editFinishedGoods';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import Swal from 'sweetalert2'
+import { CircularProgress } from '@mui/material';
 import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
@@ -21,6 +22,7 @@ import toast, { Toaster } from 'react-hot-toast'
  
 export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
+  const [loading, setLoading] = useState(false);
   const finishedGoodsData = {
     finishedGoodsId:row._id,
     finishedGoodsName:row.finishedGoodsName,
@@ -28,6 +30,17 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
     productionDate:row.productionDate,
     quantityProduced:row.quantityProduced
   }
+
+  const handlePDFDownload = async (row) => {
+    setLoading(true);
+    try {
+      await generateTraceabilityReport(row);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleOpenPopover = useCallback((event) => {
     setOpenPopover(event.currentTarget);
   }, []);
@@ -131,8 +144,9 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
           <MenuItem
             sx={{ color: 'primary.main' }}
             onClick={() => generateTraceabilityReport(row)}
+            disabled={loading} 
           >
-            <Iconify icon='solar:download-bold' />
+           {loading ? <CircularProgress size={20} /> : <Iconify icon="solar:download-bold" />}
             Download PDF
           </MenuItem>
         </MenuList>
