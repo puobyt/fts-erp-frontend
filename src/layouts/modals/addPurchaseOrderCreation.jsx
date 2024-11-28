@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
 import { TextField, MenuItem, Container, Grid, Paper } from '@mui/material'
-
+import { CircularProgress, Backdrop } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -28,6 +28,7 @@ const style = {
 export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   // const [materials, setMaterials] = useState([])
@@ -130,6 +131,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
       return
     }
     try {
+      setLoading(true);
       const result = await axiosInstance.post(
         '/newPurchaseOrderCreation',
         formData
@@ -154,7 +156,10 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
           pan: '',
           gst: ''
         })
-        setUpdate(prev => !prev)
+          setUpdate(prev => !prev);
+          setLoading(false);
+
+       
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -183,6 +188,21 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
   }
   return (
     <div>
+        {loading && (
+        <Backdrop
+          sx={{
+            color: '#fff',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: theme => theme.zIndex.drawer + 1, // Ensure it overlays other components
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+          open={loading}
+        >
+          <CircularProgress size={60} />
+        </Backdrop>
+      )}
       <Toaster position='top-center' reverseOrder={false} />
       <Button
         onClick={handleOpen}

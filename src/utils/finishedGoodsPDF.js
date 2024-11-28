@@ -66,8 +66,10 @@ export async  function generateTraceabilityReport(row) {
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text('Raw Materials', 20, 100);
-
-
+ 
+  row.materials.map((material,index)=>{
+    console.log(material);
+  })
   const sanitizedData = row.materials.map((material) => [
     material.materialsList || "N/A",
     material.batchNumber || "N/A",
