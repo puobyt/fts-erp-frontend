@@ -31,7 +31,7 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
     quantityProduced:row.quantityProduced
   }
 
-  const handlePDFDownload = async (row) => {
+  const handlePDFDownload = async () => {
     setLoading(true);
     try {
       await generateTraceabilityReport(row);
@@ -143,7 +143,7 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
           </MenuItem>
           <MenuItem
             sx={{ color: 'primary.main' }}
-            onClick={() => generateTraceabilityReport(row)}
+            onClick={handlePDFDownload}
             disabled={loading} 
           >
            {loading ? <CircularProgress size={20} /> : <Iconify icon="solar:download-bold" />}
