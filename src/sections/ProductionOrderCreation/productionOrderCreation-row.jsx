@@ -103,7 +103,7 @@ export function ProductionOrderCreationTableRow ({
         <TableCell>
           <div
             style={{
-              minWidth: row.instructions.length > 50 ? '400px' : '200px',
+              minWidth: row.productDescription.length > 50 ? '400px' : '200px',
               maxWidth: '800px', // Prevent it from growing too large
               whiteSpace: 'normal', // Enable wrapping for better readability
               wordWrap: 'break-word', // Break long words if necessary
