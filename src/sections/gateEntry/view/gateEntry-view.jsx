@@ -23,20 +23,29 @@ import { GateEntryTableToolbar } from '../gateEntry-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import GateEntryForm from '../../../layouts/modals/addGateEntry';
 import axiosInstance from 'src/configs/axiosInstance';
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
+
+
 
 // ----------------------------------------------------------------------
 
 export function GateEntryView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [gateEntries,setGateEntries] = useState([]);
   const [firmNames,setfirmNames] = useState([]);
 const fetchGateEntry = async ()=>{
 try{
+  setLoading(true)
 const result = await axiosInstance.get('/gateEntry');
 if(result.data.data){
   setGateEntries(result.data.data);
   setfirmNames(result.data.firmNames);
+  setLoading(false)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -55,7 +64,23 @@ useEffect(()=>{
   });
 
   const notFound = !dataFiltered.length && !!filterName;
-
+  const renderFallback = (
+    <Box
+     display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -75,6 +100,7 @@ useEffect(()=>{
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <GateEntryTableToolbar
          sort={table.onSort}
           numSelected={table.selected.length}

@@ -24,20 +24,28 @@ import ProcessOrderForm from '../../../layouts/modals/addProcessOrder'
 import { emptyRows, applyFilter, getComparator } from '../utils'
 
 import axiosInstance from 'src/configs/axiosInstance'
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
+
 
 // ----------------------------------------------------------------------
 
 export function ProcessOrderView () {
   const table = useTable()
-  const [update, setUpdate] = useState(false)
+  const [update, setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [processOrders, setProcessOrders] = useState([])
   // const [materialNames, setMaterialNames] = useState([])
   const fetchprocessOrders = async () => {
     try {
+      setLoading(true)
       const result = await axiosInstance.get('/processOrder');
       if (result.data.data) {
 
         setProcessOrders(result.data.data)
+        setLoading(false)
         // setMaterialNames(result.data.materials)
       }
     } catch (err) {
@@ -60,6 +68,23 @@ export function ProcessOrderView () {
 
   const notFound = !dataFiltered.length && !!filterName
 
+  const renderFallback = (
+    <Box
+     display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
       <Box display='flex' alignItems='center' mb={5}>
@@ -78,6 +103,7 @@ export function ProcessOrderView () {
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <ProcessOrderToolbar
           sort={table.onSort}
           numSelected={table.selected.length}

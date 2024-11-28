@@ -31,6 +31,7 @@ export function QualityCheckTableRow ({
     qualityCheckId: row._id,
     batchNumber: row.batchNumber,
     materialName: row.materialName,
+    materialCode:row.materialCode,
     inspectionDate: row.inspectionDate,
     inspectorName: row.inspectorName,
     qualityStatus: row.qualityStatus,
@@ -100,6 +101,7 @@ export function QualityCheckTableRow ({
         </TableCell> */}
         <TableCell> {row.batchNumber}</TableCell>
         <TableCell>{row.materialName}</TableCell>
+        <TableCell>{row.materialCode}</TableCell>
         <TableCell>
           {new Date(row.inspectionDate).toLocaleDateString()}
         </TableCell>

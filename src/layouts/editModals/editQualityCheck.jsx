@@ -42,12 +42,15 @@ export default function EditQualityCheckForm ({
     qualityCheckId: qualityCheckData.qualityCheckId,
     batchNumber: qualityCheckData.batchNumber,
     materialName: qualityCheckData.materialName,
+    materialCode: qualityCheckData.materialCode,
     inspectionDate: formattedDate,
     inspectorName: qualityCheckData.inspectorName,
     qualityStatus: qualityCheckData.qualityStatus,
     comments: qualityCheckData.comments
   })
   const [errors, setErrors] = useState({})
+
+
   const handleMaterialChange = event => {
     const selectedMaterial = event.target.value
     const isSelectedMaterial = batches.find(
@@ -58,7 +61,40 @@ export default function EditQualityCheckForm ({
       setFormData({
         ...formData,
         materialName: selectedMaterial,
-        batchNumber: isSelectedMaterial.batchNumber
+        batchNumber: isSelectedMaterial.batchNumber,
+        materialCode: isSelectedMaterial.materialCode
+      })
+    }
+  }
+
+  const handleMaterialCodeChange = event => {
+    const selectedMaterialCode = event.target.value
+    const isSelectedMaterialCode = batches.find(
+      batch => selectedMaterialCode === batch.materialCode
+    )
+
+    if (isSelectedMaterialCode) {
+      setFormData({
+        ...formData,
+        materialCode: selectedMaterialCode,
+        batchNumber: isSelectedMaterialCode.batchNumber,
+        materialName: isSelectedMaterialCode.materialName
+      })
+    }
+  }
+
+  const handleBatchChange = event => {
+    const selectedBatch = event.target.value
+    const isSelectedBatch = batches.find(
+      batch => selectedBatch === batch.batchNumber
+    )
+
+    if (isSelectedBatch) {
+      setFormData({
+        ...formData,
+        materialName: isSelectedBatch.materialName,
+        batchNumber: selectedBatch,
+        materialCode: isSelectedMaterial.materialCode
       })
     }
   }
@@ -70,6 +106,9 @@ export default function EditQualityCheckForm ({
       newErrors.batchNumber = 'Batch Number is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
+
+          if (!formData.materialCode)
+      newErrors.materialCode = 'material Code is required'
     if (!formData.inspectionDate)
       newErrors.inspectionDate = 'Inspection Date is required'
     if (!formData.inspectorName)
@@ -103,6 +142,7 @@ export default function EditQualityCheckForm ({
             authPassword: '',
             qualityCheckId: '',
             batchNumber: '',
+            materialCode:'',
             materialName: '',
             inspectionDate: '',
             inspectorName: '',
@@ -210,6 +250,35 @@ export default function EditQualityCheckForm ({
                     </MenuItem>
                   </TextField>
                 </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Material Code'
+                    name='materialCode'
+                    value={formData.materialCode}
+                    onChange={handleMaterialCodeChange}
+                    error={!!errors.materialCode}
+                    helperText={errors.materialCode}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch.materialCode}>
+                        {batch.materialCode}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/current-stock')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Material Code +
+                    </MenuItem>
+                  </TextField>
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -217,7 +286,7 @@ export default function EditQualityCheckForm ({
                     label='Batch Number'
                     name='batchNumber'
                     value={formData.batchNumber}
-                    onChange={handleChange}
+                    onChange={handleBatchChange}
                     error={!!errors.batchNumber}
                     helperText={errors.batchNumber}
                     variant='outlined'

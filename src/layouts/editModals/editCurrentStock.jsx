@@ -55,6 +55,7 @@ export default function EditCurrentStockForm ({
     authPassword: '',
     currentStockId: currentStockData.currentStockId,
     materialName: currentStockData.materialName,
+    materialCode: currentStockData.materialCode,
     batchNumber: currentStockData.batchNumber,
     quantity: currentStockData.quantity,
     price: currentStockData.price,
@@ -73,6 +74,9 @@ export default function EditCurrentStockForm ({
     }
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
+
+    if (!formData.materialCode)
+      newErrors.materialCode = 'Material Code is required'
 
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
@@ -119,6 +123,7 @@ export default function EditCurrentStockForm ({
         setFormData({
           authPassword: '',
           materialName: '',
+          materialCode: '',
           batchNumber: '',
           quantity: '',
           price: '',
@@ -248,6 +253,21 @@ export default function EditCurrentStockForm ({
                       Add New Material +
                     </MenuItem>
                   </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Material Code'
+                    name='materialCode'
+                    value={formData.materialCode}
+                    onChange={handleChange}
+                    error={!!errors.materialCode}
+                    helperText={errors.materialCode}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
+                  />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

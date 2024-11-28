@@ -22,6 +22,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
   const mainStockData = {
     mainStockId: row._id,
     materialName: row.materialName,
+    materialCode:row.materialCode,
     quantity: row.quantity,
     price: row.price,
     storageLocation: row.storageLocation,
@@ -91,6 +92,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
           </Box>
         </TableCell> */}
         <TableCell> {row.materialName}</TableCell>
+        <TableCell> {row.materialCode}</TableCell>
         <TableCell>{row.batchNumber}</TableCell>
         <TableCell>{`${row.quantity} KG`}</TableCell>
 

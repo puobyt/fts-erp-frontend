@@ -106,6 +106,7 @@ useEffect(()=>{
                 headLabel={[
                   { id: 'batchNumber', label: 'Batch Number' },
                   { id: 'materialName', label: 'Material Name' },
+                  { id: 'materialCode', label: 'Material Code' },
                   { id: 'inspectionDate', label: 'Inspection Date' },
                   { id: 'inspectorName', label: 'Inspector Name' },
                   { id: 'qualityStatus', label: 'Quality Status' },

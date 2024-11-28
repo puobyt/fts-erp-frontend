@@ -32,6 +32,7 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
   const [formData, setFormData] = useState({
     batchNumber: '',
     materialName: '',
+    materialCode: '',
     inspectionDate: '',
     inspectorName: '',
     qualityStatus: '',
@@ -45,6 +46,8 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
       newErrors.batchNumber = 'Batch Number is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
+       if (!formData.materialCode)
+      newErrors.materialCode = 'material Code is required'
     if (!formData.inspectionDate)
       newErrors.inspectionDate = 'Inspection Date is required'
     if (!formData.inspectorName)
@@ -76,6 +79,7 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
         setFormData({
           batchNumber: '',
           materialName: '',
+          materialCode: '',
           inspectionDate: '',
           inspectorName: '',
           qualityStatus: '',
@@ -102,7 +106,24 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
       setFormData({
         ...formData,
         materialName: selectedMaterial,
-        batchNumber: isSelectedMaterial.batchNumber
+        batchNumber: isSelectedMaterial.batchNumber,
+        materialCode:isSelectedMaterial.materialCode
+      })
+    }
+  }
+
+  const handleMaterialCodeChange = event => {
+    const selectedMaterialCode = event.target.value
+    const isSelectedMaterialCode = batches.find(
+      batch => selectedMaterialCode === batch.materialCode
+    )
+
+    if (isSelectedMaterialCode) {
+      setFormData({
+        ...formData,
+        materialCode: selectedMaterialCode,
+        batchNumber: isSelectedMaterialCode.batchNumber,
+        materialName:isSelectedMaterialCode.materialName
       })
     }
   }
@@ -117,7 +138,8 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
       setFormData({
         ...formData,
         materialName: isSelectedBatch.materialName,
-        batchNumber: selectedBatch
+        batchNumber: selectedBatch,
+        materialCode:isSelectedMaterial.materialCode
       })
     }
   }
@@ -192,6 +214,34 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
                       sx={{ fontStyle: 'italic' }}
                     >
                       Add New Material In Current Stock +
+                    </MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Material Code'
+                    name='materialCode'
+                    value={formData.materialCode}
+                    onChange={handleMaterialCodeChange}
+                    error={!!errors.materialCode}
+                    helperText={errors.materialCode}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {batches.map((batch, index) => (
+                      <MenuItem key={index} value={batch.materialCode}>
+                        {batch.materialCode}
+                      </MenuItem>
+                    ))}
+
+                    {/* This item only triggers navigation, not a form selection */}
+                    <MenuItem
+                      onClick={() => navigate('/current-stock')}
+                      sx={{ fontStyle: 'italic' }} // Optional styling
+                    >
+                      Add New Batch +
                     </MenuItem>
                   </TextField>
                 </Grid>

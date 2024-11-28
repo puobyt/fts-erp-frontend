@@ -41,9 +41,10 @@ export default function CurrentStockForm ({
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const navigate = useNavigate()
-  const [batchNumberType, setBatchNumberType] = useState('')
+  const [batchNumberType, setBatchNumberType] = useState('');
   const [formData, setFormData] = useState({
     materialName: '',
+    materialCode:'',
     quantity: '',
     price: '',
     batchNumber: '',
@@ -61,7 +62,8 @@ export default function CurrentStockForm ({
       if (!formData.batchNumber)
         newErrors.batchNumber = 'Batch Number is required'
     }
-
+    if (!formData.materialCode)
+      newErrors.materialCode = 'Material Code is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
     if (!batchNumberType) {
@@ -107,6 +109,7 @@ export default function CurrentStockForm ({
         handleClose()
         setFormData({
           materialName: '',
+          materialCode:'',
           batchNumber: '',
           quantity: '',
           price: '',
@@ -227,6 +230,22 @@ export default function CurrentStockForm ({
                   </TextField>
                 </Grid>
 
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Material Code'
+                    name='materialCode'
+                    value={formData.materialCode}
+                    onChange={handleChange}
+                    error={!!errors.materialCode}
+                    helperText={errors.materialCode}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
+                
+                  />
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

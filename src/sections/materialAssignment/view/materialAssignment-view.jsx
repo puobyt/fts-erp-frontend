@@ -23,6 +23,12 @@ import { MaterialAssignmentTableToolbar } from '../materialAssignment-table-tool
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import MaterialAssignmentForm from '../../../layouts/modals/materialAssignMent';
 import axiosInstance from 'src/configs/axiosInstance';
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
+
+
 
 
 // ----------------------------------------------------------------------
@@ -30,6 +36,7 @@ import axiosInstance from 'src/configs/axiosInstance';
 export function MaterialAssignmentView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [materialAssignments,setMaterialAssignments] = useState([]);
   const [materialNames,setMaterialNames] = useState([]);
   const [finishedGoods,setFinishedGoods] = useState([]);
@@ -37,6 +44,7 @@ export function MaterialAssignmentView() {
   const [processOrderNumbers,setProcessOrderNumbers] = useState([]);
 const fetchMaterialsAssignment = async ()=>{
 try{
+  setLoading(true)
 const result = await axiosInstance.get('/materialAssignment');
 if(result.data.data){
 
@@ -44,7 +52,8 @@ if(result.data.data){
   setMaterialNames(result.data.materials);
   setFinishedGoods(result.data.finishedGoods);
   setBatches(result.data.batchNumber);
-  setProcessOrderNumbers(result.data.processOrderNumber)
+  setProcessOrderNumbers(result.data.processOrderNumber);
+  setLoading(false)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -63,7 +72,23 @@ useEffect(()=>{
   });
 
   const notFound = !dataFiltered.length && !!filterName;
-
+  const renderFallback = (
+    <Box
+     display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -83,6 +108,7 @@ useEffect(()=>{
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <MaterialAssignmentTableToolbar
          sort={table.onSort}
           numSelected={table.selected.length}

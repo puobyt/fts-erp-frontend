@@ -22,6 +22,12 @@ import { MainStockTableToolbar } from '../mainStock-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import MainStockForm from '../../../layouts/modals/addMainStock';
 import axiosInstance from 'src/configs/axiosInstance';
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
+
+
 
 
 // ----------------------------------------------------------------------
@@ -29,14 +35,16 @@ import axiosInstance from 'src/configs/axiosInstance';
 export function MainStockView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [mainStocks,setMainStocks] = useState([]);
 const fetchMainStock = async ()=>{
 try{
+  setLoading(true)
 const result = await axiosInstance.get('/mainStock');
 if(result.data.data){
 
   setMainStocks(result.data.data);
-
+  setLoading(false)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
@@ -55,7 +63,23 @@ useEffect(()=>{
   });
 
   const notFound = !dataFiltered.length && !!filterName;
-
+  const renderFallback = (
+    <Box
+     display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -75,6 +99,7 @@ useEffect(()=>{
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <MainStockTableToolbar
            sort={table.onSort}
           numSelected={table.selected.length}
@@ -102,6 +127,7 @@ useEffect(()=>{
                 // }
                 headLabel={[
                   { id: 'materialName', label: 'Material Name' },
+                  { id: 'materialCode', label: 'Material Code' },
                   { id: 'batchNumber', label: 'Batch Number' },
                   { id: 'quantity', label: 'Quantity In Kg' },
                   { id: 'price', label: 'Price' },

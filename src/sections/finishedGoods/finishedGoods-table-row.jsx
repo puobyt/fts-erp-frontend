@@ -146,7 +146,7 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
             onClick={handlePDFDownload}
             disabled={loading} 
           >
-           {loading ? <CircularProgress size={20} /> : <Iconify icon="solar:download-bold" />}
+           <Iconify icon="solar:download-bold" />
             Download PDF
           </MenuItem>
         </MenuList>

@@ -43,6 +43,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
     authPassword: '',
     mainStockId: mainStockData.mainStockId,
     materialName: mainStockData.materialName,
+    materialCode:mainStockData.materialCode,
     quantity: mainStockData.quantity,
     price: mainStockData.price,
     storageLocation: mainStockData.storageLocation,
@@ -58,6 +59,9 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
       newErrors.authPassword = 'Authorization Password is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
+
+        if (!formData.materialCode)
+      newErrors.materialCode = 'Material Code is required'
     if (!formData.quantity) {
       newErrors.quantity = 'Quantity is required';
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
@@ -93,6 +97,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
         setFormData({
           authPassword: '',
           materialName: '',
+          materialCode:'',
           quantity: '',
           price: '',
           vendorName: '',
@@ -178,6 +183,22 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                     helperText={errors.materialName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Material Code'
+                    name='materialCode'
+                    value={formData.materialCode}
+                    onChange={handleChange}
+                    error={!!errors.materialCode}
+                    helperText={errors.materialCode}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
+                
                   />
                 </Grid>
                 <Grid item xs={6}>

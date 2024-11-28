@@ -7,7 +7,10 @@ import TableBody from '@mui/material/TableBody'
 import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import LinearProgress from '@mui/material/LinearProgress';
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
 import { DashboardContent } from 'src/layouts/dashboard'
 import { _users } from 'src/_mock'
 import { Iconify } from 'src/components/iconify'
@@ -23,7 +26,7 @@ import { FinishedGoodsTableToolbar } from '../finishedGoods-table-toolbar'
 import { emptyRows, applyFilter, getComparator } from '../utils'
 import FinishedGoodsForm from '../../../layouts/modals/addFinishedGoods'
 import axiosInstance from 'src/configs/axiosInstance'
-import { CircularProgress, Backdrop } from '@mui/material'
+
 
 // ----------------------------------------------------------------------
 
@@ -59,13 +62,32 @@ export function FinishedGoodsView () {
   })
 
   const notFound = !dataFiltered.length && !!filterName
-
+  const renderFallback = (
+    <Box
+      display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
+      
       <Box display='flex' alignItems='center' mb={5}>
+     
         <Typography variant='h4' flexGrow={1}>
           Finished Goods Management
         </Typography>
+        
         {/* <Button
           variant="contained"
           color="inherit"
@@ -75,9 +97,11 @@ export function FinishedGoodsView () {
         </Button> */}
 
         <FinishedGoodsForm setUpdate={setUpdate} />
+        
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <FinishedGoodsTableToolbar
           sort={table.onSort}
           numSelected={table.selected.length}
@@ -89,7 +113,9 @@ export function FinishedGoodsView () {
         />
 
         <Scrollbar>
+          
           <TableContainer sx={{ overflow: 'unset' }}>
+          {/* {loading && renderFallback} */}
             <Table sx={{ minWidth: 800 }}>
               <FinishedGoodsTableHead
                 order={table.order}
@@ -110,7 +136,9 @@ export function FinishedGoodsView () {
                   { id: 'quantityProduced', label: 'Quantity Produced' }
                 ]}
               />
+              
               <TableBody>
+                
                 {dataFiltered
                   .slice(
                     table.page * table.rowsPerPage,
@@ -124,6 +152,7 @@ export function FinishedGoodsView () {
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
                     />
+                    
                   ))}
 
                 <TableEmptyRows
@@ -151,22 +180,6 @@ export function FinishedGoodsView () {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
-      {loading && (
-        <Backdrop
-          sx={{
-            color: '#fff',
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
-            zIndex: theme => theme.zIndex.drawer + 1, // Ensure it overlays other components
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-          open={loading}
-        >
-         
-          <CircularProgress  sx={{ color: 'success.main' }} size={40} />
-        </Backdrop>
-      )}
     </DashboardContent>
   )
 }

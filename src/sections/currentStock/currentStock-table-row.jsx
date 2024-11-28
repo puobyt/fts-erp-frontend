@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-
+import { generateMaterialsReport } from '../../utils/rawMaterialsPDF'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Popover from '@mui/material/Popover'
@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/iconify'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+
 // ----------------------------------------------------------------------
 
 export function CurrentStockTableRow ({
@@ -27,9 +28,11 @@ export function CurrentStockTableRow ({
   onSelectRow
 }) {
   const [openPopover, setOpenPopover] = useState(null)
+  const [loading, setLoading] = useState(false)
   const currentStockData = {
     currentStockId: row._id,
     materialName: row.materialName,
+    materialCode: row.materialCode,
     batchNumber: row.batchNumber,
     quantity: row.quantity,
     price: row.price,
@@ -77,7 +80,6 @@ export function CurrentStockTableRow ({
     }).then(result => {
       if (result.isConfirmed) {
         handleDelete()
-    
       }
     })
   }
@@ -101,9 +103,12 @@ export function CurrentStockTableRow ({
           </Box>
         </TableCell> */}
         <TableCell> {row.materialName}</TableCell>
+        <TableCell> {row.materialCode}</TableCell>
         <TableCell>{row.batchNumber}</TableCell>
         <TableCell>{`${row.quantity} KG`}</TableCell>
-        <TableCell style={{ whiteSpace: 'nowrap' }}>{`₹ ${row.price}`}</TableCell>
+        <TableCell
+          style={{ whiteSpace: 'nowrap' }}
+        >{`₹ ${row.price}`}</TableCell>
         <TableCell>{row.storageLocation}</TableCell>
         <TableCell>{row.vendorName}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
@@ -153,6 +158,10 @@ export function CurrentStockTableRow ({
           >
             <Iconify icon='solar:trash-bin-trash-bold' />
             Delete
+          </MenuItem>
+          <MenuItem sx={{ color: 'primary.main' }} onClick={()=>generateMaterialsReport(row)}  disabled={loading}>
+            <Iconify icon='solar:download-bold' />
+            Download PDF
           </MenuItem>
         </MenuList>
       </Popover>
