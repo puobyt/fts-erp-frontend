@@ -51,7 +51,7 @@ export function ProductionOrderCreationTableRow ({
         `/removeProductionOrderCreation?productionOrderId=${productionOrderId}`
       )
       if (result) {
-        toast.success(result.data.message);
+        toast.success(result.data.message)
         setUpdate(prev => !prev)
       }
     } catch (err) {
@@ -76,7 +76,6 @@ export function ProductionOrderCreationTableRow ({
     }).then(result => {
       if (result.isConfirmed) {
         handleDelete()
-    
       }
     })
   }
@@ -104,21 +103,20 @@ export function ProductionOrderCreationTableRow ({
         <TableCell>
           <div
             style={{
-              minWidth: '400px', // Ensures a minimum width of 400px
-              maxWidth: '800px', // Optional: Restrict the maximum width if needed
-              overflow: 'visible', // Allow content to overflow vertically
-              whiteSpace: 'normal', // Enable wrapping for multiline content
-              wordWrap: 'break-word' // Break long words to fit within the width
+              minWidth: row.instructions.length > 50 ? '400px' : '200px',
+              maxWidth: '800px', // Prevent it from growing too large
+              whiteSpace: 'normal', // Enable wrapping for better readability
+              wordWrap: 'break-word', // Break long words if necessary
+              overflow: 'hidden' // Avoid breaking layout
             }}
           >
             {row.productDescription}
           </div>
         </TableCell>
-        <TableCell>{row.productName}</TableCell>
+        <TableCell style={{ minWidth: '180px' }}>{row.productName}</TableCell>
         <TableCell>{row.batch}</TableCell>
         <TableCell
           style={{
-            whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis'
           }}
@@ -126,7 +124,11 @@ export function ProductionOrderCreationTableRow ({
           {row.materials.map((material, index) => (
             <div
               key={index}
-              style={{ display: 'inline-block', marginRight: '10px' }}
+              style={{
+                display: 'inline-block',
+                marginRight: '10px',
+                minWidth: '150px'
+              }}
             >
               <strong>{material.materialsList}</strong>:{' '}
               {`${material.requiredQuantity} KG`}
@@ -141,11 +143,11 @@ export function ProductionOrderCreationTableRow ({
         </TableCell>
         <TableCell
           style={{
-            minWidth: '400px', // Ensures a minimum width of 400px
-            maxWidth: '800px',
-            overflow: 'visible', // Allow content to overflow vertically
-            whiteSpace: 'normal', // Enable wrapping for multiline content
-            wordWrap: 'break-word' // Break long words to fit within the width
+            minWidth: row.instructions.length > 50 ? '400px' : '200px',
+            maxWidth: '800px', // Prevent it from growing too large
+            whiteSpace: 'normal', // Enable wrapping for better readability
+            wordWrap: 'break-word', // Break long words if necessary
+            overflow: 'hidden' // Avoid breaking layout
           }}
         >
           {row.instructions}
