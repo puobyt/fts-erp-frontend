@@ -36,7 +36,6 @@ const fetchReworks = async ()=>{
 try{
 const result = await axiosInstance.get('/rework');
 if(result.data.data){
-  console.log(result.data);
   setReworks(result.data.data);
   setBatches(result.data.batches)
 }

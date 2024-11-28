@@ -35,7 +35,6 @@ const fetchGateEntry = async ()=>{
 try{
 const result = await axiosInstance.get('/gateEntry');
 if(result.data.data){
-  console.log(result.data);
   setGateEntries(result.data.data);
   setfirmNames(result.data.firmNames);
 }

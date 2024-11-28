@@ -37,7 +37,6 @@ const fetchQualityChecks = async ()=>{
 try{
 const result = await axiosInstance.get('/qualityCheck');
 if(result.data.data){
-  console.log(result.data);
   setQualityChecks(result.data.data);
   setBatches(result.data.batches);
   setProducts(result.data.products);

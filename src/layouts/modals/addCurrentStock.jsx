@@ -53,7 +53,7 @@ export default function CurrentStockForm ({
     expiryDate: ''
   })
   const [errors, setErrors] = useState({})
-  console.log('vendors listing...', vendors)
+
   const validateForm = () => {
     const newErrors = {}
 

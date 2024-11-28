@@ -35,7 +35,7 @@ const fetchInvoiceCreations = async ()=>{
 try{
 const result = await axiosInstance.get('/invoiceCreations');
 if(result.data.data){
-  console.log(result.data);
+
   setInvoiceCreations(result.data.data);
   setItemNames(result.data.itemNames);
   // setfirmNames(result.data.firmNames);

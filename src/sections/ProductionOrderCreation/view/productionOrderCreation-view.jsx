@@ -37,7 +37,6 @@ export function ProductionOrderCreationView () {
     try {
       const result = await axiosInstance.get('/productionOrderCreation')
       if (result.data.data) {
-        console.log(result.data)
         setProductionOrders(result.data.data)
         setMaterialNames(result.data.materials);
         setProcessOrderNumbers(result.data.processOrderNumbers);

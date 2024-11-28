@@ -65,31 +65,17 @@ export function generateTraceabilityReport(row) {
   doc.text('Raw Materials', 20, 100);
 
 
-  const rawMaterials = [
-    {
-      materialName: 'Material 1',
-      batchNumber: 'BN12345',
-      quantityUsed: '500 kg',
-      vendorId: 'V123',
-    },
-    {
-      materialName: 'Material 2',
-      batchNumber: 'BN67890',
-      quantityUsed: '300 kg',
-      vendorId: 'V124',
-    },
-  ];
-
+  const sanitizedData = row.materials.map((material) => [
+    material.materialsList || "N/A",
+    material.batchNumber || "N/A",
+    String(material.quantity || "0"), // Ensure numbers are converted to strings
+    material.vendorId || "N/A",
+  ]);
 
   doc.autoTable({
     startY: 110,
     head: [['Material Name', 'Batch Number', 'Quantity Used', 'Vendor ID']], 
-    body: row.materials.map((material) => [
-      material.materialsList,
-      material.batchNumber,
-      material.quantity,
-      material.vendorId,
-    ]), 
+    body:sanitizedData, 
     theme: 'grid', 
     headStyles: { fillColor: [41, 128, 185] }, 
     margin: { left: 20, right: 20 }, 

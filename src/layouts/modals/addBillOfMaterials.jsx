@@ -36,7 +36,7 @@ export default function BillOfMaterialsForm ({
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate()
   const handleClose = () => setOpen(false)
-  console.log('materialNames... listing',materialNames)
+
   const [formData, setFormData] = useState({
     bomNumber: '',
     productName: '',
@@ -68,7 +68,7 @@ export default function BillOfMaterialsForm ({
 
   const handleSubmit = async e => {
     e.preventDefault()
-    console.log('handle submit form trigger')
+
     if (!validateForm()) {
       return
     }

@@ -49,7 +49,6 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
     try {
 
       const vendorId = row._id;
-      console.log('vendorId... client',vendorId);
       const result = await axiosInstance.delete(`/removeVendorManagement?vendorId=${vendorId}`);
       if (result) {
         toast.success(result.data.message);

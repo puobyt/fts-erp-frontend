@@ -17,7 +17,7 @@ import {
 
 // ----------------------------------------------------------------------
 const adminData = JSON.parse(localStorage.getItem('admin'));
-console.log('adminData',adminData); // { email: "admin@example.com", userName: "AdminName" }
+
 
 export const _myAccount = {
   displayName:`${adminData?.userName}`,

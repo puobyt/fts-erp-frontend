@@ -35,7 +35,7 @@ const fetchFinishedGoods = async ()=>{
 try{
 const result = await axiosInstance.get('/finishedGoods');
 if(result.data.data){
-  console.log(result.data);
+
   setFinishedGoods(result.data.data);
 }
 }catch(err){

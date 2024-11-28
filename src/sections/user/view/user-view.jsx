@@ -34,7 +34,7 @@ const fetchVendorManagement = async ()=>{
 try{
 const result = await axiosInstance.get('/vendorManagement');
 if(result.data.data){
-  console.log(result.data);
+
   setVendors(result.data.data);
 }
 }catch(err){

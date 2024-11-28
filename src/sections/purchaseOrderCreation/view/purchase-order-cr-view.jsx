@@ -37,7 +37,6 @@ const fetchPurchaseOrderCreation = async ()=>{
 try{
 const result = await axiosInstance.get('/purchaseOrderCreation');
 if(result.data.data){
-  console.log('populated',result.data.data);
   setPurchaseCreations(result.data.data);
   setFirms(result.data.firms);
 }

@@ -38,7 +38,7 @@ const fetchbillOfMaterials = async ()=>{
 try{
 const result = await axiosInstance.get('/billOfMaterials');
 if(result.data.data){
-  console.log(result.data);
+
   setBillOfMaterials(result.data.data);
   setProductNames(result.data.productNames);
   setMaterialNames(result.data.materials);

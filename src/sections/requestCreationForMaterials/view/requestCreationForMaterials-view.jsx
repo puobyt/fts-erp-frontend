@@ -37,7 +37,6 @@ export function RequestCreationForMaterialsView () {
     try {
       const result = await axiosInstance.get('/requestCreationForMaterials')
       if (result.data.data) {
-        console.log(result.data)
         setRequestMaterials(result.data.data)
         setMaterialNames(result.data.materials)
         setFinishedGoods(result.data.finishedGoods)

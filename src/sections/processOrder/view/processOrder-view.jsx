@@ -36,7 +36,7 @@ export function ProcessOrderView () {
     try {
       const result = await axiosInstance.get('/processOrder');
       if (result.data.data) {
-        console.log(result.data)
+
         setProcessOrders(result.data.data)
         // setMaterialNames(result.data.materials)
       }

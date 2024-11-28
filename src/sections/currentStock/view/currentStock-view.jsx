@@ -38,8 +38,6 @@ const fetchCurrentStock = async ()=>{
 try{
 const result = await axiosInstance.get('/currentStock');
 if(result.data.data){
-  console.log(result.data);
-  console.log('purchase orders data',result.data.purchaseOrderCreationData);
   setCurrentStocks(result.data.data);
   setPurchaseOrderData(result.data.purchaseOrderCreationData);
   setMaterials(result.data.materials);

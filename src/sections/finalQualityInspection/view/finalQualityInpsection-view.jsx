@@ -36,7 +36,7 @@ try{
 const result = await axiosInstance.get('/qualityInpsection');
 
 if(result.data.data){
-  console.log(result.data);
+
   setQualityInspections(result.data.data);
   setProductNames(result.data.productNames);
 }

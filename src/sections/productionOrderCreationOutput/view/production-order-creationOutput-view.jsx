@@ -38,7 +38,6 @@ const fetchPurchaseOrderCreation = async ()=>{
 try{
 const result = await axiosInstance.get('/productionOrderCreationOutput');
 if(result.data.data){
-  console.log('populated',result.data.data);
   setProductionOrderOutputCreations(result.data.data);
   setBatches(result.data.batches);
   setProducts(result.data.products);
