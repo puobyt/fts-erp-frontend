@@ -141,6 +141,11 @@ export function ProductionOrderCreationTableRow ({
             <div key={index}>{`${material.requiredQuantity} KG`}</div>
           ))}
         </TableCell>
+        <TableCell>
+          {row.materials.map((material, index) => (
+            <div key={index}>{material.materialCode}</div>
+          ))}
+        </TableCell>
         <TableCell
           style={{
             minWidth: row.instructions.length > 50 ? '400px' : '200px',

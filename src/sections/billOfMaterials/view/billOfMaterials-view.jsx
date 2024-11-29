@@ -136,6 +136,7 @@ useEffect(()=>{
                   { id: 'productName', label: 'Product Name' },
                   { id: 'materialsList', label: 'Materials List'},
                   { id: 'quantity', label: 'Quantity'},
+                  { id: 'materialCode', label: 'Material Code'},
                 ]}
               />
               <TableBody>
@@ -164,10 +165,7 @@ useEffect(()=>{
                 {notFound && <TableNoData searchQuery={filterName} />}
               </TableBody>
             </Table>
-          </TableContainer>
-        </Scrollbar>
-
-        <TablePagination
+            <TablePagination
           component="div"
           page={table.page}
           count={billOfMaterials.length}
@@ -176,6 +174,10 @@ useEffect(()=>{
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
+          </TableContainer>
+        </Scrollbar>
+
+
       </Card>
     </DashboardContent>
   );

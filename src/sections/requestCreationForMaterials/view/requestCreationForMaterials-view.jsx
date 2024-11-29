@@ -138,6 +138,7 @@ export function RequestCreationForMaterialsView () {
                   { id: 'requestNumber', label: 'Request Number' },
                   { id: 'materialsList', label: 'Materials List' },
                   { id: 'quantity', label: 'quantity' },
+                  { id: 'materialCode', label: 'Material Code' },
                   { id: 'requiredDate', label: 'Required Date' },
                 
                 ]}

@@ -40,7 +40,7 @@ export default function BillOfMaterialsForm ({
   const [formData, setFormData] = useState({
     bomNumber: '',
     productName: '',
-    materials: [{ materialsList: '', quantity: '' }],
+    materials: [{ materialsList: '', quantity: '', materialCode: '' }],
     quantity: ''
   })
   const [errors, setErrors] = useState({})
@@ -50,7 +50,11 @@ export default function BillOfMaterialsForm ({
     // if (!formData.bomNumber) newErrors.bomNumber = 'BOM Number is required'
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
-    if (formData.materials.some(mat => !mat.materialsList || !mat.quantity)) {
+    if (
+      formData.materials.some(
+        mat => !mat.materialsList || !mat.quantity || !mat.materialCode
+      )
+    ) {
       newErrors.materials = 'All material fields must be filled'
     } else if (
       formData.materials.some(mat => !Number.isFinite(Number(mat.quantity)))
@@ -80,7 +84,7 @@ export default function BillOfMaterialsForm ({
         setFormData({
           bomNumber: '',
           productName: '',
-          materials: [{ materialsList: '', quantity: '' }]
+          materials: [{ materialsList: '', quantity: '', materialCode: '' }]
         })
         setErrors({})
         setUpdate(prev => !prev)
@@ -96,8 +100,18 @@ export default function BillOfMaterialsForm ({
 
   const handleMaterialChange = (e, index) => {
     const { name, value } = e.target
+
     const updatedMaterials = [...formData.materials]
     updatedMaterials[index][name] = value
+
+    if (name === 'materialsList') {
+      const selectedMaterial = materialNames.find(
+        material => material.materialName === value
+      )
+      updatedMaterials[index].materialCode =
+        selectedMaterial?.materialCode || ''
+    }
+
     setFormData({ ...formData, materials: updatedMaterials })
   }
 
@@ -106,7 +120,7 @@ export default function BillOfMaterialsForm ({
       ...prevFormData,
       materials: [
         ...prevFormData.materials,
-        { materialsList: '', quantity: '' }
+        { materialsList: '', quantity: '', materialCode: '' }
       ]
     }))
   }
@@ -142,7 +156,7 @@ export default function BillOfMaterialsForm ({
           </Typography>
         </Box> */}
 
-        <Container maxWidth='sm' sx={{ mt: 8 }} >
+        <Container maxWidth='sm' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
             sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}
@@ -170,8 +184,8 @@ export default function BillOfMaterialsForm ({
                 paddingRight: 2
               }}
             >
-              <Grid container spacing={2}>
-                <Grid item xs={6} sx={{mt:1}}>
+              <Grid container spacing={2} sx={{ mt: 0.1 }}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Bom Number'
@@ -211,7 +225,9 @@ export default function BillOfMaterialsForm ({
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/production-order-creation-output')}
+                      onClick={() =>
+                        navigate('/production-order-creation-output')
+                      }
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Product +
@@ -221,7 +237,7 @@ export default function BillOfMaterialsForm ({
 
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         select
@@ -234,9 +250,9 @@ export default function BillOfMaterialsForm ({
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
                       >
-                        {materialNames.map((materialName, index) => (
-                          <MenuItem key={index} value={materialName}>
-                            {materialName}
+                        {materialNames.map((material, index) => (
+                          <MenuItem key={index} value={material.materialName}>
+                            {material.materialName}
                           </MenuItem>
                         ))}
 
@@ -249,7 +265,7 @@ export default function BillOfMaterialsForm ({
                         </MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         label='Quantity In KG'
@@ -260,6 +276,23 @@ export default function BillOfMaterialsForm ({
                         onChange={e => handleMaterialChange(e, index)}
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        label='Material Code'
+                        name='materialCode'
+                        error={!!errors.materials}
+                        value={material.materialCode}
+                        helperText={errors.materials}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{
+                          style: { borderRadius: 8 },
+                          readOnly: true
+                        }}
                       />
                     </Grid>
                     <Grid

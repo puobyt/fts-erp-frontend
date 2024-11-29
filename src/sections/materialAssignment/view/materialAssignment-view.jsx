@@ -139,6 +139,7 @@ useEffect(()=>{
                   { id: 'processOrderNubmer', label: 'Process Order Nubmer' },
                   { id: 'materialsList', label: 'Materials List' },
                   { id: 'assignedQuantity', label: 'Assigned Quantity' },
+                  { id: 'materialCode', label: 'Material Code' },
                   { id: 'assignedTo', label: 'Assigned To' },
                 ]}
               />

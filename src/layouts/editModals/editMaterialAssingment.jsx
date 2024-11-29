@@ -56,10 +56,16 @@ export default function EditMaterialAssignmentForm ({
       newErrors.processOrderNumber = 'Process Order Number is required'
     // if (!formData.assignmentNumber)
     //   newErrors.assignMentNumber = 'Assignment Number is required'
-    if (formData.materials.some(mat => !mat.materialsList || !mat.assignedQuantity)) {
+    if (
+      formData.materials.some(
+        mat => !mat.materialsList || !mat.assignedQuantity || !mat.materialCode
+      )
+    ) {
       newErrors.materials = 'All material fields must be filled'
     } else if (
-      formData.materials.some(mat => !Number.isFinite(Number(mat.assignedQuantity)))
+      formData.materials.some(
+        mat => !Number.isFinite(Number(mat.assignedQuantity))
+      )
     ) {
       newErrors.quantity = 'Assigned Quantity must be a number'
     }
@@ -92,7 +98,9 @@ export default function EditMaterialAssignmentForm ({
             assignmentNumber: '',
             // batchNumber: '',
             processOrderNumber: '',
-            materials: [{ materialsList: '', assignedQuantity: '' }],
+            materials: [
+              { materialsList: '', assignedQuantity: '', materialCode: '' }
+            ],
             assignedTo: ''
           })
           setUpdate(prev => !prev)
@@ -114,20 +122,19 @@ export default function EditMaterialAssignmentForm ({
 
   const handleMaterialChange = (e, index) => {
     const { name, value } = e.target
+
     const updatedMaterials = [...formData.materials]
     updatedMaterials[index][name] = value
-    setFormData({ ...formData, materials: updatedMaterials })
-    const selectedMaterialName = e.target.value
 
-    const selectedMaterial = materialNames.find(
-      material => material.materialName === selectedMaterialName
-    )
-    if (selectedMaterial) {
-      setFormData({
-        ...formData,
-        batchNumber: selectedMaterial?.batchNumber || ''
-      })
+    if (name === 'materialsList') {
+      const selectedMaterial = materialNames.find(
+        material => material.materialName === value
+      )
+      updatedMaterials[index].materialCode =
+        selectedMaterial?.materialCode || ''
     }
+
+    setFormData({ ...formData, materials: updatedMaterials })
   }
 
   const addMaterial = () => {
@@ -135,7 +142,7 @@ export default function EditMaterialAssignmentForm ({
       ...prevFormData,
       materials: [
         ...prevFormData.materials,
-        { materialsList: '', assignedQuantity: '' }
+        { materialsList: '', assignedQuantity: '', materialCode: '' }
       ]
     }))
   }
@@ -185,13 +192,17 @@ export default function EditMaterialAssignmentForm ({
                 Assignment Material Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit} sx={{
+            <Box
+              component='form'
+              onSubmit={handleSubmit}
+              sx={{
                 maxHeight: '65vh',
                 overflowY: 'auto',
                 paddingRight: 2
-              }}>
-              <Grid container spacing={2}>
-              <Grid item xs={12}>
+              }}
+            >
+              <Grid container spacing={2} sx={{ mt: 0.1 }}>
+                <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label='Authorization Password'
@@ -205,9 +216,9 @@ export default function EditMaterialAssignmentForm ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-              {formData.materials.map((material, index) => (
+                {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         select
@@ -261,7 +272,7 @@ export default function EditMaterialAssignmentForm ({
                         </MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         label='Quantity In KG'
@@ -272,6 +283,23 @@ export default function EditMaterialAssignmentForm ({
                         onChange={e => handleMaterialChange(e, index)}
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        label='Material Code'
+                        name='materialCode'
+                        error={!!errors.materials}
+                        value={material.materialCode}
+                        helperText={errors.materials}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{
+                          style: { borderRadius: 8 },
+                          readOnly: true
+                        }}
                       />
                     </Grid>
                     <Grid
@@ -308,7 +336,7 @@ export default function EditMaterialAssignmentForm ({
                     Add Material
                   </Button>
                 </Grid>
-             
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -319,7 +347,10 @@ export default function EditMaterialAssignmentForm ({
                     error={!!errors.assignmentNumber}
                     helperText={errors.assignmentNumber}
                     variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 },placeholder:'Auto-Generate' }}
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
                     InputLabelProps={{
                       shrink: true
                     }}

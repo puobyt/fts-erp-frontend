@@ -27,7 +27,6 @@ import { emptyRows, applyFilter, getComparator } from '../utils'
 import FinishedGoodsForm from '../../../layouts/modals/addFinishedGoods'
 import axiosInstance from 'src/configs/axiosInstance'
 
-
 // ----------------------------------------------------------------------
 
 export function FinishedGoodsView () {
@@ -81,13 +80,11 @@ export function FinishedGoodsView () {
   )
   return (
     <DashboardContent>
-      
       <Box display='flex' alignItems='center' mb={5}>
-     
         <Typography variant='h4' flexGrow={1}>
           Finished Goods Management
         </Typography>
-        
+
         {/* <Button
           variant="contained"
           color="inherit"
@@ -97,11 +94,10 @@ export function FinishedGoodsView () {
         </Button> */}
 
         <FinishedGoodsForm setUpdate={setUpdate} />
-        
       </Box>
 
       <Card>
-      {loading && renderFallback}
+        {loading && renderFallback}
         <FinishedGoodsTableToolbar
           sort={table.onSort}
           numSelected={table.selected.length}
@@ -113,9 +109,8 @@ export function FinishedGoodsView () {
         />
 
         <Scrollbar>
-          
           <TableContainer sx={{ overflow: 'unset' }}>
-          {/* {loading && renderFallback} */}
+            {/* {loading && renderFallback} */}
             <Table sx={{ minWidth: 800 }}>
               <FinishedGoodsTableHead
                 order={table.order}
@@ -136,9 +131,8 @@ export function FinishedGoodsView () {
                   { id: 'quantityProduced', label: 'Quantity Produced' }
                 ]}
               />
-              
+
               <TableBody>
-                
                 {dataFiltered
                   .slice(
                     table.page * table.rowsPerPage,
@@ -152,7 +146,6 @@ export function FinishedGoodsView () {
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
                     />
-                    
                   ))}
 
                 <TableEmptyRows
@@ -167,18 +160,17 @@ export function FinishedGoodsView () {
                 {notFound && <TableNoData searchQuery={filterName} />}
               </TableBody>
             </Table>
+            <TablePagination
+              component='div'
+              page={table.page}
+              count={finishedGoods.length}
+              rowsPerPage={table.rowsPerPage}
+              onPageChange={table.onChangePage}
+              rowsPerPageOptions={[5, 10, 25]}
+              onRowsPerPageChange={table.onChangeRowsPerPage}
+            />
           </TableContainer>
         </Scrollbar>
-
-        <TablePagination
-          component='div'
-          page={table.page}
-          count={finishedGoods.length}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
-        />
       </Card>
     </DashboardContent>
   )

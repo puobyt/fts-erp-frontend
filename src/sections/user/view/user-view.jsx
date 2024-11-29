@@ -166,10 +166,7 @@ export function UserView () {
                 {notFound && <TableNoData searchQuery={filterName} />}
               </TableBody>
             </Table>
-          </TableContainer>
-        </Scrollbar>
-
-        <TablePagination
+            <TablePagination
           component='div'
           page={table.page}
           count={vendors.length}
@@ -178,6 +175,10 @@ export function UserView () {
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
+          </TableContainer>
+        </Scrollbar>
+
+
       </Card>
     </DashboardContent>
   )

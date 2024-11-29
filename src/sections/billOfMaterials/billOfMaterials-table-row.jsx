@@ -111,6 +111,11 @@ export function BillOfMaterialsTableRow ({
             <div key={index}>{`${material.quantity} KG`}</div>
           ))}
         </TableCell>
+        <TableCell>
+          {row.materials.map((material, index) => (
+            <div key={index}>{material.materialCode}</div>
+          ))}
+        </TableCell>
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon='eva:more-vertical-fill' />

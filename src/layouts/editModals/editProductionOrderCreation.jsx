@@ -65,7 +65,7 @@ export default function EditProductionOrderCreationForm ({
     if (!formData.batch) newErrors.batch = 'Batch is required'
     if (
       formData.materials.some(
-        mat => !mat.materialsList || !mat.requiredQuantity
+        mat => !mat.materialsList || !mat.requiredQuantity || !mat.materialCode
       )
     ) {
       newErrors.materials = 'All material fields must be filled'
@@ -110,7 +110,9 @@ export default function EditProductionOrderCreationForm ({
             productDescription: '',
             productName: '',
             batch: '',
-            materials: [{ materialsList: '', requiredQuantity: '' }],
+            materials: [
+              { materialsList: '', requiredQuantity: '', materialCode: '' }
+            ],
             instructions: '',
             startDate: '',
             endDate: ''
@@ -134,8 +136,18 @@ export default function EditProductionOrderCreationForm ({
 
   const handleMaterialChange = (e, index) => {
     const { name, value } = e.target
+
     const updatedMaterials = [...formData.materials]
     updatedMaterials[index][name] = value
+
+    if (name === 'materialsList') {
+      const selectedMaterial = materialNames.find(
+        material => material.materialName === value
+      )
+      updatedMaterials[index].materialCode =
+        selectedMaterial?.materialCode || ''
+    }
+
     setFormData({ ...formData, materials: updatedMaterials })
   }
 
@@ -203,7 +215,7 @@ export default function EditProductionOrderCreationForm ({
                 paddingRight: 2
               }}
             >
-              <Grid container spacing={2}>
+              <Grid container spacing={2} sx={{ mt: 0.1 }}>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -289,7 +301,7 @@ export default function EditProductionOrderCreationForm ({
                 </Grid>
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         select
@@ -302,9 +314,9 @@ export default function EditProductionOrderCreationForm ({
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
                       >
-                        {materialNames.map((materialName, index) => (
-                          <MenuItem key={index} value={materialName}>
-                            {materialName}
+                        {materialNames.map((material, index) => (
+                          <MenuItem key={index} value={material.materialName}>
+                            {material.materialName}
                           </MenuItem>
                         ))}
 
@@ -317,7 +329,7 @@ export default function EditProductionOrderCreationForm ({
                         </MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         label='Required Quantity In KG'
@@ -328,6 +340,22 @@ export default function EditProductionOrderCreationForm ({
                         onChange={e => handleMaterialChange(e, index)}
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        label='Material Code'
+                        name='materialCode'
+                        error={!!errors.materials}
+                        value={material.materialCode}
+                        helperText={errors.materials}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{
+                          style: { borderRadius: 8 },
+                          readOnly: true // Makes the field uneditable
+                        }}
                       />
                     </Grid>
                     <Grid

@@ -52,7 +52,7 @@ export default function EditRequestCreationForMaterialsForm ({
       newErrors.requestNumber = 'Request Number is required'
     // if (!formData.batchNumber)
     //   newErrors.batchNumber = 'Batch Number is required'
-    if (formData.materials.some(mat => !mat.materialsList || !mat.quantity)) {
+    if (formData.materials.some(mat => !mat.materialsList || !mat.quantity || !mat.materialCode)) {
       newErrors.materials = 'All material fields must be filled'
     } else if (
       formData.materials.some(mat => !Number.isFinite(Number(mat.quantity)))
@@ -88,7 +88,7 @@ export default function EditRequestCreationForMaterialsForm ({
             requestMaterialsId: '',
             requestNumber: '',
             // batchNumber: '',
-            materials: [{ materialsList: '', quantity: '' }],
+            materials: [{ materialsList: '', quantity: '',materialCode:'' }],
             requiredDate: ''
           })
           setUpdate(prev => !prev)
@@ -109,30 +109,29 @@ export default function EditRequestCreationForMaterialsForm ({
     }
   }
 
-  const handleMaterialChange = (e, index) => {
-    const { name, value } = e.target
-    const updatedMaterials = [...formData.materials]
-    updatedMaterials[index][name] = value
-    setFormData({ ...formData, materials: updatedMaterials })
-    // const selectedMaterialName = e.target.value
 
-    // const selectedMaterial = materialNames.find(
-    //   material => material.materialName === selectedMaterialName
-    // )
-    // if (selectedMaterial) {
-    //   setFormData({
-    //     ...formData,
-    //     batchNumber: selectedMaterial?.batchNumber || ''
-    //   })
-    // }
-  }
+  const handleMaterialChange = (e, index) => {
+    const { name, value } = e.target;
+  
+    const updatedMaterials = [...formData.materials];
+    updatedMaterials[index][name] = value;
+  
+    if (name === 'materialsList') {
+      const selectedMaterial = materialNames.find(
+        material => material.materialName === value
+      );
+      updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
+    }
+  
+    setFormData({ ...formData, materials: updatedMaterials });
+  };
 
   const addMaterial = () => {
     setFormData(prevFormData => ({
       ...prevFormData,
       materials: [
         ...prevFormData.materials,
-        { materialsList: '', requiredQuantity: '' }
+        { materialsList: '', quantity: '' }
       ]
     }))
   }
@@ -208,7 +207,7 @@ export default function EditRequestCreationForMaterialsForm ({
                 </Grid>
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         select
@@ -262,7 +261,7 @@ export default function EditRequestCreationForMaterialsForm ({
                         </MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         label='Quantity In KG'
@@ -273,6 +272,22 @@ export default function EditRequestCreationForMaterialsForm ({
                         onChange={e => handleMaterialChange(e, index)}
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        label='Material Code'
+                        name='materialCode'
+                        error={!!errors.materials}
+                        value={material.materialCode}
+                        helperText={errors.materials}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{
+                          style: { borderRadius: 8 },
+                          readOnly: true 
+                        }}
                       />
                     </Grid>
                     <Grid

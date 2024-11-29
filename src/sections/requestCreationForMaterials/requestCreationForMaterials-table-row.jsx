@@ -115,6 +115,11 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
             <div key={index}>{`${material.quantity} KG`}</div>
           ))}
         </TableCell>
+        <TableCell>
+          {row.materials.map((material, index) => (
+            <div key={index}>{material.materialCode}</div>
+          ))}
+        </TableCell>
         <TableCell>{new Date(row.requiredDate).toLocaleDateString()}</TableCell>
 
         <TableCell align="right">

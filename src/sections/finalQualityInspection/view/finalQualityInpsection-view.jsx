@@ -159,10 +159,7 @@ useEffect(()=>{
                 {notFound && <TableNoData searchQuery={filterName} />}
               </TableBody>
             </Table>
-          </TableContainer>
-        </Scrollbar>
-
-        <TablePagination
+            <TablePagination
           component="div"
           page={table.page}
           count={qualityInspections.length}
@@ -171,6 +168,10 @@ useEffect(()=>{
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
+          </TableContainer>
+        </Scrollbar>
+
+
       </Card>
     </DashboardContent>
   );

@@ -140,6 +140,7 @@ export function ProductionOrderCreationView () {
                   { id: 'batch', label: 'Batch' },
                   { id: 'materialList', label: 'Material List' },
                   { id: 'requiredQuantity', label: 'Required Quantity' },
+                  { id: 'materialCode', label: 'Material Code' },
                   { id: 'instructions', label: 'Instructions' },
                   { id: 'startDate', label: 'Start Date' },
                   { id: 'endDate', label: 'End Date' }

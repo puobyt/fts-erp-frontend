@@ -72,6 +72,7 @@ export async  function generateTraceabilityReport(row) {
   })
   const sanitizedData = row.materials.map((material) => [
     material.materialsList || "N/A",
+    material.materialCode || "N/A",
     material.batchNumber || "N/A",
     String(material.quantity || "0"), // Ensure numbers are converted to strings
     material.vendorId || "N/A",
@@ -81,7 +82,7 @@ export async  function generateTraceabilityReport(row) {
 
   doc.autoTable({
     startY: 110,
-    head: [['Material Name', 'Batch Number', 'Quantity Used', 'Vendor ID']], 
+    head: [['Material Name','Material Code', 'Batch Number', 'Quantity Used', 'Vendor ID']], 
     body:sanitizedData, 
     theme: 'grid', 
     headStyles: { fillColor: [41, 128, 185] }, 

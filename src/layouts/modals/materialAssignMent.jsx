@@ -38,7 +38,7 @@ export default function MaterialAssignmentForm ({
     assignmentNumber: '',
     // batchNumber: '',
     processOrderNumber: '',
-    materials: [{ materialsList: '', assignedQuantity: '' }],
+    materials: [{ materialsList: '', assignedQuantity: '',materialCode:'' }],
     assignedTo: ''
   })
   const [errors, setErrors] = useState({})
@@ -53,7 +53,7 @@ export default function MaterialAssignmentForm ({
       newErrors.processOrderNumber = 'Process Order Number is required'
     if (
       formData.materials.some(
-        mat => !mat.materialsList || !mat.assignedQuantity
+        mat => !mat.materialsList || !mat.assignedQuantity || !mat.materialCode
       )
     ) {
       newErrors.materials = 'All material fields must be filled'
@@ -90,7 +90,7 @@ export default function MaterialAssignmentForm ({
           assignmentNumber: '',
           // batchNumber: '',
           processOrderNumber: '',
-          materials: [{ materialsList: '', assignedQuantity: '' }],
+          materials: [{ materialsList: '', assignedQuantity: '',materialCode:'' }],
           assignedTo: ''
         })
         setUpdate(prev => !prev)
@@ -109,29 +109,27 @@ export default function MaterialAssignmentForm ({
   }
 
   const handleMaterialChange = (e, index) => {
-    const { name, value } = e.target
-    const updatedMaterials = [...formData.materials]
-    updatedMaterials[index][name] = value
-    setFormData({ ...formData, materials: updatedMaterials })
-    const selectedMaterialName = e.target.value
-
-    const selectedMaterial = materialNames.find(
-      material => material.materialName === selectedMaterialName
-    )
-    if (selectedMaterial) {
-      setFormData({
-        ...formData,
-        batchNumber: selectedMaterial?.batchNumber || ''
-      })
+    const { name, value } = e.target;
+  
+    const updatedMaterials = [...formData.materials];
+    updatedMaterials[index][name] = value;
+  
+    if (name === 'materialsList') {
+      const selectedMaterial = materialNames.find(
+        material => material.materialName === value
+      );
+      updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
     }
-  }
+  
+    setFormData({ ...formData, materials: updatedMaterials });
+  };
 
   const addMaterial = () => {
     setFormData(prevFormData => ({
       ...prevFormData,
       materials: [
         ...prevFormData.materials,
-        { materialsList: '', assignedQuantity: '' }
+        { materialsList: '', assignedQuantity: '',materialCode:'' }
       ]
     }))
   }
@@ -194,10 +192,10 @@ export default function MaterialAssignmentForm ({
                 paddingRight: 2
               }}
             >
-              <Grid container spacing={2}>
+              <Grid container spacing={2} sx={{mt:0.1}}>
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         select
@@ -251,7 +249,7 @@ export default function MaterialAssignmentForm ({
                         </MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <TextField
                         fullWidth
                         label='Assigned Quantity In KG'
@@ -262,6 +260,22 @@ export default function MaterialAssignmentForm ({
                         onChange={e => handleMaterialChange(e, index)}
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid item xs={4}>
+                      <TextField
+                        fullWidth
+                        label='Material Code'
+                        name='materialCode'
+                        error={!!errors.materials}
+                        value={material.materialCode}
+                        helperText={errors.materials}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{
+                          style: { borderRadius: 8 },
+                          readOnly: true 
+                        }}
                       />
                     </Grid>
                     <Grid

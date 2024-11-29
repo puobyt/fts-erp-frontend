@@ -123,6 +123,12 @@ export function MaterialAssignmentTableRow ({
             <div key={index}>{`${material.assignedQuantity} KG`}</div>
           ))}
         </TableCell>
+        
+        <TableCell>
+          {row.materials.map((material, index) => (
+            <div key={index}>{material.materialCode}</div>
+          ))}
+        </TableCell>
         <TableCell>{row.assignedTo}</TableCell>
 
         <TableCell align='right'>
