@@ -22,6 +22,12 @@ import { UserTableToolbar } from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import VendorManagementForm from '../../../layouts/modals/addVendorManagement';
 import axiosInstance from 'src/configs/axiosInstance';
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
+
+
 
 
 // ----------------------------------------------------------------------
@@ -29,6 +35,7 @@ import axiosInstance from 'src/configs/axiosInstance';
 export function UserView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [vendors,setVendors] = useState([]);
 const fetchVendorManagement = async ()=>{
 try{
@@ -55,7 +62,23 @@ useEffect(()=>{
 
   const notFound = !dataFiltered.length && !!filterName;
 
-  
+  const renderFallback = (
+    <Box
+     display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -75,6 +98,7 @@ useEffect(()=>{
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <UserTableToolbar
         sort={table.onSort}
           numSelected={table.selected.length}

@@ -24,6 +24,12 @@ import { PurchcaseOrderCreationTableToolbar } from '../purchase-order-creation-t
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import axiosInstance from 'src/configs/axiosInstance';
 import PurchaseOrderCreationForm from '../../../layouts/modals/addPurchaseOrderCreation';
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
+
+
 
 
 // ----------------------------------------------------------------------
@@ -31,6 +37,7 @@ import PurchaseOrderCreationForm from '../../../layouts/modals/addPurchaseOrderC
 export function PurchaseOrderCreationView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [purchaseCreations,setPurchaseCreations] = useState([]);
   const [firms,setFirms] = useState([]);
 const fetchPurchaseOrderCreation = async ()=>{
@@ -57,7 +64,23 @@ useEffect(()=>{
   });
 
   const notFound = !dataFiltered.length && !!filterName;
-
+  const renderFallback = (
+    <Box
+     display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -75,6 +98,7 @@ useEffect(()=>{
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <PurchcaseOrderCreationTableToolbar
         sort={table.onSort}
           numSelected={table.selected.length}

@@ -114,10 +114,6 @@ export async function generateMaterialsReport(row) {
     const vendorYStart = nextY + 20;
     let vendorY = vendorYStart;
     
-    // Vendor Information
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Vendor Information', 20, vendorY);
     
     doc.setFontSize(12);
     doc.setFont('Times', 'bold');

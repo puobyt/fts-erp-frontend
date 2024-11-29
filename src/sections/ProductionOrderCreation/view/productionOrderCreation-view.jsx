@@ -24,12 +24,19 @@ import ProductionOrderCreationForm from '../../../layouts/modals/addProductionOr
 import { emptyRows, applyFilter, getComparator } from '../utils'
 
 import axiosInstance from 'src/configs/axiosInstance'
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
+
+
 
 // ----------------------------------------------------------------------
 
 export function ProductionOrderCreationView () {
   const table = useTable()
   const [update, setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [productionOrders, setProductionOrders] = useState([]);
   const [materialNames, setMaterialNames] = useState([]);
   const [processOrderNumbers, setProcessOrderNumbers] = useState([]);
@@ -60,7 +67,23 @@ export function ProductionOrderCreationView () {
   })
 
   const notFound = !dataFiltered.length && !!filterName
-
+  const renderFallback = (
+    <Box
+     display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
       <Box display='flex' alignItems='center' mb={5}>
@@ -79,6 +102,7 @@ export function ProductionOrderCreationView () {
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <ProductionOrderCreationTableToolbar
           sort={table.onSort}
           numSelected={table.selected.length}

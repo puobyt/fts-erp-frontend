@@ -23,13 +23,20 @@ import { ReworkTableToolbar } from '../rework-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import ReworkForm from '../../../layouts/modals/addRework';
 import axiosInstance from 'src/configs/axiosInstance';
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
+ 
 
+  
 
 // ----------------------------------------------------------------------
 
 export function ReworkView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [reworks,setReworks] = useState([]);
   const [batches,setBatches] = useState([]);
 const fetchReworks = async ()=>{
@@ -56,7 +63,23 @@ useEffect(()=>{
   });
 
   const notFound = !dataFiltered.length && !!filterName;
-
+  const renderFallback = (
+    <Box
+     display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -76,6 +99,7 @@ useEffect(()=>{
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <ReworkTableToolbar
             sort={table.onSort}
           numSelected={table.selected.length}

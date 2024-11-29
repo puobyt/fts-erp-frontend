@@ -24,12 +24,19 @@ import { TableEmptyRows } from '../table-empty-rows';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import axiosInstance from 'src/configs/axiosInstance';
 import ProductionOrderCreationOutputForm from '../../../layouts/modals/addProductionOrderCreationOutput';
+import LinearProgress, {
+  linearProgressClasses
+} from '@mui/material/LinearProgress'
+import { varAlpha } from 'src/theme/styles'
+
+
 
 // ----------------------------------------------------------------------
 
 export function ProductionOrderCreationOutputView() {
   const table = useTable();
   const [update,setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [productionOrderOutputCreations,setProductionOrderOutputCreations] = useState([]);
   const [batches,setBatches] = useState([]);
   const [tableRows,setTableRows] = useState([]);
@@ -62,7 +69,23 @@ useEffect(()=>{
   }, [dataFiltered, setTableRows,update]);
   const notFound = !dataFiltered.length && !!filterName;
   const nextBatchNumber = `FN${String(tableRows + 1).padStart(3, '0')}`; // Generate batch number
-
+  const renderFallback = (
+    <Box
+     display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='1 1 auto'
+    >
+      <LinearProgress
+        sx={{
+          width: 1150,
+          bgcolor: theme =>
+            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+        }}
+      />
+    </Box>
+  )
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
@@ -80,6 +103,7 @@ useEffect(()=>{
       </Box>
 
       <Card>
+      {loading && renderFallback}
         <ProductionOrderCreationOutputTableToolbar
             sort={table.onSort}
           numSelected={table.selected.length}
