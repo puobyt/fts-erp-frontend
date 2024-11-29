@@ -105,7 +105,7 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
         <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
         <TableCell>{row.nameOfTheFirm}</TableCell>
         <TableCell>{row.address}</TableCell>
-        <TableCell>{row.contact}</TableCell>
+        <TableCell>{row.contactNumber}</TableCell>
         <TableCell>{row.contactPersonName}</TableCell>
         <TableCell>{row.contactPersonDetails}</TableCell>
         <TableCell>{row.vendorId}</TableCell>
