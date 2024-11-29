@@ -42,10 +42,12 @@ export function PurchaseOrderCreationView() {
   const [firms,setFirms] = useState([]);
 const fetchPurchaseOrderCreation = async ()=>{
 try{
+  setLoading(true)
 const result = await axiosInstance.get('/purchaseOrderCreation');
 if(result.data.data){
   setPurchaseCreations(result.data.data);
   setFirms(result.data.firms);
+  setLoading(false)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)

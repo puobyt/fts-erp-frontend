@@ -42,11 +42,13 @@ export function QualityCheckView() {
   const [products,setProducts] = useState([]);
 const fetchQualityChecks = async ()=>{
 try{
+  setLoading(true)
 const result = await axiosInstance.get('/qualityCheck');
 if(result.data.data){
   setQualityChecks(result.data.data);
   setBatches(result.data.batches);
   setProducts(result.data.products);
+  setLoading(false)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)

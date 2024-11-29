@@ -42,11 +42,13 @@ export function ProductionOrderCreationView () {
   const [processOrderNumbers, setProcessOrderNumbers] = useState([]);
   const fetchProductionOrders = async () => {
     try {
+      setLoading(true)
       const result = await axiosInstance.get('/productionOrderCreation')
       if (result.data.data) {
         setProductionOrders(result.data.data)
         setMaterialNames(result.data.materials);
         setProcessOrderNumbers(result.data.processOrderNumbers);
+        setLoading(false)
       }
     } catch (err) {
       console.error(

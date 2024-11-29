@@ -42,11 +42,13 @@ export function RequestCreationForMaterialsView () {
   const [finishedGoods, setFinishedGoods] = useState([])
   const fetchRequestCreationMaterials = async () => {
     try {
+      setLoading(true)
       const result = await axiosInstance.get('/requestCreationForMaterials')
       if (result.data.data) {
         setRequestMaterials(result.data.data)
         setMaterialNames(result.data.materials)
-        setFinishedGoods(result.data.finishedGoods)
+        setFinishedGoods(result.data.finishedGoods);
+        setLoading(false)
       }
     } catch (err) {
       console.error(

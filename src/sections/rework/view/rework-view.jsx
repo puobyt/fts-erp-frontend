@@ -41,10 +41,12 @@ export function ReworkView() {
   const [batches,setBatches] = useState([]);
 const fetchReworks = async ()=>{
 try{
+  setLoading(true)
 const result = await axiosInstance.get('/rework');
 if(result.data.data){
   setReworks(result.data.data);
-  setBatches(result.data.batches)
+  setBatches(result.data.batches);
+  setLoading(false)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)

@@ -43,11 +43,13 @@ export function ProductionOrderCreationOutputView() {
   const [products,setProducts] = useState([]);
 const fetchPurchaseOrderCreation = async ()=>{
 try{
+  setLoading(true)
 const result = await axiosInstance.get('/productionOrderCreationOutput');
 if(result.data.data){
   setProductionOrderOutputCreations(result.data.data);
   setBatches(result.data.batches);
   setProducts(result.data.products);
+  setLoading(false)
 }
 }catch(err){
   console.error('Error occured in fetching vendors inc client side',err.message)
