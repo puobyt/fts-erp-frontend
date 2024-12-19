@@ -105,6 +105,11 @@ export const navData = [
     path: '/invoice-creations',
     icon: icon('ic-cart'),
   },
+  {
+    title: 'Tracebility',
+    path: '/tracebility',
+    icon: icon('ic-cart'),
+  },
   // {
   //   title: 'sign-in',
   //   path: '/sign-in',

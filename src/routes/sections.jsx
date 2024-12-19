@@ -45,6 +45,7 @@ export const ProductionOrderCreationOutput = lazy(() =>
   import('src/pages/productionOrderCreationOutput')
 )
 export const Rework = lazy(() => import('src/pages/rework'))
+export const Tracebility = lazy(() => import('src/pages/tracebility'))
 export const SignInPage = lazy(() => import('src/pages/signIn'))
 export const SignUpPage = lazy(() => import('src/pages/signUp'))
 export const ProductsPage = lazy(() => import('src/pages/products'))
@@ -118,7 +119,8 @@ export function Router () {
         { path: 'finished-goods', element: <FinishedGoods /> },
         { path: 'invoice-creations', element: <InvoiceCreations /> },
         { path: 'out-of-stock', element: <OutOfStock /> },
-        { path: 'process-order', element: <ProcessOrder /> }
+        { path: 'process-order', element: <ProcessOrder /> },
+        { path: 'tracebility', element: <Tracebility /> }
       ]
     },
     {
