@@ -7,7 +7,7 @@ import TableBody from '@mui/material/TableBody'
 import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-
+import ImportExcel from '../../../utils/ExcelImport'
 import { DashboardContent } from 'src/layouts/dashboard'
 import { _users } from 'src/_mock'
 import { Iconify } from 'src/components/iconify'
@@ -87,7 +87,7 @@ export function ProcessOrderView () {
   )
   return (
     <DashboardContent>
-      <Box display='flex' alignItems='center' mb={5}>
+      <Box display='flex' alignItems='center' mb={5}  sx={{ gap: 2 }}>
         <Typography variant='h4' flexGrow={1}>
          Process Order Details
         </Typography>
@@ -100,6 +100,7 @@ export function ProcessOrderView () {
         </Button> */}
 
         <ProcessOrderForm setUpdate={setUpdate} />
+        <ImportExcel setUpdate={setUpdate}/>
       </Box>
 
       <Card>
@@ -131,9 +132,24 @@ export function ProcessOrderView () {
                 // }
                 headLabel={[
                   { id: 'processOrderNumber', label: 'Process Order Number' },
+                  { id: 'plant', label: 'Plant' },
+                  { id: 'equipment', label: 'Equipment' },
+                  { id: 'startDate', label: 'Start Date' },
+                  { id: 'finishDate', label: 'Finish Date' },
                   { id: 'productName', label: 'Product Name' },
-         
-                  { id: 'Description', label: ' Description' },
+                  { id: 'productCode', label: ' Product Code' },
+                  { id: 'batchNumber', label: 'Batch Number' },
+                  { id: 'orderQuantity', label: 'Order Quantity' },
+                  { id: 'materialCode', label: 'Material Code(Material Input)' },
+                  { id: 'materialQuantity', label: 'Material Quantity(Material Input) ' },
+                  { id: 'batch', label: 'Batch(Material Input) ' },
+                  { id: 'storageLocation', label: 'Storage Location(Material Input) ' },
+
+                  { id: 'materialCode', label: 'Material Code(Material Output)' },
+                  { id: 'materialQuantity', label: 'Material Quantity(Material Output) ' },
+                  { id: 'batch', label: 'Batch(Material Output) ' },
+                  { id: 'storageLocation', label: 'Storage Location(Material Output) ' },
+                  { id: 'yield', label: 'Yield(Material Output) ' },
                 ]}
               />
               <TableBody>

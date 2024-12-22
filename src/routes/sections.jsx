@@ -91,36 +91,36 @@ export function Router () {
           ),
           index: true
         },
-        { path: 'vendor-management', element: <VendorManagement /> },
-        { path: 'purchase-order-creation', element: <PurhcaseOrderCreation /> },
-        { path: 'gate-entry', element: <GateEntry /> },
-        { path: 'current-stock', element: <CurrentStock /> },
-        { path: 'main-stock', element: <MainStock /> },
-        { path: 'quality-check', element: <QualityCheck /> },
-        { path: 'rework', element: <Rework /> },
+        { path: 'vendor-stock-management/vendor-management', element: <VendorManagement /> },
+        { path: 'vendor-stock-management/purchase-order-creation', element: <PurhcaseOrderCreation /> },
+        { path: 'vendor-stock-management/gate-entry', element: <GateEntry /> },
+        { path: 'vendor-stock-management/current-stock', element: <CurrentStock /> },
+        { path: 'vendor-stock-management/main-stock', element: <MainStock /> },
+        { path: 'quality-control/quality-check', element: <QualityCheck /> },
+        { path: 'quality-control/rework', element: <Rework /> },
         {
-          path: 'production-order-creation',
+          path: 'production-workflow/production-order-creation',
           element: <ProductionOrderCreation />
         },
         {
-          path: 'production-order-creation-output',
+          path: 'production-workflow/production-order-creation-output',
           element: <ProductionOrderCreationOutput />
         },
         {
-          path: 'request-creation-for-materials',
+          path: 'production-workflow/request-creation-for-materials',
           element: <RequestCreationForMaterials />
         },
-        { path: 'material-assignment', element: <MaterialAssignment /> },
-        { path: 'bill-of-materials', element: <BillOfMaterials /> },
+        { path: 'production-workflow/material-assignment', element: <MaterialAssignment /> },
+        { path: 'production-workflow/bill-of-materials', element: <BillOfMaterials /> },
         {
-          path: 'final-quality-inspection',
+          path: 'quality-control/final-quality-inspection',
           element: <FinalQualityInspection />
         },
-        { path: 'finished-goods', element: <FinishedGoods /> },
-        { path: 'invoice-creations', element: <InvoiceCreations /> },
-        { path: 'out-of-stock', element: <OutOfStock /> },
-        { path: 'process-order', element: <ProcessOrder /> },
-        { path: 'tracebility', element: <Tracebility /> }
+        { path: 'finished-goods-invoicing/finished-goods', element: <FinishedGoods /> },
+        { path: 'finished-goods-invoicing/invoice-creations', element: <InvoiceCreations /> },
+        { path: 'vendor-stock-management/out-of-stock', element: <OutOfStock /> },
+        { path: 'production-workflow/process-order', element: <ProcessOrder /> },
+        { path: 'tracebility/tracebility', element: <Tracebility /> }
       ]
     },
     {

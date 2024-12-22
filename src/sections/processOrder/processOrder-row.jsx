@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-
+import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Popover from '@mui/material/Popover'
@@ -44,7 +44,7 @@ export function ProcessOrderTableRow ({
         `/removeProcessOrder?processOrderId=${processOrderId}`
       )
       if (result) {
-        toast.success(result.data.message);
+        toast.success(result.data.message)
         setUpdate(prev => !prev)
       }
     } catch (err) {
@@ -91,9 +91,69 @@ export function ProcessOrderTableRow ({
           
           </Box>
         </TableCell> */}
+
         <TableCell> {row.processOrderNumber}</TableCell>
-        <TableCell>{row.productName}</TableCell>
-        <TableCell
+        <TableCell>{row.plant}</TableCell>
+        <TableCell> {row.equipment}</TableCell>
+        <TableCell sx={{ minWidth: 120 }} >{row.startDate}</TableCell>
+        <TableCell sx={{ minWidth: 120 }}>{row.finishDate}</TableCell>
+        <TableCell sx={{ minWidth: 150 }}>{row.productName}</TableCell>
+
+        <TableCell> {row.productCode}</TableCell>
+      
+
+        <TableCell>{row.batchNumber}</TableCell>
+        <TableCell>{row.orderQuantity}</TableCell>
+
+        <TableCell>
+          {row.materialInput.map((material, index) => (
+       <div key={index}>{`${material.materialCode}`}</div>
+          ))}
+        </TableCell>
+
+        <TableCell>
+          {row.materialInput.map((material, index) => (
+            <div key={index}>{`${material.quantity}`}</div>
+          ))}
+        </TableCell>
+        <TableCell>
+          {row.materialInput.map((material, index) => (
+            <div key={index}>{material.batch}</div>
+          ))}
+        </TableCell>
+        <TableCell>
+          {row.materialInput.map((material, index) => (
+            <div key={index}>{material.storageLocation}</div>
+          ))}
+        </TableCell>
+
+        <TableCell>
+          {row.materialOutput?.map((material, index) => (
+    <div key={index}>{`${material.materialCode}`}</div>
+          ))}
+        </TableCell>
+
+        <TableCell>
+          {row.materialOutput?.map((material, index) => (
+            <div key={index}>{`${material.quantity} `}</div>
+          ))}
+        </TableCell>
+        <TableCell>
+          {row.materialOutput?.map((material, index) => (
+            <div key={index}>{material.batch}</div>
+          ))}
+        </TableCell>
+        <TableCell>
+          {row.materialOutput?.map((material, index) => (
+            <div key={index}>{material.storageLocation}</div>
+          ))}
+        </TableCell>
+        <TableCell>
+          {row.materialOutput?.map((material, index) => (
+            <div key={index}>{material.Yield}</div>
+          ))}
+        </TableCell>
+        {/* <TableCell
           style={{
             maxWidth: '300px', // Set a maximum width for the cell
             overflow: 'hidden', // Hide content that overflows the width
@@ -102,9 +162,7 @@ export function ProcessOrderTableRow ({
           }}
         >
           {row.description}
-        </TableCell>
-
-        <TableCell>{row.instructions}</TableCell>
+        </TableCell> */}
 
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
