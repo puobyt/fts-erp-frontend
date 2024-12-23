@@ -124,7 +124,6 @@ export function NavContent ({ data, slots, workspaces, sx }) {
         >
           <Box component='ul' gap={0.5} display='flex' flexDirection='column'>
             {data.map(item => {
-              console.log('item is here with children', item)
               const isActived = item.path === pathname // Check active state
               const isOpen = openMenus[item.title] || false // Get dropdown toggle state
 

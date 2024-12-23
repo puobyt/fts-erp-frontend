@@ -18,6 +18,7 @@ import { TracebilityBar } from '../tracebility-table-toolbar'
 import { TracebilityRow } from '../tracebility-table-row'
 import { TableNoData } from '../table-no-data'
 
+import { TracebilityProductionRow } from '../production-tracebility-row'
 import { TableEmptyRows } from '../table-empty-rows'
 import { emptyRows, applyFilter, getComparator } from '../utils'
 import VendorManagementForm from '../../../layouts/modals/addVendorManagement'
@@ -40,10 +41,18 @@ export function TracebilityView () {
   const [isTableVisible2, setIsTableVisible2] = useState(false)
   const [isTableVisible3, setIsTableVisible3] = useState(false)
 
+  const [production, setProduction] = useState([])
   const handleSearchMaterialsResults = (results) => {
   
     setMaterialData(results);
     setIsTableVisible(true);
+  };
+
+  const handleProductionResults = (results) => {
+    setProduction(results);
+    setIsTableVisible(false);
+    setIsTableVisible2(true)
+   
   };
 
 
@@ -82,6 +91,13 @@ export function TracebilityView () {
     comparator: getComparator(table.order, table.orderBy),
     filterName
   })
+
+  const dataFilteredProduction = applyFilter({
+    inputData: production,
+    comparator: getComparator(table.order, table.orderBy),
+    filterName
+  })
+
 
   // const dataFilteredFinishedGoo = applyFilter({
   //   inputData: materialData,
@@ -199,8 +215,8 @@ export function TracebilityView () {
                   //   )
                   // }
                   headLabel={[
-                    { id: 'materiaLName', label: 'Material Name' },
                     { id: 'materialCode', label: 'Material Code' },
+                    { id: 'materiaLName', label: 'Material Name' },
                     { id: 'batchNumber', label: 'Batch Number' },
                     { id: 'quantity', label: 'Quantity In Kg' },
                     { id: 'price', label: 'Price' },
@@ -218,6 +234,7 @@ export function TracebilityView () {
                     )
                     .map((row, index) => (
                       <TracebilityRow
+                      setProduction={handleProductionResults}
                         setUpdate={setUpdate}
                         key={index}
                         row={row}
@@ -321,28 +338,26 @@ export function TracebilityView () {
                   //   )
                   // }
                   headLabel={[
-                    { id: 'nameOfTheFirm', label: 'Name Of The Firm' },
-                    { id: 'address', label: 'Address' },
-                    { id: 'contactNumber', label: 'Contact Number' },
-                    { id: 'contactPersonName', label: 'Contact Person Name' },
+                    { id: 'dateofProduction ', label: 'Date of Production ' },
+                    { id: 'processOrderNumber', label: 'Process Order Number' },
+                    { id: 'plant', label: 'Plant' },
+                    { id: 'rawMaterialList', label: 'Raw Material List' },
                     {
-                      id: 'contactPersonDetails',
-                      label: 'Contact Person Details'
+                      id: 'yieldQuantity ',
+                      label: 'Yield Quantity '
                     },
-                    { id: 'Material', label: 'Material' },
-                    { id: 'BankDetails', label: 'Bank Details' },
-                    { id: 'pan', label: 'Pan' },
-                    { id: 'gst', label: 'GST' }
+                    { id: 'operator', label: 'Operator' },
+             
                   ]}
                 />
-                {/* <TableBody>
-                  {dataFiltered
+                <TableBody>
+                  {dataFilteredProduction
                     .slice(
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row, index) => (
-                      <TracebilityRow
+                      <TracebilityProductionRow
                         setUpdate={setUpdate}
                         key={index}
                         row={row}
@@ -361,7 +376,7 @@ export function TracebilityView () {
                   />
 
                   {notFound && <TableNoData searchQuery={filterName} />}
-                </TableBody> */}
+                </TableBody>
               </Table>
               <TablePagination
                 component='div'
