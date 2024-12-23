@@ -37,10 +37,13 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
        
       }
     } else if(dropdownValue === 'finishedGoods' && searchValue){
+
       try {
+        const code = encodeURIComponent(searchValue);
+        console.log('Encoded Code:', code); // Check what is being sent
         const response = await axiosInstance.get(
-          `/search/finishedGoods?code=${searchValue}`
-        )
+          `/search/finishedGoods?code=${code}`
+        );
 
         const materials = response?.data?.materials
         if (materials && materials.length > 0) {
