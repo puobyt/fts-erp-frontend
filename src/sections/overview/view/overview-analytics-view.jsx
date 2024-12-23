@@ -14,10 +14,73 @@ import { AnalyticsTrafficBySite } from '../analytics-traffic-by-site'
 import { AnalyticsCurrentSubject } from '../analytics-current-subject'
 import { AnalyticsConversionRates } from '../analytics-conversion-rates'
 import FlippableCard from '../../../components/cards/flipCard'
+
 // ----------------------------------------------------------------------
 
 export function OverviewAnalyticsView () {
   const adminData = JSON.parse(localStorage.getItem('admin'))
+
+  const materialLinks = [
+    {
+      label: 'Vendor Management',
+      route: '/vendor-stock-management/vendor-management'
+    },
+    {
+      label: 'Purchase Order Creation',
+      route: '/vendor-stock-management/purchase-order-creation'
+    },
+    { label: 'Gate Entry', route: '/vendor-stock-management/gate-entry' },
+    {
+      label: 'Inward Current Stock',
+      route: '/vendor-stock-management/current-stock'
+    },
+    { label: 'Main Stock', route: '/vendor-stock-management/main-stock' },
+    { label: 'Out Of Stock', route: '/vendor-stock-management/out-of-stock' }
+  ]
+
+  const qualityLinks = [
+    { label: 'Inward quality Check', route: '/quality-control/quality-check' },
+    { label: 'Rework', route: '/quality-control/rework' },
+    {
+      label: 'Final Quality Inspection',
+      route: '/quality-control/final-quality-inspection'
+    }
+  ]
+
+  const productionLinks = [
+    { label: 'Process Order', route: '/production-workflow/process-order' },
+    {
+      label: 'Production Order Creation',
+      route: '/production-workflow/production-order-creation'
+    },
+    {
+      label: 'Request Creation For Materials',
+      route: '/production-workflow/request-creation-for-materials'
+    },
+    {
+      label: 'Material Assignment',
+      route: '/production-workflow/material-assignment'
+    },
+    {
+      label: 'Production Order Creation Output',
+      route: '/production-workflow/production-order-creation-output'
+    },
+    {
+      label: 'Bill Of Materials',
+      route: '/production-workflow/bill-of-materials'
+    }
+  ]
+
+  const finishedGoodsLinks = [
+    {
+      label: 'Finished Goods Management',
+      route: '/finished-goods-invoicing/finished-goods'
+    },
+    {
+      label: 'Invoice Creations',
+      route: '/finished-goods-invoicing/invoice-creations'
+    }
+  ]
 
   return (
     <DashboardContent maxWidth='xl'>
@@ -72,7 +135,11 @@ export function OverviewAnalyticsView () {
           md={3}
           sx={{ height: '300px' }} // Set desired height for the Grid
         >
-          <FlippableCard  title={'Raw Materials'} img={'/assets/icons/glass/composite.png'} />
+          <FlippableCard
+            title={'Raw Materials'}
+            img={'/assets/icons/glass/composite.png'}
+            links={materialLinks}
+          />
         </Grid>
 
         <Grid
@@ -82,7 +149,21 @@ export function OverviewAnalyticsView () {
           md={3}
           sx={{ height: '300px' }} // Set desired height for the Grid
         >
-          <FlippableCard colour={'secondary'} title={'Quality Control'}img={'/assets/icons/glass/quality-control.png'}/>
+          <FlippableCard
+            colour={'secondary'}
+            title={'Quality Control'}
+            img={'/assets/icons/glass/quality-control.png'}
+            links={qualityLinks}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3} sx={{ height: '300px' }}>
+          <FlippableCard
+            colour={'warning'}
+            title={'Production'}
+            img={'/assets/icons/glass/production.png'}
+            links={productionLinks}
+          />
         </Grid>
 
         <Grid
@@ -92,17 +173,12 @@ export function OverviewAnalyticsView () {
           md={3}
           sx={{ height: '300px' }} // Set desired height for the Grid
         >
-          <FlippableCard colour={'warning'} title={'Production'} img={'/assets/icons/glass/production.png'}/>
-        </Grid>
-
-        <Grid
-          item // Make sure it's treated as an item inside the grid container
-          xs={12}
-          sm={6}
-          md={3}
-          sx={{ height: '300px' }} // Set desired height for the Grid
-        >
-          <FlippableCard colour={'error'} title={'Finished Goods'} img={'/assets/icons/glass/goods.png'}/>
+          <FlippableCard
+            colour={'error'}
+            title={'Finished Goods'}
+            img={'/assets/icons/glass/goods.png'}
+            links={finishedGoodsLinks}
+          />
         </Grid>
       </Grid>
     </DashboardContent>

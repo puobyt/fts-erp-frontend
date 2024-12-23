@@ -126,10 +126,12 @@ export function GateEntryView () {
                 //   )
                 // }
                 headLabel={[
-                  { id: 'entryTime', label: 'Entry Time' },
-                  { id: 'vehicleNumber', label: 'Vehicle Number' },
                   { id: 'vendorName', label: 'Vendor Name' },
-                  { id: 'date', label: 'Date' }
+                  { id: 'vehicleNumber', label: 'Vehicle Number' },
+                  { id: 'date', label: 'Date' },
+                  { id: 'entryTime', label: 'Entry Time' },
+
+                
                 ]}
               />
               <TableBody>

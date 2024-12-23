@@ -111,6 +111,11 @@ export const navData = [
         icon: icons(EditNoteTwoToneIcon),
       },
       {
+        title: 'Request Creation For Materials',
+        path: '/production-workflow/request-creation-for-materials',
+        icon: icons(SaveAsTwoToneIcon),
+      },
+      {
         title: 'Material Assignment',
         path: '/production-workflow/material-assignment',
         icon: icons(SummarizeTwoToneIcon),
@@ -120,11 +125,7 @@ export const navData = [
         path: '/production-workflow/production-order-creation-output',
         icon: icons(OutputTwoToneIcon),
       },
-      {
-        title: 'Request Creation For Materials',
-        path: '/production-workflow/request-creation-for-materials',
-        icon: icons(SaveAsTwoToneIcon),
-      },
+
       {
         title: 'Bill Of Material',
         path: '/production-workflow/bill-of-materials',

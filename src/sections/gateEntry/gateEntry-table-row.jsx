@@ -90,10 +90,13 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
           
           </Box>
         </TableCell> */}
+           <TableCell>{row.vendorName}</TableCell>
+           <TableCell>  {row.vehicleNumber}</TableCell>
+           <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
         <TableCell>  {formattedTime}</TableCell>
-        <TableCell>  {row.vehicleNumber}</TableCell>
-        <TableCell>{row.vendorName}</TableCell>
-        <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
+     
+     
+   
 
    
 
