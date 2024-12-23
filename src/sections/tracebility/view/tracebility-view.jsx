@@ -17,7 +17,7 @@ import { TracebilityHead } from '../tracebility-table-head'
 import { TracebilityBar } from '../tracebility-table-toolbar'
 import { TracebilityRow } from '../tracebility-table-row'
 import { TableNoData } from '../table-no-data'
-
+import { TracebilityShippingRow } from '../shipping-tracebility-row'
 import { TracebilityProductionRow } from '../production-tracebility-row'
 import { TableEmptyRows } from '../table-empty-rows'
 import { emptyRows, applyFilter, getComparator } from '../utils'
@@ -42,6 +42,7 @@ export function TracebilityView () {
   const [isTableVisible3, setIsTableVisible3] = useState(false)
 
   const [production, setProduction] = useState([])
+  const [shipping, setShipping] = useState([])
   const handleSearchMaterialsResults = (results) => {
   
     setMaterialData(results);
@@ -53,6 +54,12 @@ export function TracebilityView () {
     setIsTableVisible(false);
     setIsTableVisible2(true)
    
+  };
+
+  const handleShippingResults = (results) => {
+    setShipping(results);
+    setIsTableVisible2(false);
+    setIsTableVisible3(true)
   };
 
 
@@ -94,6 +101,12 @@ export function TracebilityView () {
 
   const dataFilteredProduction = applyFilter({
     inputData: production,
+    comparator: getComparator(table.order, table.orderBy),
+    filterName
+  })
+
+  const dataFilteredShipping = applyFilter({
+    inputData: shipping,
     comparator: getComparator(table.order, table.orderBy),
     filterName
   })
@@ -359,6 +372,7 @@ export function TracebilityView () {
                     .map((row, index) => (
                       <TracebilityProductionRow
                         setUpdate={setUpdate}
+                        setShipping={handleShippingResults}
                         key={index}
                         row={row}
                         selected={table.selected.includes(row.id)}
@@ -476,13 +490,13 @@ export function TracebilityView () {
                   ]}
                 />
                 <TableBody>
-                  {dataFiltered
+                  {dataFilteredShipping
                     .slice(
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row, index) => (
-                      <TracebilityRow
+                      <TracebilityShippingRow
                         setUpdate={setUpdate}
                         key={index}
                         row={row}

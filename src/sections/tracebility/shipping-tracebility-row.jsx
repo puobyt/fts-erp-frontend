@@ -17,28 +17,28 @@ import toast, { Toaster } from 'react-hot-toast'
 import { Link } from '@mui/material'
 // ----------------------------------------------------------------------
 
-export function TracebilityProductionRow ({
+export function TracebilityShippingRow ({
   setUpdate,
-  setShipping,
   row,
   selected,
   onSelectRow
 }) {
-    const handleProductionClick = async processCode => {
-      try {
-        const result = await axiosInstance.get(
-          `/search/packing&shipping?processCode=${processCode}`
-        )
+  // const handleProductionClick = async processCode => {
+  //   try {
+  //     const result = await axiosInstance.get(
+  //       `/search/packing&shipping?processCode=${processCode}`
+  //     )
 
-        if (result && result.data.shippingData) {
-          setShipping(result.data.shippingData)
-        } else {
-          console.log('No production data found.')
-        }
-      } catch (err) {
-        console.error('Error occurred while fetching productions:', err.message)
-      }
-    }
+  //     if (result && result.data.shippingData) {
+  //       console.log('result for production',result.data.shippingData)
+  //       setShipping(result.data.shippingData)
+  //     } else {
+  //       console.log('No production data found.')
+  //     }
+  //   } catch (err) {
+  //     console.error('Error occurred while fetching productions:', err.message)
+  //   }
+  // }
 
   const [openPopover, setOpenPopover] = useState(null)
 
@@ -107,35 +107,15 @@ export function TracebilityProductionRow ({
           </Box>
         </TableCell> */}
 
-        <TableCell>{new Date(row.startDate).toLocaleDateString()}</TableCell>
-        <TableCell>
-          <Link
-            component='button'
-            onClick={() => handleProductionClick(row.processOrder)}
-            sx={{
-              textDecoration: 'none',
-              color: 'primary.main',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              '&:hover': {
-                textDecoration: 'underline'
-              }
-            }}
-          >
-            {row.processOrder}
-          </Link>
-        </TableCell>
-        <TableCell>{row.plant}</TableCell>
-        <TableCell>
-          {row.materials.map((material, index) => (
-            <div key={index}>
-              <strong>{material.materialsList}</strong>:{' '}
-              {`${material.requiredQuantity} KG`}
-            </div>
-          ))}
-        </TableCell>
-        <TableCell>50</TableCell>
-        <TableCell>Operator</TableCell>
+        <TableCell>{row.invoiceNumber}</TableCell>
+
+        <TableCell>{new Date(row.invoiceDate).toLocaleDateString()}</TableCell>
+        <TableCell>{row.customerName}</TableCell>
+        <TableCell>{row.quantity}</TableCell>
+        <TableCell>{row.storage}</TableCell>
+        <TableCell>{row.fgReceived}</TableCell>
+        <TableCell>{row.balanceQuantity}</TableCell>
+        <TableCell>{row.dateOfInward}</TableCell>
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon='eva:more-vertical-fill' />
