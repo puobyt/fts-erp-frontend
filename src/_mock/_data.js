@@ -22,7 +22,7 @@ const adminData = JSON.parse(localStorage.getItem('admin'));
 export const _myAccount = {
   displayName:`${adminData?.userName}`,
   email: `${adminData?.email}`,
-  photoURL: 'https://static.vecteezy.com/system/resources/previews/012/210/707/non_2x/worker-employee-businessman-avatar-profile-icon-vector.jpg',
+  photoURL: '/assets/icons/glass/man.png',
 };
 
 // ----------------------------------------------------------------------
