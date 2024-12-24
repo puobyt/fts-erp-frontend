@@ -24,11 +24,19 @@ export function ProcessOrderTableRow ({
   onSelectRow
 }) {
   const [openPopover, setOpenPopover] = useState(null)
+  
   const processOrderData = {
     processOrderId: row._id,
     processOrderNumber: row.processOrderNumber,
-    productName: row.productName,
-    description: row.description
+    plant:row.plant,
+    equipment:row.equipment,
+    startDate:row.startDate,
+    finishDate:row.finishDate,
+    productName:row.productName,
+    productCode:row.productCode,
+    batch:row.batch,
+    orderQuantity:row.orderQuantity,
+    materialInput:row.materialInput
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -102,7 +110,7 @@ export function ProcessOrderTableRow ({
         <TableCell> {row.productCode}</TableCell>
       
 
-        <TableCell>{row.batchNumber}</TableCell>
+        <TableCell>{row.batch}</TableCell>
         <TableCell>{row.orderQuantity}</TableCell>
 
         <TableCell>

@@ -29,12 +29,21 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate()
   const handleClose = () => setOpen(false)
+  const formattedStartDate = processOrderData.startDate.split('-').reverse().join('-');
+  const formattedEndDate = processOrderData.finishDate.split('-').reverse().join('-');
   const [formData, setFormData] = useState({
-    authPassword: '',
+    authPassword:'',
     processOrderId: processOrderData.processOrderId,
     processOrderNumber: processOrderData.processOrderNumber,
-    description: processOrderData.description,
-    productName: processOrderData.productName
+    plant:processOrderData.plant,
+    equipment:processOrderData.equipment,
+    startDate:formattedStartDate,
+    finishDate:formattedEndDate,
+    productName:processOrderData.productName,
+    productCode:processOrderData.productCode,
+    batchNumber:processOrderData.batch,
+    orderQuantity:processOrderData.orderQuantity,
+    materialInput:processOrderData.materialInput
   })
   const [errors, setErrors] = useState({})
 
@@ -58,7 +67,39 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
+  const handleMaterialChange = (e, index) => {
+    const { name, value } = e.target
 
+    const updatedMaterials = [...formData.materialInput]
+    updatedMaterials[index][name] = value
+
+    // if (name === 'materialCode') {
+    //   const selectedMaterial = materialNames.find(
+    //     material => material.materialName === value
+    //   )
+    //   updatedMaterials[index].materialCode =
+    //     selectedMaterial?.materialCode || ''
+    // }
+
+    setFormData({ ...formData, materialInput: updatedMaterials })
+  }
+
+  const addMaterial = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      materialInput: [
+        ...prevFormData.materialInput,
+        { materialCode: '', quantity: '', batchNumber: '', storageLocation: '' }
+      ]
+    }))
+  }
+
+  const removeMaterial = index => {
+    const updatedMaterials = formData.materialInput.filter(
+      (_, i) => i !== index
+    )
+    setFormData({ ...formData, materialInput: updatedMaterials })
+  }
   const handleSubmit = async e => {
     e.preventDefault()
 
@@ -72,8 +113,14 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
         handleClose()
         setFormData({
           processOrderNumber: '',
-          description: '',
-          productName: ''
+          plant: '',
+          equipment: '',
+          startDate: '',
+          finishDate: '',
+          productName: '',
+          productCode: '',
+          batchNumber: '',
+          orderQuantity: '',
         })
         setUpdate(prev => !prev)
       }
@@ -137,8 +184,8 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                 paddingRight: 2
               }}
             >
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
+              <Grid container spacing={2} >
+              <Grid item xs={6} sx={{ mt: 2 }}>
                   <TextField
                     fullWidth
                     label='Authorization Password'
@@ -164,7 +211,75 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                     variant='outlined'
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={6} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    label='Plant'
+                    name='plant'
+                    value={formData.plant}
+                    onChange={handleChange}
+                    error={!!errors.plant}
+                    helperText={errors.plant}
+                    variant='outlined'
+                  />
+                </Grid>
+                <Grid item xs={6} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    label='Equipment'
+                    name='equipment'
+                    value={formData.equipment}
+                    onChange={handleChange}
+                    error={!!errors.equipment}
+                    helperText={errors.equipment}
+                    variant='outlined'
+                  />
+                </Grid>
+                <Grid item xs={6} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    type='date'
+                    label='Start Date'
+                    name='startDate'
+                    value={formData.startDate}
+                    onChange={handleChange}
+                    error={!!errors.startDate}
+                    helperText={errors.startDate}
+                    variant='outlined'
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    label='Finish Date'
+                    type='date'
+                    name='finishDate'
+                    value={formData.finishDate}
+                    onChange={handleChange}
+                    error={!!errors.finishDate}
+                    helperText={errors.finishDate}
+                    variant='outlined'
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    label='Product Code'
+                    name='productCode'
+                    value={formData.productCode}
+                    onChange={handleChange}
+                    error={!!errors.productCode}
+                    helperText={errors.productCode}
+                    variant='outlined'
+                  />
+                </Grid>
+                <Grid item xs={6} sx={{ mt: 2 }}>
                   <TextField
                     fullWidth
                     label='Product Name'
@@ -177,8 +292,135 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
+                <Grid item xs={6} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                  />
+                </Grid>
+                <Grid item xs={6} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    label='Order Quantity'
+                    name='orderQuantity'
+                    value={formData.orderQuantity}
+                    onChange={handleChange}
+                    error={!!errors.orderQuantity}
+                    helperText={errors.orderQuantity}
+                    variant='outlined'
+                  />
+                </Grid>
                 <Grid item xs={12}>
+                  <Typography
+                    variant='subtitle2'
+                    fontWeight='bold'
+                    // Adds margin-bottom for spacing
+                  >
+                    Material Input
+                  </Typography>
+                </Grid>
+
+                {formData.materialInput.map((material, index) => (
+                  <React.Fragment key={index}>
+                    <Grid item xs={3}>
+                      <TextField
+                        fullWidth
+                        label='Material Code'
+                        name='materialCode'
+                        value={material.materialCode}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.materialInput}
+                        helperText={errors.materialInput}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        fullWidth
+                        label='Quantity'
+                        name='quantity'
+                        error={!!errors.materialInput}
+                        value={material.quantity}
+                        helperText={errors.materialInput}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={3}>
+                      <TextField
+                        fullWidth
+                        label='Batch'
+                        name='batch'
+                        error={!!errors.materialInput}
+                        value={material.batch}
+                        helperText={errors.materialInput}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{
+                          style: { borderRadius: 8 }
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextField
+                        fullWidth
+                        label='Storage Location'
+                        name='storageLocation'
+                        error={!!errors.materialInput}
+                        value={material.storageLocation}
+                        helperText={errors.materialInput}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{
+                          style: { borderRadius: 8 }
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end', // Align to the right
+                        alignItems: 'center' // Vertically center the content if needed
+                      }}
+                    >
+                      <Button
+                        variant='text'
+                        color='error'
+                        onClick={() => removeMaterial(index)}
+                        size='small'
+                        sx={{
+                          textTransform: 'none',
+                          padding: 0,
+                          minWidth: 'auto'
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  </React.Fragment>
+                ))}
+                <Grid item xs={12}>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={addMaterial}
+                  >
+                    Add Material
+                  </Button>
+                </Grid>
+
+                {/* <Grid item xs={12}>
                   <Box
                     sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                   >
@@ -206,7 +448,7 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                       </Typography>
                     )}
                   </Box>
-                </Grid>
+                </Grid> */}
               </Grid>
               <Button
                 type='submit'
