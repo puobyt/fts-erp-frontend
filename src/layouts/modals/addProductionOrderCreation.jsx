@@ -38,6 +38,7 @@ export default function ProductionOrderCreationForm ({
     plant: '',
     productDescription: '',
     productName: '',
+    productQuantity:'',
     batch: '',
     materials: [{ materialsList: '', requiredQuantity: '', materialCode: '' }],
     instructions: '',
@@ -54,6 +55,8 @@ export default function ProductionOrderCreationForm ({
 
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
+        if (!formData.productQuantity)
+      newErrors.productQuantity = 'Product Quantity is required'
     if (!formData.productDescription)
       newErrors.productDescription = 'Product Description is required'
 
@@ -119,6 +122,7 @@ export default function ProductionOrderCreationForm ({
           plant: '',
           productDescription: '',
           productName: '',
+          productQuantity:'',
           batch: '',
           materials: [
             { materialsList: '', requiredQuantity: '', materialCode: '' }
@@ -313,6 +317,23 @@ export default function ProductionOrderCreationForm ({
                     InputLabelProps={{
                       shrink: true // Keeps the label above the field to avoid overlap
                     }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Product Quantity'
+                    name='productQuantity'
+                    value={formData.productQuantity}
+                    onChange={handleChange}
+                    error={!!errors.productQuantity}
+                    helperText={errors.productQuantity}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                     
+                    }}
+                 
                   />
                 </Grid>
                 {/* <Grid item xs={6}>

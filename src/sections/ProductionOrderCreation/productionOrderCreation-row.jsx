@@ -30,6 +30,7 @@ export function ProductionOrderCreationTableRow ({
     processOrder: row.processOrder,
     plant: row.plant,
     productName: row.productName,
+    productQuantity:row.productQuantity,
     productDescription: row.productDescription,
     batch: row.batch,
     materials: row.materials,
@@ -114,6 +115,7 @@ export function ProductionOrderCreationTableRow ({
           </div>
         </TableCell>
         <TableCell style={{ minWidth: '180px' }}>{row.productName}</TableCell>
+        <TableCell style={{ minWidth: '180px' }}>{` ${row.productQuantity} KG`}</TableCell>
         <TableCell>{row.batch}</TableCell>
         <TableCell
           style={{

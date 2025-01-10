@@ -43,7 +43,8 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
     authPassword: '',
     mainStockId: mainStockData.mainStockId,
     materialName: mainStockData.materialName,
-    materialCode:mainStockData.materialCode,
+    materialCode: mainStockData.materialCode,
+    batchNumber:mainStockData.batchNumber,
     quantity: mainStockData.quantity,
     price: mainStockData.price,
     storageLocation: mainStockData.storageLocation,
@@ -60,12 +61,12 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
 
-        if (!formData.materialCode)
+    if (!formData.materialCode)
       newErrors.materialCode = 'Material Code is required'
     if (!formData.quantity) {
-      newErrors.quantity = 'Quantity is required';
+      newErrors.quantity = 'Quantity is required'
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
-      newErrors.quantity = 'Quantity must be a valid number';
+      newErrors.quantity = 'Quantity must be a valid number'
     }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
@@ -97,7 +98,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
         setFormData({
           authPassword: '',
           materialName: '',
-          materialCode:'',
+          materialCode: '',
           quantity: '',
           price: '',
           vendorName: '',
@@ -198,7 +199,23 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                     InputProps={{
                       style: { borderRadius: 8 }
                     }}
-                
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Batch Number'
+                    name='batchNumber'
+                    value={formData.batchNumber}
+                    onChange={handleChange}
+                    error={!!errors.batchNumber}
+                    helperText={errors.batchNumber}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
+                  
                   />
                 </Grid>
                 <Grid item xs={6}>

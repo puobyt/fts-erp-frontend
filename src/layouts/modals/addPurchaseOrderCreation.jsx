@@ -510,14 +510,11 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                   position: 'relative'
                 }}
               >
-                {loading ? (
-                  <CircularProgress
-                    size={24}
-                    sx={{ color: 'white', position: 'absolute' }}
-                  />
-                ) : (
-                  'Submit'
-                )}
+              
+             
+               
+                  Submit
+               
               </Button>
             </Box>
           </Paper>

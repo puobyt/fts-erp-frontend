@@ -173,7 +173,11 @@ export default function CurrentStockForm ({
                 Current Stock Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box component='form' onSubmit={handleSubmit}   sx={{
+                maxHeight: '65vh', // Restrict height to 70% of viewport height
+                overflowY: 'auto', // Enable vertical scrolling
+                paddingRight: 2 // Add padding to avoid scrollbar overlap with content
+              }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <FormControl error={!!errors.batchNumberType}>

@@ -23,6 +23,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
     mainStockId: row._id,
     materialName: row.materialName,
     materialCode:row.materialCode,
+    batchNumber:row.batchNumber,
     quantity: row.quantity,
     price: row.price,
     storageLocation: row.storageLocation,

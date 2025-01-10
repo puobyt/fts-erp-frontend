@@ -42,8 +42,10 @@ export default function EditProductionOrderCreationForm ({
     productionOrderId: productionOrderData.productionOrderId,
     processOrder: productionOrderData.processOrder,
     plant: productionOrderData.plant,
+    batch: productionOrderData.batch,
     productDescription: productionOrderData.productDescription,
     productName: productionOrderData.productName,
+    productQuantity: productionOrderData.productQuantity,
     batch: productionOrderData.batch,
     materials: productionOrderData.materials,
     instructions: productionOrderData.instructions,
@@ -59,7 +61,10 @@ export default function EditProductionOrderCreationForm ({
     // if (!formData.processOrder)
     //   newErrors.processOrder = 'Process Order is required'
     if (!formData.plant) newErrors.plant = 'Plant is required'
+    if (!formData.batch) newErrors.batch = 'Batch is required'
     if (!formData.productName) newErrors.productName = 'ProductName is required'
+    if (!formData.productQuantity)
+      newErrors.productQuantity = 'Product Quantity is required'
     if (!formData.productDescription)
       newErrors.productDescription = 'Product Description is required'
     if (!formData.batch) newErrors.batch = 'Batch is required'
@@ -107,8 +112,10 @@ export default function EditProductionOrderCreationForm ({
             productionOrderId: '',
             processOrder: '',
             plant: '',
+            batch: '',
             productDescription: '',
             productName: '',
+            productQuantity: '',
             batch: '',
             materials: [
               { materialsList: '', requiredQuantity: '', materialCode: '' }
@@ -270,6 +277,40 @@ export default function EditProductionOrderCreationForm ({
                     helperText={errors.plant}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Batch'
+                    name='batch'
+                    value={formData.batch}
+                    onChange={handleChange}
+                    error={!!errors.batch}
+                    helperText={errors.batch}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      placeholder: 'Auto-Generate'
+                    }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Product Quantity'
+                    name='productQuantity'
+                    value={formData.productQuantity}
+                    onChange={handleChange}
+                    error={!!errors.productQuantity}
+                    helperText={errors.productQuantity}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>

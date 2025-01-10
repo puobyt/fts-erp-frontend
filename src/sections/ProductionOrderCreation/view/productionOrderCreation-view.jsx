@@ -135,8 +135,8 @@ export function ProductionOrderCreationView () {
                   { id: 'plant', label: 'Plant' },
          
                   { id: 'productDescription', label: 'Product Description' },
-                  { id: 'ProductName', label: 'Product Name' },
-
+                  { id: 'productName', label: 'Product Name' },
+                  { id: 'productQuantity', label: 'Product Quantity' },
                   { id: 'batch', label: 'Batch' },
                   { id: 'materialList', label: 'Material List' },
                   { id: 'requiredQuantity', label: 'Required Quantity' },

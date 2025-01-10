@@ -358,9 +358,9 @@ export default function EditQualityCheckForm ({
                     <MenuItem sx={{ color: 'red' }} value='Rejected'>
                       Rejected
                     </MenuItem>
-                    <MenuItem sx={{ color: 'purple' }} value='Quarantine'>
+                    {/* <MenuItem sx={{ color: 'purple' }} value='Quarantine'>
                       Quarantine
-                    </MenuItem>
+                    </MenuItem> */}
                   </TextField>
                 </Grid>
                 <Grid item xs={6}>

@@ -42,6 +42,7 @@ export default function MainStockForm ({
   const [formData, setFormData] = useState({
     materialName: '',
     materialCode: '',
+    batchNumber:'',
     quantity: '',
     price: '',
     storageLocation: '',
@@ -103,6 +104,7 @@ export default function MainStockForm ({
         setFormData({
           materialName: '',
           materialCode: '',
+          batchNumber:'',
           quantity: '',
           price: '',
           storageLocation: '',
