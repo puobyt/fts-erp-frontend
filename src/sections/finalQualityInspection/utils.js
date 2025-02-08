@@ -58,7 +58,10 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (qualityInspection) => qualityInspection.productName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (qualityInspection) => qualityInspection.productName.toLowerCase().includes(filterName.toLowerCase()) || 
+      qualityInspection.inspectionResults.toLowerCase().includes(filterName.toLowerCase()) || 
+      qualityInspection.inspectionNumber.toLowerCase().includes(filterName.toLowerCase())
+      
     );
   }
 

@@ -57,8 +57,9 @@ export function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (rework) => rework.materialName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    inputData = inputData.filter((user) =>
+      user.materialName.toLowerCase().includes(filterName.toLowerCase()) ||
+      user.batchNumber.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 

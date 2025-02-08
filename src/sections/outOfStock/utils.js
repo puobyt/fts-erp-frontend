@@ -57,8 +57,10 @@ export function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.productName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    inputData = inputData.filter((user) =>
+      user.materialName.toLowerCase().includes(filterName.toLowerCase()) ||
+      user.materialCode.toLowerCase().includes(filterName.toLowerCase()) ||
+      user.vendorName.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 

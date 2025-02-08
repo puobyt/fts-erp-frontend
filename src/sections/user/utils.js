@@ -56,11 +56,15 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+
   if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    inputData = inputData.filter((user) =>
+      user.nameOfTheFirm.toLowerCase().includes(filterName.toLowerCase()) ||
+      user.material.toLowerCase().includes(filterName.toLowerCase())
+    
     );
   }
+  
 
   return inputData;
 }

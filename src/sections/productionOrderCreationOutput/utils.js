@@ -58,7 +58,9 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (user) => user.nameOfTheFirm.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (output) => output.productName.toLowerCase().includes(filterName.toLowerCase()) 
+
+      
     );
   }
 

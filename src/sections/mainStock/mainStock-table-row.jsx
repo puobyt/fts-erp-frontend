@@ -98,8 +98,9 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
         <TableCell>{`${row.quantity} KG`}</TableCell>
 
         <TableCell style={{ whiteSpace: 'nowrap' }}>{`₹ ${row.price}`}</TableCell>
-        <TableCell>{row.vendorName}</TableCell>
+       
         <TableCell>{row.storageLocation}</TableCell>
+        <TableCell>{row.vendorName}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>
 

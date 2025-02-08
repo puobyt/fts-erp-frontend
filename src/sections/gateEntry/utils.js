@@ -58,7 +58,8 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (user) => user.vehicleNumber.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (user) => user.vehicleNumber.toLowerCase().includes(filterName.toLowerCase()) || 
+      user.vendorName.toLowerCase().includes(filterName.toLowerCase()) 
     );
   }
 

@@ -58,7 +58,9 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (billOfMaterial) => billOfMaterial.productName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (billOfMaterial) => billOfMaterial.productName.toLowerCase().includes(filterName.toLowerCase()) ||
+      billOfMaterial.bomNumber.toLowerCase().includes(filterName.toLowerCase())
+
     );
   }
 

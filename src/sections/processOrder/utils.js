@@ -58,7 +58,10 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (productionOrder) => productionOrder.processOrder.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (processOrder) => processOrder.processOrderNumber.toLowerCase().includes(filterName.toLowerCase()) || 
+      processOrder.plant.toLowerCase().includes(filterName.toLowerCase()) || 
+      processOrder.productName.toLowerCase().includes(filterName.toLowerCase())
+      
     );
   }
 

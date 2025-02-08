@@ -5,6 +5,6 @@ import packageJson from '../package.json';
 
 // ----------------------------------------------------------------------
 export const CONFIG = {
-  appName: 'Minimal UI',
+  appName: 'ERP Tracebility',
   appVersion: packageJson.version,
 };

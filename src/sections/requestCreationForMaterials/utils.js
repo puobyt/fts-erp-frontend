@@ -58,7 +58,9 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (requestCreationMaterial) => requestCreationMaterial.materialName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (reqMaterials) => reqMaterials.requestNumber.toLowerCase().includes(filterName.toLowerCase())
+
+      
     );
   }
 

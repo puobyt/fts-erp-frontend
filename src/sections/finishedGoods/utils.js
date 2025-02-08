@@ -58,7 +58,8 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (finishedGood) => finishedGood.finishedGoodsName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (finishedGood) => finishedGood.finishedGoodsName.toLowerCase().includes(filterName.toLowerCase()) ||
+      finishedGood.batchNumber.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 

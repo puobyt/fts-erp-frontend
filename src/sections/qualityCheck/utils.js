@@ -57,8 +57,11 @@ export function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (qualityCheck) => qualityCheck.productName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    inputData = inputData.filter((user) =>
+      user.materialName.toLowerCase().includes(filterName.toLowerCase()) ||
+      user.materialCode.toLowerCase().includes(filterName.toLowerCase()) ||
+      user.qualityStatus.toLowerCase().includes(filterName.toLowerCase()) || 
+      user.batchNumber.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 

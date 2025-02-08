@@ -57,10 +57,14 @@ export function applyFilter({ inputData, comparator, filterName }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.nameOfTheFirm.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    inputData = inputData.filter((user) =>
+      user.purchaseOrderNumber.toLowerCase().includes(filterName.toLowerCase()) ||
+      user.nameOfTheFirm.toLowerCase().includes(filterName.toLowerCase()) ||
+      user.materialName.toLowerCase().includes(filterName.toLowerCase()) || 
+      user.vendorId.toLowerCase().includes(filterName.toLowerCase())
     );
   }
+  
 
   return inputData;
 }

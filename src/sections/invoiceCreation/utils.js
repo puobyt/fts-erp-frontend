@@ -58,7 +58,9 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (invoiceCreation) => invoiceCreation.itemName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (invoiceCreation) => invoiceCreation.itemName.toLowerCase().includes(filterName.toLowerCase()) ||
+      invoiceCreation.invoiceNumber.toLowerCase().includes(filterName.toLowerCase()) ||
+      invoiceCreation.customerName.toLowerCase().includes(filterName.toLowerCase())
     );
   }
 

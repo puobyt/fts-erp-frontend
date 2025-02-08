@@ -58,7 +58,10 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (materialAssignment) => materialAssignment.materialName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (assignment) => assignment.assignmentNumber.toLowerCase().includes(filterName.toLowerCase()) || 
+      assignment.processOrderNumber.toLowerCase().includes(filterName.toLowerCase())
+
+      
     );
   }
 
