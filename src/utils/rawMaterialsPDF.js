@@ -4,8 +4,10 @@ import axiosInstance from '../configs/axiosInstance';
 export async function generateMaterialsReport(row) {
   try {
     const currentStockId = row._id;
+
     const response = await axiosInstance.get(`/current-stock/${currentStockId}/pdf-data`);
-    const pdfData = response.data;
+    console.log('pdfff....ing',response.data);
+    const pdfData = response.data.pdfData;
     const doc = new jsPDF();
 
     // Add custom font
@@ -118,22 +120,28 @@ export async function generateMaterialsReport(row) {
     doc.setFont('Times', 'bold');
     doc.text(`Vendor ID:`, 20, vendorY + 10);
     doc.setFont('helvetica', 'normal');
-    doc.text('VND 10104' || 'N/A', 60, vendorY + 10);
+    doc.text(`${pdfData?.vendor?.vendorId}` || 'N/A', 60, vendorY + 10);
 
     doc.setFont('Times', 'bold');
     doc.text(`Vendor Name:`, 20, vendorY + 20);
     doc.setFont('helvetica', 'normal');
-    doc.text('Quinn solution' || 'N/A', 60, vendorY + 20);
+    doc.text(`${pdfData?.vendor?.vendorName}` || 'N/A', 60, vendorY + 20);
 
     doc.setFont('Times', 'bold');
     doc.text(`Contact Information:`, 20, vendorY + 30);
     doc.setFont('helvetica', 'normal');
-    doc.text('8139889998' || 'N/A', 60, vendorY + 30);
+    doc.text(
+      `${pdfData?.vendor?.contactName || 'N/A'} ${pdfData?.vendor?.contactPersonDetails
+        || 'N/A'}`, 
+      60, 
+      vendorY + 30
+    );
+    
 
     doc.setFont('Times', 'bold');
     doc.text(`Location:`, 20, vendorY + 40);
     doc.setFont('helvetica', 'normal');
-    doc.text('Pathalam,Ernakulam' || 'N/A', 60, vendorY + 40);
+    doc.text(`${pdfData?.vendor?.address}` || 'N/A', 60, vendorY + 40);
 
     // Add some spacing after Vendor Information
     const storageYStart = vendorY + 60;
