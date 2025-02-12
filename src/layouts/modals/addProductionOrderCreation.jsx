@@ -266,10 +266,10 @@ export default function ProductionOrderCreationForm ({
                     ))}
 
                     <MenuItem
-                      onClick={() => navigate('/process-order')}
+                      onClick={() => navigate('/production-workflow/process-order')}
                       sx={{ fontStyle: 'italic' }}
                     >
-                      Add New Material In Current Stock +
+                      Add New Process Order No. +
                     </MenuItem>
                   </TextField>
                 </Grid>
@@ -400,7 +400,7 @@ export default function ProductionOrderCreationForm ({
 
                         {/* This item only triggers navigation, not a form selection */}
                         <MenuItem
-                          onClick={() => navigate('/main-stock')}
+                          onClick={() => navigate('/vendor-stock-management/main-stock')}
                           sx={{ fontStyle: 'italic' }} // Optional styling
                         >
                           Add New materialName +

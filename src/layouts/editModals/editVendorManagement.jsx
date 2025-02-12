@@ -98,7 +98,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
         })
         .catch(err => {
           toast.error(err.response.data.message)
-          console.log('catchErro', err)
+          // console.log('catchErro', err)
           console.error(
             'Error occured in editing vendor management client side',
             err.message

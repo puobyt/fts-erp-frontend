@@ -226,7 +226,7 @@ export default function CurrentStockForm ({
                     ))}
 
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/vendor-stock-management/purchase-order-creation')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Material +
@@ -326,7 +326,7 @@ export default function CurrentStockForm ({
                     ))}
 
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/vendor-stock-management/vendor-management')}
                       sx={{ fontStyle: 'italic' }}
                     >
                       Add New Vendor +

@@ -8,6 +8,7 @@ import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
@@ -30,6 +31,7 @@ export default function ProductionOrderCreationOutputForm ({
   products
 }) {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate();
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
@@ -189,10 +191,10 @@ export default function ProductionOrderCreationOutputForm ({
                       </MenuItem>
                     ))}
                     <MenuItem
-                      onClick={() => navigate('/production-order-creation')}
+                      onClick={() => navigate('/production-workflow/production-order-creation')}
                       sx={{ fontStyle: 'italic' }} 
                     >
-                      Add New Batch +
+                      Add New product +
                     </MenuItem>
                   </TextField>
                 </Grid>
@@ -269,7 +271,7 @@ export default function ProductionOrderCreationOutputForm ({
                       </MenuItem>
                     ))}
                     <MenuItem
-                      onClick={() => navigate('/production-order-creation')}
+                      onClick={() => navigate('/production-workflow/production-order-creation')}
                       sx={{ fontStyle: 'italic' }} 
                     >
                       Add New Batch +

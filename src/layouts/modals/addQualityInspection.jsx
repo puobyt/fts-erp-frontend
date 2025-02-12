@@ -8,6 +8,8 @@ import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
+
 import axios from 'axios'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
@@ -26,6 +28,7 @@ const style = {
 export default function QualityInspectionForm ({ setUpdate, productNames }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
+  const navigate = useNavigate();
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     inspectionNumber: '',
@@ -144,10 +147,10 @@ export default function QualityInspectionForm ({ setUpdate, productNames }) {
                     ))}
 
                     <MenuItem
-                      onClick={() => navigate('/current-stock')}
+                      onClick={() => navigate('/production-workflow/production-order-creation-output')}
                       sx={{ fontStyle: 'italic' }}
                     >
-                      Add New Material In Current Stock +
+                      Create New Product +
                     </MenuItem>
                   </TextField>
                 </Grid>

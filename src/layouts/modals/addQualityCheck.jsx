@@ -210,7 +210,7 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
                     ))}
 
                     <MenuItem
-                      onClick={() => navigate('/current-stock')}
+                      onClick={() => navigate('/vendor-stock-management/current-stock')}
                       sx={{ fontStyle: 'italic' }}
                     >
                       Add New Material In Current Stock +
@@ -238,10 +238,10 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/current-stock')}
+                      onClick={() => navigate('/vendor-stock-management/current-stock')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
-                      Add New Batch +
+                      Add New Material Code +
                     </MenuItem>
                   </TextField>
                 </Grid>
@@ -266,7 +266,7 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/current-stock')}
+                      onClick={() => navigate('/vendor-stock-management/current-stock')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Batch +

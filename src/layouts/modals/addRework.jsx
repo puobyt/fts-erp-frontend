@@ -8,6 +8,7 @@ import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
 import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
@@ -41,7 +42,7 @@ export default function ReworkForm ({ setUpdate, batches }) {
     comments: ''
   })
   const [errors, setErrors] = useState({})
-
+const navigate = useNavigate();
   const validateForm = () => {
     const newErrors = {}
     if (!formData.batchNumber)
@@ -210,7 +211,7 @@ export default function ReworkForm ({ setUpdate, batches }) {
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/current-stock')}
+                      onClick={() => navigate('/vendor-stock-management/current-stock')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Batch +
@@ -237,7 +238,7 @@ export default function ReworkForm ({ setUpdate, batches }) {
                     ))}
 
                     <MenuItem
-                      onClick={() => navigate('/current-stock')}
+                      onClick={() => navigate('/vendor-stock-management/current-stock')}
                       sx={{ fontStyle: 'italic' }}
                     >
                       Add New Material In Current Stock +

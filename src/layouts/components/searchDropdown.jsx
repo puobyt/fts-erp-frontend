@@ -40,7 +40,7 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
 
       try {
         const code = encodeURIComponent(searchValue);
-        console.log('Encoded Code:', code); // Check what is being sent
+        // console.log('Encoded Code:', code); // Check what is being sent
         const response = await axiosInstance.get(
           `/search/finishedGoods?code=${code}`
         );

@@ -96,7 +96,7 @@ export function NavContent ({ data, slots, workspaces, sx }) {
 
   // Toggle dropdown visibility
   const handleToggle = title => {
-    console.log('title sray ,', title)
+    // console.log('title sray ,', title)
     setOpenMenus(prev => ({
       ...prev,
       [title]: !prev[title] // Toggle the specific dropdown

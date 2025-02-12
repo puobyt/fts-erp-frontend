@@ -223,7 +223,7 @@ export default function MaterialAssignmentForm ({
                           </MenuItem>
                         ))}
                         <MenuItem
-                          onClick={() => navigate('/main-stock')}
+                          onClick={() => navigate('/vendor-stock-management/main-stock')}
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Material +
@@ -242,7 +242,7 @@ export default function MaterialAssignmentForm ({
                         ))}
 
                         <MenuItem
-                          onClick={() => navigate('/finished-goods')}
+                          onClick={() => navigate('/finished-goods-invoicing/finished-goods')}
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Finished Goods +
@@ -366,7 +366,7 @@ export default function MaterialAssignmentForm ({
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/production-order-creation')}
+                      onClick={() => navigate('/production-workflow/production-order-creation')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Process Order Number +

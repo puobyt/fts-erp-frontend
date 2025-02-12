@@ -8,6 +8,7 @@ import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
@@ -34,7 +35,7 @@ export default function GateEntryForm ({ setUpdate, firmNames }) {
     date: ''
   })
   const [errors, setErrors] = useState({})
-
+const navigate = useNavigate();
   const validateForm = () => {
     const newErrors = {}
     if (!formData.entryTime) newErrors.entryTime = 'Entry Time is required'
@@ -171,7 +172,7 @@ export default function GateEntryForm ({ setUpdate, firmNames }) {
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/vendor-management')}
+                      onClick={() => navigate('/vendor-stock-management/vendor-management')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Firm +
