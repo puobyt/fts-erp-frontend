@@ -270,7 +270,7 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData,itemNa
                     ))}
 
                     <MenuItem
-                      onClick={() => navigate('/finished-goods')}
+                      onClick={() => navigate('/finished-goods-invoicing/finished-goods')}
                       sx={{ fontStyle: 'italic' }} 
                     >
                       Add New ItemName +

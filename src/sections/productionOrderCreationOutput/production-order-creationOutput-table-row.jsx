@@ -19,6 +19,7 @@ import EditProductionOrderCreationOutputForm from '../../layouts/editModals/edit
 // ----------------------------------------------------------------------
 
 export function ProductionOrderCreationOutputTableRow ({
+  batches,
   products,
   setUpdate,
   index,
@@ -148,6 +149,7 @@ export function ProductionOrderCreationOutputTableRow ({
           }}
         >
           <EditProductionOrderCreationOutputForm
+          batches={batches}
             setUpdate={setUpdate}
             productionOrderOutputData={productionOrderOutputData}
             products={products}

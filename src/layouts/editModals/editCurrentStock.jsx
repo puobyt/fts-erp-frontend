@@ -247,10 +247,10 @@ export default function EditCurrentStockForm ({
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/vendor-management')}
+                      onClick={() => navigate('/vendor-stock-management/vendor-management')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
-                      Add New Material +
+                      Add New Vendor +
                     </MenuItem>
                   </TextField>
                 </Grid>

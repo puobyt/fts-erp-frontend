@@ -10,6 +10,7 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import '../../global.css'
+import { useNavigate } from 'react-router-dom'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
@@ -30,6 +31,7 @@ export default function EditQualityInspectionForm ({
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
+  const navigate = useNavigate();
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     authPassword: '',
@@ -172,10 +174,10 @@ export default function EditQualityInspectionForm ({
                     ))}
 
                     <MenuItem
-                      onClick={() => navigate('/current-stock')}
+                      onClick={() => navigate('/production-workflow/production-order-creation-output')}
                       sx={{ fontStyle: 'italic' }}
                     >
-                      Add New Material In Current Stock +
+                       Create New Product +
                     </MenuItem>
                   </TextField>
                 </Grid>

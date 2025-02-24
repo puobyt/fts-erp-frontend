@@ -237,7 +237,7 @@ export default function EditBillOfMaterialsForm ({
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/purchase-order-creation')}
+                      onClick={() => navigate('/production-workflow/production-order-creation-output')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Product +
@@ -268,7 +268,7 @@ export default function EditBillOfMaterialsForm ({
                           ))}
 
                           <MenuItem
-                            onClick={() => navigate('/main-stock')}
+                            onClick={() => navigate('/vendor-stock-management/current-stock')}
                             sx={{ fontStyle: 'italic' }} // Optional styling
                           >
                             Add New materialName +

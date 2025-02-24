@@ -153,6 +153,7 @@ useEffect(()=>{
                   )
                   .map((row,index) => (
                     <ProductionOrderCreationOutputTableRow
+                    batches={batches}
                     products={products}
                     setUpdate={setUpdate}
                     index={index}

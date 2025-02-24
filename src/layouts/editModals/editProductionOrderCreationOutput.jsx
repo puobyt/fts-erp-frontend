@@ -9,6 +9,8 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
@@ -24,6 +26,7 @@ const style = {
 }
 
 export default function EditProductionOrderCreationOutputForm ({
+  batches,
   setUpdate,
   productionOrderOutputData,
   products
@@ -31,6 +34,7 @@ export default function EditProductionOrderCreationOutputForm ({
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const navigate = useNavigate();
   const formattedDate = productionOrderOutputData.productionCompletionDate
     ? new Date(productionOrderOutputData.productionCompletionDate)
         .toISOString()
@@ -202,10 +206,10 @@ export default function EditProductionOrderCreationOutputForm ({
                       </MenuItem>
                     ))}
                     <MenuItem
-                      onClick={() => navigate('/production-order-creation')}
+                      onClick={() => navigate('/production-workflow/production-order-creation')}
                       sx={{ fontStyle: 'italic' }} 
                     >
-                      Add New Batch +
+                      Add New Product +
                     </MenuItem>
                   </TextField>
                 </Grid>
@@ -277,21 +281,31 @@ export default function EditProductionOrderCreationOutputForm ({
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Batch Number for Output'
-                    name='batchNumberforOutput'
-                    value={formData.batchNumberforOutput}
-                    onChange={handleChange}
-                    error={!!errors.batchNumberforOutput}
-                    helperText={errors.batchNumberforOutput}
-                    variant='outlined'
-                    InputProps={{
-                      style: { borderRadius: 8 },
-                      placeholder: 'Auto-Generate' 
-                    }}
-                  />
-                </Grid>
+                          <TextField
+                            fullWidth
+                            select
+                            label='Batch Number For Output'
+                            name='batchNumberforOutput'
+                            value={formData.batchNumberforOutput}
+                            onChange={handleChange}
+                            error={!!errors.batchNumberforOutput}
+                            helperText={errors.batchNumberforOutput}
+                            variant='outlined'
+                            InputProps={{ style: { borderRadius: 8 } }}
+                          >
+                            {batches.map((batch, index) => (
+                              <MenuItem key={index} value={batch}>
+                                {batch}
+                              </MenuItem>
+                            ))}
+                            <MenuItem
+                              onClick={() => navigate('/production-workflow/production-order-creation')}
+                              sx={{ fontStyle: 'italic' }} 
+                            >
+                              Add New Batch +
+                            </MenuItem>
+                          </TextField>
+                        </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

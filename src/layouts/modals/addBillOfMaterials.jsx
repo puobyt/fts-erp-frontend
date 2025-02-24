@@ -258,7 +258,7 @@ export default function BillOfMaterialsForm ({
 
                         {/* This item only triggers navigation, not a form selection */}
                         <MenuItem
-                          onClick={() => navigate('/vendor-stock-management/main-stock')}
+                          onClick={() => navigate('/vendor-stock-management/current-stock')}
                           sx={{ fontStyle: 'italic' }} // Optional styling
                         >
                           Add New materialName +

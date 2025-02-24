@@ -235,7 +235,7 @@ export default function EditRequestCreationForMaterialsForm ({
                           </MenuItem>
                         ))}
                         <MenuItem
-                          onClick={() => navigate('/main-stock')}
+                          onClick={() => navigate('/vendor-stock-management/current-stock')}
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Material +
@@ -254,7 +254,7 @@ export default function EditRequestCreationForMaterialsForm ({
                         ))}
 
                         <MenuItem
-                          onClick={() => navigate('/finished-goods')}
+                          onClick={() => navigate('/finished-goods-invoicing/finished-goods')}
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Finished Goods +

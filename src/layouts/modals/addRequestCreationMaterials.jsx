@@ -218,7 +218,7 @@ export default function RequestCreationForMaterialsForm ({
                           </MenuItem>
                         ))}
                         <MenuItem
-                          onClick={() => navigate('/vendor-stock-management/main-stock')}
+                          onClick={() => navigate('/vendor-stock-management/current-stock')}
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Material +
