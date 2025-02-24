@@ -116,7 +116,7 @@ export default function MaterialAssignmentForm ({
   
     if (name === 'materialsList') {
       const selectedMaterial = materialNames.find(
-        material => material.materialName === value
+        material => material.materialsList === value
       );
       updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
     }
@@ -217,13 +217,13 @@ export default function MaterialAssignmentForm ({
                         {materialNames.map((materialName, index) => (
                           <MenuItem
                             key={`product-${index}`}
-                            value={materialName.materialName}
+                            value={materialName.materialsList}
                           >
-                            {materialName.materialName}
+                            {materialName.materialsList}
                           </MenuItem>
                         ))}
                         <MenuItem
-                          onClick={() => navigate('/vendor-stock-management/current-stock')}
+                          onClick={() => navigate('/vendor-stock-management/request-creation-for-materials')}
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Material +

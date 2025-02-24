@@ -47,7 +47,6 @@ try{
   setLoading(true)
 const result = await axiosInstance.get('/materialAssignment');
 if(result.data.data){
-
   setMaterialAssignments(result.data.data);
   setMaterialNames(result.data.materials);
   setFinishedGoods(result.data.finishedGoods);
