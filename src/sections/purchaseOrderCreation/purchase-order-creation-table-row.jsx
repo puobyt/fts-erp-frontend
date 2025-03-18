@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/iconify';
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast'
+import generatePocpdf from '../../utils/purchaseOrderCreation';
 
 // ----------------------------------------------------------------------
 
@@ -154,6 +155,14 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 
+          </MenuItem>
+
+          <MenuItem
+            sx={{ color: 'primary.main' }}
+            onClick={() => generatePocpdf(row)}
+          >
+            <Iconify icon='solar:download-bold' />
+            Download PDF
           </MenuItem>
         </MenuList>
       </Popover>

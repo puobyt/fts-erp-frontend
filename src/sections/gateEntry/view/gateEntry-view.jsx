@@ -128,6 +128,9 @@ export function GateEntryView () {
                 headLabel={[
                   { id: 'vendorName', label: 'Vendor Name' },
                   { id: 'vehicleNumber', label: 'Vehicle Number' },
+                  { id: 'materialName', label: 'Material Name' },
+                  { id: 'quantity', label: 'Quantity' },
+                  { id: 'docNumber', label: 'Doc Number' },
                   { id: 'date', label: 'Date' },
                   { id: 'entryTime', label: 'Entry Time' },
 

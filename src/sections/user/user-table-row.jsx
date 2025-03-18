@@ -24,6 +24,7 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
   const vendorData = {
     nameOfTheFirm: row.nameOfTheFirm,
     address: row.address,
+    vendorCode: row.vendorCode,
     vendorId: row._id,
     contactNumber:row.contactNumber,
     contactPersonName:row.contactPersonName,
@@ -102,6 +103,7 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
           </Box>
         </TableCell> */}
         <TableCell>  {row.nameOfTheFirm}</TableCell>
+        <TableCell>{row.vendorCode}</TableCell>
         <TableCell>{row.address}</TableCell>
         <TableCell>{row.contactNumber}</TableCell>
         <TableCell>{row.contactPersonName}</TableCell>

@@ -30,6 +30,7 @@ export default function VendorManagementForm({setUpdate}) {
   const [formData, setFormData] = useState({
      nameOfTheFirm: '', 
      address: '', 
+     vendorCode:'',
      contactNumber: '', 
      contactPersonName: '' ,
      contactPersonDetails:'',
@@ -44,6 +45,7 @@ export default function VendorManagementForm({setUpdate}) {
     const newErrors = {};
     if (!formData.nameOfTheFirm) newErrors.nameOfTheFirm = 'Name of the Firm is required';
     if (!formData.address) newErrors.address = 'Address is required';
+    if (!formData.vendorCode) newErrors.address = 'Vendor Code is required';
     if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required';
     if (!formData.contactPersonName) newErrors.contactPersonName = 'Contact Person Name is required';
     if (!formData.contactPersonDetails) newErrors.contactPersonDetails = 'Contact Person Details are required';
@@ -76,6 +78,7 @@ try{
         setFormData({
             nameOfTheFirm: '', 
             address: '', 
+            vendorCode: '', 
             contactNumber: '', 
             contactPersonName: '' ,
             contactPersonDetails:'',
@@ -171,6 +174,19 @@ try{
                 onChange={handleChange}
                 error={!!errors.contactNumber}
                 helperText={errors.contactNumber}
+                variant="outlined"
+                InputProps={{ style: { borderRadius: 8 } }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Vendor Code"
+                name="vendorCode"
+                value={formData.vendorCode}
+                onChange={handleChange}
+                error={!!errors.vendorCode}
+                helperText={errors.vendorCode}
                 variant="outlined"
                 InputProps={{ style: { borderRadius: 8 } }}
               />

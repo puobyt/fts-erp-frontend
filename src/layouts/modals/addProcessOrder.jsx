@@ -12,6 +12,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -40,7 +41,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
     batchNumber: '',
     orderQuantity: '',
     materialInput: [
-      { materialCode: '', quantity: '', batch: '', storageLocation: '' }
+      { materialCode: '', quantity: '', batch: '', storageLocation: ''}
     ]
   })
   const [errors, setErrors] = useState({})

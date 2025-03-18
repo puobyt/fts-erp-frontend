@@ -92,6 +92,30 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
         </TableCell> */}
            <TableCell>{row.vendorName}</TableCell>
            <TableCell>  {row.vehicleNumber}</TableCell>
+              <TableCell
+                style={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {row.materials.map((material, index) => (
+                  <div
+                    key={index}
+                    style={{ marginRight: '10px' }}
+                  >
+                    <strong>{material.materialName}</strong>:{' '}
+                    {`${material.quantity} KG`}
+                  </div>
+                  
+                ))}
+              </TableCell>
+      
+              <TableCell>
+                {row.materials.map((material, index) => (
+                  <div key={index}>{`${material.quantity} KG`}</div>
+                ))}
+              </TableCell>
+           <TableCell>  {row.docNumber}</TableCell>
            <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
         <TableCell>  {formattedTime}</TableCell>
      

@@ -25,20 +25,36 @@ const style = {
 }
 
 export default function GateEntryForm ({ setUpdate, firmNames }) {
-  const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [formData, setFormData] = useState({
     entryTime: '',
     vehicleNumber: '',
     vendorName: '',
+    docNumber: '',
+    materials: [{ materialName: '', quantity: ''}],
     date: ''
   })
   const [errors, setErrors] = useState({})
 const navigate = useNavigate();
   const validateForm = () => {
     const newErrors = {}
+    if (
+      formData.materials.some(
+        mat => !mat.materialName || !mat.quantity
+      )
+    ) {
+      newErrors.materials = 'All material fields must be filled'
+    } else if (
+      formData.materials.some(
+        mat => !Number.isFinite(Number(mat.quantity))
+      )
+    ) {
+      newErrors.quantity = 'Assigned Quantity must be a number'
+    }
     if (!formData.entryTime) newErrors.entryTime = 'Entry Time is required'
+        if (!formData.docNumber) newErrors.docNumber = 'Doc Number is required'
     if (!formData.vehicleNumber)
       newErrors.vehicleNumber = 'Vehicle Number is required'
     if (!formData.vendorName) newErrors.vendorName = 'Vendor Name is required'
@@ -68,6 +84,8 @@ const navigate = useNavigate();
           entryTime: '',
           vehicleNumber: '',
           vendorName: '',
+          docNumber: '',
+          materials: [{ materialName: '', quantity: ''}],
           date: ''
         })
         setUpdate(prev => !prev)
@@ -77,6 +95,39 @@ const navigate = useNavigate();
       console.error('Error occured in adding vendor management client side')
     }
   }
+ 
+  const handleMaterialChange = (e, index) => {
+    const { name, value } = e.target;
+  
+    const updatedMaterials = [...formData.materials];
+    updatedMaterials[index][name] = value;
+  
+    // if (name === 'materialName') {
+    //   const selectedMaterial = materialNames.find(
+    //     material => material.materialsList === value
+    //   );
+    //   updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
+    // }
+  
+    setFormData({ ...formData, materials: updatedMaterials });
+  };
+
+
+  const addMaterial = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      materials: [
+        ...prevFormData.materials,
+        { materialName: '', quantity: '' }
+      ]
+    }))
+  }
+
+  const removeMaterial = index => {
+    const updatedMaterials = formData.materials.filter((_, i) => i !== index)
+    setFormData({ ...formData, materials: updatedMaterials })
+  }
+
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
@@ -154,6 +205,19 @@ const navigate = useNavigate();
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    label='Doc Number'
+                    name='docNumber'
+                    value={formData.docNumber}
+                    onChange={handleChange}
+                    error={!!errors.docNumber}
+                    helperText={errors.docNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
                     select
                     label='Vendor Name'
                     name='vendorName'
@@ -179,6 +243,100 @@ const navigate = useNavigate();
                     </MenuItem>
                   </TextField>
                 </Grid>
+
+                {formData.materials.map((material, index) => (
+                  <React.Fragment key={index}>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Materials Name'
+                        name='materialName'
+                        value={material.materialName}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.materials}
+                        helperText={errors.materials}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        <MenuItem
+                          disabled
+                          sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                        >
+                          Materials
+                        </MenuItem>
+                        <MenuItem
+                     
+                            value='hai'
+                          >
+                           hai
+                          </MenuItem>
+                        {/* {materialNames?.map((materialName, index) => (
+                          <MenuItem
+                            key={`product-${index}`}
+                            value={materialName.materialsList}
+                          >
+                            {materialName.materialsList}
+                          </MenuItem>
+                        ))} */}
+                        <MenuItem
+                          onClick={() => navigate('/vendor-stock-management/request-creation-for-materials')}
+                          sx={{ fontStyle: 'italic' }}
+                        >
+                          Add New Material +
+                        </MenuItem>
+
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label='Quantity'
+                        name='quantity'
+                        error={!!errors.quantity}
+                        value={material.quantity}
+                        helperText={errors.quantity}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end', // Align to the right
+                        alignItems: 'center' // Vertically center the content if needed
+                      }}
+                    >
+                      <Button
+                        variant='text'
+                        color='error'
+                        onClick={() => removeMaterial(index)}
+                        size='small'
+                        sx={{
+                          textTransform: 'none',
+                          padding: 0,
+                          minWidth: 'auto'
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  </React.Fragment>
+                ))}
+          
+                        <Grid item xs={12}>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={addMaterial}
+                  >
+                    Add Material
+                  </Button>
+                </Grid>
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

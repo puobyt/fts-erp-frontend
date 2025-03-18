@@ -32,6 +32,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
     vendorId: vendorData.vendorId,
     nameOfTheFirm: vendorData.nameOfTheFirm,
     address: vendorData.address,
+    vendorCode: vendorData.vendorCode,
     contactNumber: vendorData.contactNumber,
     contactPersonName: vendorData.contactPersonName,
     contactPersonDetails: vendorData.contactPersonDetails,
@@ -49,7 +50,9 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
     if (!formData.nameOfTheFirm)
       newErrors.nameOfTheFirm = 'Name of the Firm is required'
     if (!formData.address) newErrors.address = 'Address is required'
-    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required'
+        if (!formData.vendorCode) newErrors.vendorCode = 'Vendor Code is required'
+    if (!formData.contactNumber)
+      newErrors.contactNumber = 'Contact Number is required'
     if (!formData.contactPersonName)
       newErrors.contactPersonName = 'Contact Person Name is required'
     if (!formData.contactPersonDetails)
@@ -86,6 +89,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
             vendorId: '',
             nameOfTheFirm: '',
             address: '',
+            vendorCode: '',
             contactNumber: '',
             contactPersonName: '',
             contactPersonDetails: '',
@@ -200,6 +204,19 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
                     onChange={handleChange}
                     error={!!errors.address}
                     helperText={errors.address}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Vendor Code'
+                    name='vendorCode'
+                    value={formData.vendorCode}
+                    onChange={handleChange}
+                    error={!!errors.vendorCode}
+                    helperText={errors.vendorCode}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />

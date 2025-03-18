@@ -1,48 +1,106 @@
-## Minimal UI ([Free version](https://free.minimals.cc/))
+# ERP Frontend
 
-![license](https://img.shields.io/badge/license-MIT-blue.svg)
+## 📌 Overview
 
-![preview](public/assets/images/minimal-free-preview.jpg)
+This is the frontend of an **ERP system** built using **React (Vite) + Material UI**, designed as a template with prebuilt components. The project follows a modular folder structure to maintain clean and scalable code.
 
-> Free React Admin Dashboard made with Material-UI components and React + Vite.js.
+## 🚀 Tech Stack
 
-## Pages
+- ⚡ **React (Vite)** – Fast development setup
+- 🎨 **Material UI** – UI components
+- 🔗 **Axios** – HTTP requests
+- 🚏 **React Router** – Client-side routing
+- 📜 **JavaScript (ES6+)**
+- 📦 **NPM** – Package manager
 
-- [Dashboard](https://free.minimals.cc/)
-- [Users](https://free.minimals.cc/user)
-- [Products](https://free.minimals.cc/products)
-- [Blog](https://free.minimals.cc/blog)
-- [Sign in](https://free.minimals.cc/sign-in)
-- [Not found](https://free.minimals.cc/404)
+## 📁 Folder Structure
 
-## Quick start
+```
+└── CRM-frontEnd-Freelance-project.git/
+    ├── 📄 CHANGELOG.md
+    ├── 📜 README.md
+    ├── 📑 index.html
+    ├── 📌 package-lock.json
+    ├── 📦 package.json
+    ├── 🎨 prettier.config.mjs
+    ├── 🗂 public
+    │   ├── 🖼 assets
+    │   ├── 🌐 favicon.ico
+    │   └── 🌐 favicon1.ico
+    ├── 📂 src
+    │   ├── 🗃 _mock
+    │   ├── ⚙️ app.jsx
+    │   ├── 🧩 components
+    │   ├── 🛠 config-global.js
+    │   ├── ⚙️ configs
+    │   ├── 🎨 global.css
+    │   ├── 🔗 hooks
+    │   ├── 🏗 layouts
+    │   ├── 🚀 main.jsx
+    │   ├── 📄 pages
+    │   ├── 🔥 redux
+    │   ├── 🔀 routes
+    │   ├── 📌 sections
+    │   ├── 🎨 theme
+    │   ├── 🔧 utils
+    │   └── 📜 vite-env.d.js
+    ├── 🎨 tailwind.config.js
+    ├── 🔗 vercel.json
+    ├── ⚙️ vite.config.js
+    └── 🔄 yarn.lock
+```
 
-- Clone the repo: `git clone https://github.com/minimal-ui-kit/material-kit-react.git`
-- Recommended: `Node.js v20.x`
-- **Install:** `npm i` or `yarn install`
-- **Start:** `npm run dev` or `yarn dev`
-- **Build:** `npm run build` or `yarn build`
-- Open browser: `http://localhost:3039`
+**Don't be scared** of the number of prebuilt components. This is a frontend React template with a structured component hierarchy.
 
-## Upgrade to PRO Version
+## 📦 Installation & Setup
 
-| Minimal Free                | [Minimal Pro](https://material-ui.com/store/items/minimal-dashboard/)                                   |
-| :-------------------------- | :------------------------------------------------------------------------------------------------------ |
-| **6** Pages                 | **70+** Pages                                                                                           |
-| **Partial** theme customize | **Fully** theme customize                                                                               |
-| -                           | **Next.js** version                                                                                     |
-| -                           | **TypeScript** version (Standard Plus and Extended license)                                             |
-| -                           | Design **Figma** file (Standard Plus and Extended license)                                              |
-| -                           | Authentication with **Amplify**, **Auth0**, **JWT**, **Firebase** and **Supabase**                      |
-| -                           | Light/dark mode, right-to-left, form validation... ([+more components](https://minimals.cc/components)) |
-| -                           | Complete users flows                                                                                    |
-| -                           | 1 year of free updates / 6 months of technical support                                                  |
-| -                           | Learn more: [Package & license](https://docs.minimals.cc/package)                                       |
+Ensure you have **Node.js** and **npm** installed.
 
-## License
+```bash
+# Clone the repository
+git clone https://github.com/jishnuanilDev/CRM-frontEnd-Freelance-project.git
+cd CRM-frontEnd-Freelance-project.git
 
-Distributed under the [MIT](https://github.com/minimal-ui-kit/minimal.free/blob/main/LICENSE.md) license.
+# Install dependencies
+npm install
 
-## Contact us
+# Start the development server
+npm run dev
+```
 
-Email: support@minimals.cc
+## 📌 Features
+
+- 🏗 **Modular component structure** for scalability
+- 📝 **Dynamic forms and modals** for adding and editing data
+- 🚀 **Prebuilt UI components** to speed up development
+- 🔀 **Client-side routing** with `React Router`
+- 🔒 **Protected Routes** for authentication
+- 📤 **Export features** (Excel, PDF reports)
+
+## 📜 Client-side Routing
+
+🚏 Routing is handled inside the **routes/section.jsx** file. All pages are imported and rendered within the **pages** directory.
+
+## 📄 API Integration
+
+🔗 The API base URL (server URL) is configured inside the **config/axiosConfig.js** file. Modify this file to update the API server URL.
+
+## 📖 Usage
+
+To start working on a new feature:
+
+1. 📝 **Create forms** inside `src/layouts/modals`
+2. ✏️ **Edit forms** inside `src/layouts/editModals`
+3. 📊 **Update or import data** inside `src/sections/views`
+
+## 🔄 About Redux
+
+⚠️ This project does not currently use **Redux** for state management. However, implementing **Redux** in the future would enhance global state handling and improve scalability.
+
+## 🔗 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+Enjoy coding! 🚀

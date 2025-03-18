@@ -125,6 +125,7 @@ export function UserView () {
                 // }
                 headLabel={[
                   { id: 'nameOfTheFirm', label: 'Name Of The Firm' },
+                  { id: 'vendorCode', label: 'Vendor Code' },
                   { id: 'address', label: 'Address' },
                   { id: 'contactNumber', label: 'Contact Number' },
                   { id: 'contactPersonName', label: 'Contact Person Name' },
