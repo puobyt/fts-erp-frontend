@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-
+import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
@@ -24,9 +24,11 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
   const requestMaterialsData = {
     requestMaterialsId:row._id,
     requestNumber:row.requestNumber,
+    finishedGoodsName:row.finishedGoodsName,
     batchNumber:row.batchNumber,
     materials:row.materials,
-    requiredDate:row.requiredDate
+    requiredDate:row.requiredDate,
+    status:row.status,
   }
   const handleOpenPopover = useCallback((event) => {
     setOpenPopover(event.currentTarget);
@@ -91,6 +93,7 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
           </Box>
         </TableCell> */}
         <TableCell>  {row.requestNumber}</TableCell>
+        <TableCell>  {row.finishedGoodsName}</TableCell>
         {/* <TableCell>  {row.batchNumber}</TableCell> */}
         <TableCell
           style={{
@@ -118,9 +121,17 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
         <TableCell>
           {row.materials.map((material, index) => (
             <div key={index}>{material.materialCode}</div>
+            
           ))}
         </TableCell>
         <TableCell>{new Date(row.requiredDate).toLocaleDateString()}</TableCell>
+        <TableCell>
+  {row.status? (
+    <Typography sx={{ color: 'blue', fontWeight: 'bold' }}>Returned</Typography>
+  ) : (
+    ''
+  )}
+</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>

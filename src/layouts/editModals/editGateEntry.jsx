@@ -25,7 +25,11 @@ const style = {
   p: 4
 }
 
-export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData }) {
+export default function EditGateEntryForm ({
+  firmNames,
+  setUpdate,
+  gateEntryData
+}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -35,18 +39,28 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
   const [formData, setFormData] = useState({
     authPassword: '',
     gateEntryId: gateEntryData.gateEntryId,
-    entryTime:gateEntryData.entryTime,
+    entryTime: gateEntryData.entryTime,
     vehicleNumber: gateEntryData.vehicleNumber,
     vendorName: gateEntryData.vendorName,
-    date: formattedDate
+    date: formattedDate,
+    docNumber:gateEntryData.docNumber ,
+    materials: gateEntryData.materials
   })
   const [errors, setErrors] = useState({})
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const validateForm = () => {
     const newErrors = {}
+    if (formData.materials.some(mat => !mat.materialName || !mat.quantity)) {
+      newErrors.materials = 'All material fields must be filled'
+    } else if (
+      formData.materials.some(mat => !Number.isFinite(Number(mat.quantity)))
+    ) {
+      newErrors.quantity = 'Assigned Quantity must be a number'
+    }
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
-     if (!formData.entryTime) newErrors.entryTime = 'Entry Time is required'
+    if (!formData.docNumber) newErrors.docNumber = 'Doc Number is required'
+    if (!formData.entryTime) newErrors.entryTime = 'Entry Time is required'
     if (!formData.vehicleNumber)
       newErrors.vehicleNumber = 'Vehicle Number is required'
     if (!formData.vendorName) newErrors.vendorName = 'Vendor Name is required'
@@ -56,9 +70,54 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
 
+  function convertTo24HourFormat(time12h) {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+  
+    if (modifier === 'PM' && hours < 12) {
+      hours += 12;
+    }
+    if (modifier === 'AM' && hours === 12) {
+      hours = 0;
+    }
+  
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  }
+  
   const handleChange = e => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleMaterialChange = (e, index) => {
+    const { name, value } = e.target;
+  
+    const updatedMaterials = [...formData.materials];
+    updatedMaterials[index][name] = value;
+  
+    // if (name === 'materialName') {
+    //   const selectedMaterial = materialNames.find(
+    //     material => material.materialsList === value
+    //   );
+    //   updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
+    // }
+  
+    setFormData({ ...formData, materials: updatedMaterials });
+  };
+
+  const addMaterial = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      materials: [
+        ...prevFormData.materials,
+        { materialName: '', quantity: '' }
+      ]
+    }))
+  }
+
+  const removeMaterial = index => {
+    const updatedMaterials = formData.materials.filter((_, i) => i !== index)
+    setFormData({ ...formData, materials: updatedMaterials })
   }
 
   const handleSubmit = async e => {
@@ -74,7 +133,7 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
           toast.success(result.data.message)
           handleClose()
           setFormData({
-            entryTime:'',
+            entryTime: '',
             vehicleNumber: '',
             vendorName: '',
             date: ''
@@ -136,7 +195,12 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
                 Gate Entry Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box component='form' onSubmit={handleSubmit}
+                  sx={{
+                    maxHeight: '65vh',
+                    overflowY: 'auto',
+                    paddingRight: 2
+                  }}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
@@ -180,7 +244,20 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
                   />
                 </Grid>
                 <Grid item xs={6}>
-                <TextField
+                  <TextField
+                    fullWidth
+                    label='Doc Number'
+                    name='docNumber'
+                    value={formData.docNumber}
+                    onChange={handleChange}
+                    error={!!errors.docNumber}
+                    helperText={errors.docNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
                     fullWidth
                     select
                     label='Vendor Name'
@@ -193,14 +270,16 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
                     {firmNames.map((firm, index) => (
-                      <MenuItem key={index} value= {firm}>
-                   {firm}
+                      <MenuItem key={index} value={firm}>
+                        {firm}
                       </MenuItem>
                     ))}
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/vendor-stock-management/vendor-management')}
+                      onClick={() =>
+                        navigate('/vendor-stock-management/vendor-management')
+                      }
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Firm +
@@ -224,6 +303,97 @@ export default function EditGateEntryForm ({firmNames, setUpdate, gateEntryData 
                     }}
                   />
                 </Grid>
+                {formData.materials?.map((material, index) => (
+                  <React.Fragment key={index}>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Materials Name'
+                        name='materialName'
+                        value={material.materialName}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.materials}
+                        helperText={errors.materials}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        <MenuItem
+                          disabled
+                          sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                        >
+                          Materials
+                        </MenuItem>
+                        <MenuItem value='hai'>hai</MenuItem>
+                        {/* {materialNames?.map((materialName, index) => (
+                                          <MenuItem
+                                            key={`product-${index}`}
+                                            value={materialName.materialsList}
+                                          >
+                                            {materialName.materialsList}
+                                          </MenuItem>
+                                        ))} */}
+                        <MenuItem
+                          onClick={() =>
+                            navigate(
+                              '/vendor-stock-management/request-creation-for-materials'
+                            )
+                          }
+                          sx={{ fontStyle: 'italic' }}
+                        >
+                          Add New Material +
+                        </MenuItem>
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        label='Quantity'
+                        name='quantity'
+                        error={!!errors.quantity}
+                        value={material.quantity}
+                        helperText={errors.quantity}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end', // Align to the right
+                        alignItems: 'center' // Vertically center the content if needed
+                      }}
+                    >
+                      <Button
+                        variant='text'
+                        color='error'
+                        onClick={() => removeMaterial(index)}
+                        size='small'
+                        sx={{
+                          textTransform: 'none',
+                          padding: 0,
+                          minWidth: 'auto'
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  </React.Fragment>
+                ))}
+
+                <Grid item xs={12}>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={addMaterial}
+                  >
+                    Add Material
+                  </Button>
+                </Grid>
+  
               </Grid>
               <Button
                 type='submit'

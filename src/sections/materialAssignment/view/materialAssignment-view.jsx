@@ -135,6 +135,9 @@ useEffect(()=>{
                 // }
                 headLabel={[
                   { id: 'assignmentNumber', label: 'Assignment Number' },
+                  { id: 'indentNumber', label: 'Indent Number' },
+                  { id: 'finishedGoodsName', label: 'Finished Goods Name' },
+                  { id: 'date', label: 'Date' },
                   { id: 'processOrderNubmer', label: 'Process Order Nubmer' },
                   { id: 'materialsList', label: 'Materials List' },
                   { id: 'assignedQuantity', label: 'Assigned Quantity' },

@@ -40,7 +40,7 @@ export default function EditCurrentStockForm ({
 }) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
-  const [batchNumberType, setBatchNumberType] = useState('')
+  const [grnNumberType, setGrnNumberType] = useState('')
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const formattedDate = currentStockData.dateRecieved
@@ -56,7 +56,7 @@ export default function EditCurrentStockForm ({
     currentStockId: currentStockData.currentStockId,
     materialName: currentStockData.materialName,
     materialCode: currentStockData.materialCode,
-    batchNumber: currentStockData.batchNumber,
+    grn: currentStockData.grn,
     quantity: currentStockData.quantity,
     price: currentStockData.price,
     storageLocation: currentStockData.storageLocation,
@@ -68,9 +68,9 @@ export default function EditCurrentStockForm ({
 
   const validateForm = () => {
     const newErrors = {}
-    if (batchNumberType == 'manual') {
-      if (!formData.batchNumber)
-        newErrors.batchNumber = 'Batch Number is required'
+    if (grnNumberType == 'manual') {
+      if (!formData.grn)
+        newErrors.grn = 'Grn is required'
     }
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
@@ -86,8 +86,8 @@ export default function EditCurrentStockForm ({
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
       newErrors.quantity = 'Quantity must be a valid number'
     }
-    if (!batchNumberType) {
-      newErrors.batchNumberType = 'Please select a batch number type'
+    if (!grnNumberType) {
+      newErrors.grnNumberType = 'Please select a grn number type'
     }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
@@ -106,7 +106,7 @@ export default function EditCurrentStockForm ({
   }
 
   const handleRadioChange = event => {
-    setBatchNumberType(event.target.value)
+    setGrnNumberType(event.target.value)
   }
 
   const handleSubmit = async e => {
@@ -124,7 +124,7 @@ export default function EditCurrentStockForm ({
           authPassword: '',
           materialName: '',
           materialCode: '',
-          batchNumber: '',
+          grn: '',
           quantity: '',
           price: '',
           storageLocation: '',
@@ -186,28 +186,28 @@ export default function EditCurrentStockForm ({
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <FormControl error={!!errors.batchNumberType}>
-                    <FormLabel>Batch Number Type</FormLabel>
+                  <FormControl error={!!errors.grnNumberType}>
+                    <FormLabel>GRN Type</FormLabel>
                     <RadioGroup
                       row
-                      name='batchNumberType'
-                      value={batchNumberType}
+                      name='grnNumberType'
+                      value={grnNumberType}
                       onChange={handleRadioChange}
                     >
                       <FormControlLabel
                         value='manual'
                         control={<Radio />}
-                        label='Manual Batch Number'
+                        label='Manual GRN Number'
                       />
                       <FormControlLabel
                         value='automated'
                         control={<Radio />}
-                        label='Automated Batch Number'
+                        label='Automated GRN Number'
                       />
                     </RadioGroup>
-                    {errors.batchNumberType && (
+                    {errors.grnNumberType && (
                       <Typography variant='body2' color='error'>
-                        {errors.batchNumberType}
+                        {errors.grnNumberType}
                       </Typography>
                     )}
                   </FormControl>
@@ -272,18 +272,18 @@ export default function EditCurrentStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={formData.batchNumber}
+                    label='GRN'
+                    name='grn'
+                    value={formData.grn}
                     onChange={handleChange}
-                    error={!!errors.batchNumber}
-                    helperText={errors.batchNumber}
+                    error={!!errors.grn}
+                    helperText={errors.grn}
                     variant='outlined'
                     InputProps={{
                       style: { borderRadius: 8 },
                       placeholder: 'Auto-Generate'
                     }}
-                    disabled={batchNumberType !== 'manual'}
+                    disabled={grnNumberType !== 'manual'}
                   />
                 </Grid>
                 <Grid item xs={6}>

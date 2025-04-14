@@ -40,8 +40,21 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     contactNumber: '',
     contactPersonName: '',
     contactPersonDetails: '',
+    quotationReferenceNumber: '',
+    hsn: '',
+    description: '',
+    totalAmount: '',
+    amountInWords: '',
+    discount: '',
+    afterDiscount: '',
+    igst: '',
+    transportationFreight: '',
+    roundOff: '',
+    finalAmount: '',
+    poDate: '',
     vendorId: '',
     materialName: '',
+    unit: '',
     // batchNumber: '',
     mfgDate: '',
     quantity: '',
@@ -149,6 +162,19 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
           contactPersonDetails: '',
           vendorId: '',
           materialName: '',
+          quotationReferenceNumber: '',
+          hsn: '',
+          description: '',
+          totalAmount: '',
+          amountInWords: '',
+          discount: '',
+          afterDiscount: '',
+          igst: '',
+          transportationFreight: '',
+          roundOff: '',
+          finalAmount: '',
+          poDate: '',
+          unit: '',
           // batchNumber: '',
           mfgDate: '',
           quantity: '',
@@ -255,7 +281,9 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/vendor-stock-management/vendor-management')}
+                      onClick={() =>
+                        navigate('/vendor-stock-management/vendor-management')
+                      }
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Firm +
@@ -418,6 +446,55 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid> */}
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Quantity'
+                    name='quantity'
+                    value={formData.quantity}
+                    onChange={handleChange}
+                    error={!!errors.quantity}
+                    helperText={errors.quantity}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Price/unit'
+                    name='price'
+                    value={formData.price}
+                    onChange={handleChange}
+                    error={!!errors.price}
+                    helperText={errors.price}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -433,32 +510,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputLabelProps={{
                       shrink: true
                     }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Quantity In KG'
-                    name='quantity'
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    error={!!errors.quantity}
-                    helperText={errors.quantity}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Price/Kg'
-                    name='price'
-                    value={formData.price}
-                    onChange={handleChange}
-                    error={!!errors.price}
-                    helperText={errors.price}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -487,6 +538,177 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Quotation Reference Number'
+                    name='quoationReferenceNumber'
+                    value={formData.quoationReferenceNumber}
+                    onChange={handleChange}
+                    error={!!errors.quoationReferenceNumber}
+                    helperText={errors.quoationReferenceNumber}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='HSN'
+                    name='hsn'
+                    value={formData.hsn}
+                    onChange={handleChange}
+                    error={!!errors.hsn}
+                    helperText={errors.hsn}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Description'
+                    name='description'
+                    value={formData.description}
+                    onChange={handleChange}
+                    error={!!errors.description}
+                    helperText={errors.description}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Total Amount'
+                    name='totalAmount'
+                    value={formData.totalAmount}
+                    onChange={handleChange}
+                    error={!!errors.totalAmount}
+                    helperText={errors.totalAmount}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Amount In Words'
+                    name='amountInWords'
+                    value={formData.amountInWords}
+                    onChange={handleChange}
+                    error={!!errors.amountInWords}
+                    helperText={errors.amountInWords}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Discount'
+                    name='discount'
+                    value={formData.discount}
+                    onChange={handleChange}
+                    error={!!errors.discount}
+                    helperText={errors.discount}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='After Discount'
+                    name='afterDiscount'
+                    value={formData.afterDiscount}
+                    onChange={handleChange}
+                    error={!!errors.afterDiscount}
+                    helperText={errors.afterDiscount}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Igst18%'
+                    name='igst'
+                    value={formData.igst}
+                    onChange={handleChange}
+                    error={!!errors.igst}
+                    helperText={errors.igst}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Transportation Freight'
+                    name='transportationFreight'
+                    value={formData.transportationFreight}
+                    onChange={handleChange}
+                    error={!!errors.transportationFreight}
+                    helperText={errors.transportationFreight}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Round Off'
+                    name='roundOff'
+                    value={formData.roundOff}
+                    onChange={handleChange}
+                    error={!!errors.roundOff}
+                    helperText={errors.roundOff}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Final Amount'
+                    name='finalAmount'
+                    value={formData.finalAmount}
+                    onChange={handleChange}
+                    error={!!errors.finalAmount}
+                    helperText={errors.finalAmount}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='P.O Date'
+                    name='poDate'
+                    type='date'
+                    value={formData.poDate}
+                    onChange={handleChange}
+                    error={!!errors.poDate}
+                    helperText={errors.poDate}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                  />
+                </Grid>
               </Grid>
               <Button
                 type='submit'
@@ -510,11 +732,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                   position: 'relative'
                 }}
               >
-              
-             
-               
-                  Submit
-               
+                Submit
               </Button>
             </Box>
           </Paper>

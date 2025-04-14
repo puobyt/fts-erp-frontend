@@ -30,6 +30,9 @@ export function MaterialAssignmentTableRow ({
   const materialAssignmentData = {
     materialAssignmentId: row._id,
     assignmentNumber: row.assignmentNumber,
+    indentNumber:row.indentNumber,
+    finishedGoodsName:row.finishedGoodsName,
+    date:row.date,
     batchNumber:row.batchNumber,
     processOrderNumber:row.processOrderNumber,
     materials: row.materials,
@@ -98,7 +101,9 @@ export function MaterialAssignmentTableRow ({
           </Box>
         </TableCell> */}
         <TableCell> {row.assignmentNumber}</TableCell>
-        {/* <TableCell> {row.batchNumber}</TableCell> */}
+        <TableCell> {row.indentNumber}</TableCell>
+        <TableCell> {row.finishedGoodsName}</TableCell>
+        <TableCell> {row.date}</TableCell>
         <TableCell> {row.processOrderNumber}</TableCell>
         <TableCell
           style={{

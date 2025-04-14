@@ -35,8 +35,12 @@ export default function RequestCreationForMaterialsForm ({
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     requestNumber: '',
+    finishedGoodsName: '',
+    status: '',
     // batchNumber: '',
-    materials: [{ materialsList: '', quantity: '', materialCode: '' }],
+    materials: [
+      { materialsList: '', quantity: '', unit: '', materialCode: '' }
+    ],
     requiredDate: ''
   })
   const [errors, setErrors] = useState({})
@@ -47,9 +51,13 @@ export default function RequestCreationForMaterialsForm ({
     //   newErrors.requestNumber = 'Request Number is required'
     // if (!formData.batchNumber)
     //   newErrors.batchNumber = 'Batch Number is required'
+    if (!formData.finishedGoodsName)
+      newErrors.finishedGoodsName = 'Finished Goods Nameis required'
+
     if (
       formData.materials.some(
-        mat => !mat.materialsList || !mat.quantity || !mat.materialCode
+        mat =>
+          !mat.materialsList || !mat.quantity || !mat.materialCode || !mat.unit
       )
     ) {
       newErrors.materials = 'All material fields must be filled'
@@ -86,8 +94,13 @@ export default function RequestCreationForMaterialsForm ({
         handleClose()
         setFormData({
           requestNumber: '',
+          finishedGoodsName: '',
+          status: '',
+          unit: '',
           // batchNumber: '',
-          materials: [{ materialsList: '', quantity: '', materialCode: '' }],
+          materials: [
+            { materialsList: '', quantity: '', unit: '', materialCode: '' }
+          ],
           requiredDate: ''
         })
         setUpdate(prev => !prev)
@@ -123,7 +136,7 @@ export default function RequestCreationForMaterialsForm ({
       ...prevFormData,
       materials: [
         ...prevFormData.materials,
-        { materialsList: '', quantity: '', materialCode: '' }
+        { materialsList: '', quantity: '', unit: '', materialCode: '' }
       ]
     }))
   }
@@ -190,7 +203,7 @@ export default function RequestCreationForMaterialsForm ({
               <Grid container spacing={2} sx={{ mt: 0.1 }}>
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                       <TextField
                         fullWidth
                         select
@@ -218,7 +231,9 @@ export default function RequestCreationForMaterialsForm ({
                           </MenuItem>
                         ))}
                         <MenuItem
-                          onClick={() => navigate('/vendor-stock-management/current-stock')}
+                          onClick={() =>
+                            navigate('/vendor-stock-management/current-stock')
+                          }
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Material +
@@ -237,17 +252,19 @@ export default function RequestCreationForMaterialsForm ({
                         ))}
 
                         <MenuItem
-                          onClick={() => navigate('/finished-goods-invoicing/finished-goods')}
+                          onClick={() =>
+                            navigate('/finished-goods-invoicing/finished-goods')
+                          }
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Finished Goods +
                         </MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                       <TextField
                         fullWidth
-                        label='Quantity In KG'
+                        label='Quantity'
                         name='quantity'
                         error={!!errors.materials}
                         value={material.quantity}
@@ -258,7 +275,28 @@ export default function RequestCreationForMaterialsForm ({
                       />
                     </Grid>
 
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        value={material.unit}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.materials}
+                        helperText={errors.materials}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                          <MenuItem key={unit} value={unit}>
+                            {unit}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+
+                    <Grid item xs={3}>
                       <TextField
                         fullWidth
                         label='Material Code'
@@ -270,7 +308,7 @@ export default function RequestCreationForMaterialsForm ({
                         variant='outlined'
                         InputProps={{
                           style: { borderRadius: 8 },
-                          readOnly: true 
+                          readOnly: true
                         }}
                       />
                     </Grid>
@@ -339,6 +377,44 @@ export default function RequestCreationForMaterialsForm ({
                       shrink: true
                     }}
                   />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Finished Goods Name'
+                    name='finishedGoodsName'
+                    value={formData.finishedGoodsName}
+                    onChange={handleChange}
+                    error={!!errors.finishedGoodsName}
+                    helperText={errors.finishedGoodsName}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    select
+                    fullWidth
+                    label='Status'
+                    name='status'
+                    value={formData.status}
+                    onChange={handleChange}
+                    error={!!errors.status}
+                    helperText={errors.status}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
+                  >
+                    <MenuItem value=''>None</MenuItem>
+                    <MenuItem value='Return' sx={{ color: 'blue' ,fontWeight: 'bold' }}>
+                      Return
+                    </MenuItem>
+                  </TextField>
                 </Grid>
 
                 <Grid item xs={6}>

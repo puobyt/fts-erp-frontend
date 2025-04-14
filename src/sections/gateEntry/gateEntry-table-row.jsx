@@ -27,6 +27,8 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
     vendorName:row.vendorName,
     vehicleNumber:row.vehicleNumber,
     date:row.date,
+    docNumber:row.docNumber,
+    materials:row.materials
   
   }
   const handleOpenPopover = useCallback((event) => {
@@ -98,7 +100,7 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
                   textOverflow: 'ellipsis'
                 }}
               >
-                {row.materials.map((material, index) => (
+                {row.materials?.map((material, index) => (
                   <div
                     key={index}
                     style={{ marginRight: '10px' }}

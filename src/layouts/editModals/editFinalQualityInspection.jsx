@@ -38,7 +38,10 @@ export default function EditQualityInspectionForm ({
     qualityInspectionId: qualityInspectionData.qualityInspectionId,
     inspectionNumber: qualityInspectionData.inspectionNumber,
     productName: qualityInspectionData.productName,
-    inspectionResults: qualityInspectionData.inspectionResults
+    inspectionResults: qualityInspectionData.inspectionResults,
+    date: qualityInspectionData.date,
+    batchNumber: qualityInspectionData.batchNumber,
+    quantity: qualityInspectionData.quantity
   })
   const [errors, setErrors] = useState({})
 
@@ -52,7 +55,12 @@ export default function EditQualityInspectionForm ({
       newErrors.productName = 'Product Name is required'
     if (!formData.inspectionResults)
       newErrors.inspectionResults = 'Inspection Results is required'
-
+    if (!formData.date)
+      newErrors.date = 'Date is required'
+       if (!formData.batchNumber)
+      newErrors.batchNumber = 'Batch Number is required'
+      if (!formData.quantity)
+      newErrors.quantity = 'Quantity is required'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
   }
@@ -79,7 +87,10 @@ export default function EditQualityInspectionForm ({
             qualityInspectionId: '',
             inspectionNumber: '',
             productName: '',
-            inspectionResults: ''
+            inspectionResults: '',
+            date: '',
+            batchNumber: '',
+            quantity: ''
           })
           setUpdate(prev => !prev)
         })
@@ -223,6 +234,65 @@ export default function EditQualityInspectionForm ({
                     </MenuItem>
                   </TextField>
                 </Grid>
+
+                   <Grid item xs={6}>
+                                  <TextField
+                                    fullWidth
+                                    label='Date'
+                                    name='date'
+                                        type='date'
+                                    value={formData.date}
+                                    onChange={handleChange}
+                                    error={!!errors.date}
+                                    helperText={errors.date}
+                                    variant='outlined'
+                                    InputProps={{
+                                      style: { borderRadius: 8 },
+                                   
+                                    }}
+                                    InputLabelProps={{
+                                      shrink: true
+                                    }}
+                              
+                                  />
+                                </Grid>
+                
+                                <Grid item xs={6}>
+                                  <TextField
+                                    fullWidth
+                                    label='Batch Number'
+                                    name='batchNumber'
+                                    value={formData.batchNumber}
+                                    onChange={handleChange}
+                                    error={!!errors.batchNumber}
+                                    helperText={errors.batchNumber}
+                                    variant='outlined'
+                                    InputProps={{
+                                      style: { borderRadius: 8 },
+                                
+                                    }}
+                              
+                                  />
+                                </Grid>
+                
+                                <Grid item xs={6}>
+                                  <TextField
+                                    fullWidth
+                                    label='Quantity'
+                                    name='quantity'
+                                    value={formData.quantity}
+                                    onChange={handleChange}
+                                    error={!!errors.quantity}
+                                    helperText={errors.quantity}
+                                    variant='outlined'
+                                    InputProps={{
+                                      style: { borderRadius: 8 },
+                                
+                                    }}
+                              
+                                  />
+                                </Grid>
+                
               </Grid>
               <Button
                 type='submit'

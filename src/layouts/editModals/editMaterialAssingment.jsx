@@ -39,6 +39,9 @@ export default function EditMaterialAssignmentForm ({
     authPassword: '',
     materialAssignmentId: materialAssignmentData.materialAssignmentId,
     assignmentNumber: materialAssignmentData.assignmentNumber,
+    indentNumber: materialAssignmentData.indentNumber,
+    finishedGoodsName: materialAssignmentData.finishedGoodsName,
+    date: materialAssignmentData.date,
     // batchNumber: materialAssignmentData.batchNumber,
     processOrderNumber: materialAssignmentData.processOrderNumber,
     materials: materialAssignmentData.materials,
@@ -48,6 +51,11 @@ export default function EditMaterialAssignmentForm ({
 
   const validateForm = () => {
     const newErrors = {}
+    if (!formData.indentNumber)
+      newErrors.indentNumber = 'Indent Number is required'
+    if (!formData.finishedGoodsName)
+      newErrors.finishedGoodsName = 'Finished goods name is required'
+    if (!formData.date) newErrors.date = 'Date is required'
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
     // if (!formData.batchNumber)
@@ -96,7 +104,9 @@ export default function EditMaterialAssignmentForm ({
             authPassword: '',
             materialAssignmentId: '',
             assignmentNumber: '',
-            // batchNumber: '',
+            indentNumber: '',
+            finishedGoodsName: '',
+            date: '',
             processOrderNumber: '',
             materials: [
               { materialsList: '', assignedQuantity: '', materialCode: '' }
@@ -246,7 +256,9 @@ export default function EditMaterialAssignmentForm ({
                           </MenuItem>
                         ))}
                         <MenuItem
-                          onClick={() => navigate('/vendor-stock-management/current-stock')}
+                          onClick={() =>
+                            navigate('/vendor-stock-management/current-stock')
+                          }
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Material +
@@ -265,7 +277,9 @@ export default function EditMaterialAssignmentForm ({
                         ))}
 
                         <MenuItem
-                          onClick={() => navigate('/finished-goods-invoicing/finished-goods')}
+                          onClick={() =>
+                            navigate('/finished-goods-invoicing/finished-goods')
+                          }
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Finished Goods +
@@ -356,6 +370,55 @@ export default function EditMaterialAssignmentForm ({
                     }}
                   />
                 </Grid>
+                {formData.materials.map((material, index) => (
+                  <React.Fragment key={index}>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Finished Goods Name'
+                        name='finishedGoodsName'
+                        value={formData.finishedGoodsName}
+                        onChange={handleChange}
+                        error={!!errors.finishedGoodsName}
+                        helperText={errors.finishedGoodsName}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {finishedGoods.map((item, index) => (
+                          <MenuItem key={`finished-${index}`} value={item}>
+                            {item}
+                          </MenuItem>
+                        ))}
+
+                        <MenuItem
+                          onClick={() =>
+                            navigate('/finished-goods-invoicing/finished-goods')
+                          }
+                          sx={{ fontStyle: 'italic' }}
+                        >
+                          Add New Finished Goods +
+                        </MenuItem>
+                      </TextField>
+                    </Grid>
+                  </React.Fragment>
+                ))}
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Indent Number'
+                    name='indentNumber'
+                    value={formData.indentNumber}
+                    onChange={handleChange}
+                    error={!!errors.indentNumber}
+                    helperText={errors.indentNumber}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
+                  />
+                </Grid>
+
                 {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -390,14 +453,34 @@ export default function EditMaterialAssignmentForm ({
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() => navigate('/production-workflow/production-order-creation')}
+                      onClick={() =>
+                        navigate(
+                          '/production-workflow/production-order-creation'
+                        )
+                      }
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Process Order Number +
                     </MenuItem>
                   </TextField>
                 </Grid>
-
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Date'
+                    name='date'
+                    type='date'
+                    value={formData.date}
+                    onChange={handleChange}
+                    error={!!errors.date}
+                    helperText={errors.date}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                  />
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

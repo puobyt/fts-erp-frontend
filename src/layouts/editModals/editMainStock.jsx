@@ -44,7 +44,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
     mainStockId: mainStockData.mainStockId,
     materialName: mainStockData.materialName,
     materialCode: mainStockData.materialCode,
-    batchNumber:mainStockData.batchNumber,
+    grn:mainStockData.grn,
     quantity: mainStockData.quantity,
     price: mainStockData.price,
     storageLocation: mainStockData.storageLocation,
@@ -68,6 +68,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
       newErrors.quantity = 'Quantity must be a valid number'
     }
+      if (!formData.grn) newErrors.grn = 'GRN is required'
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
       newErrors.storageLocation = 'Storage Location is required'
@@ -100,6 +101,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
           materialName: '',
           materialCode: '',
           quantity: '',
+          grn:'',
           price: '',
           vendorName: '',
           storageLocation: '',
@@ -204,12 +206,12 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={formData.batchNumber}
+                    label='GRN'
+                    name='grn'
+                    value={formData.grn}
                     onChange={handleChange}
-                    error={!!errors.batchNumber}
-                    helperText={errors.batchNumber}
+                    error={!!errors.grn}
+                    helperText={errors.grn}
                     variant='outlined'
                     InputProps={{
                       style: { borderRadius: 8 },

@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
-
+import { useRef } from 'react';
+import html2pdf from 'html2pdf.js';
+import PurchaseOrder from '../../components/pdf/purchaseOrder';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
@@ -23,6 +25,19 @@ import generatePocpdf from '../../utils/purchaseOrderCreation';
 
 export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
+  const pdfRef = useRef();
+  const handleDownload = () => {
+    const element = pdfRef.current;
+    const opt = {
+      margin:       5,
+      filename:     'purchase_order.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+  };
   const orderData = {
     orderId:row._id,
     purchaseOrderNumber:row.purchaseOrderNumber,
@@ -34,6 +49,19 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
     contactPersonDetails:row.contactPersonDetails,
     vendorId:row.vendorId,
     materialName:row.materialName,
+    quotationReferenceNumber: row.quotationReferenceNumber,
+    hsn: row.hsn,
+    description: row.description,
+    totalAmount: row.totalAmount,
+    amountInWords: row.amountInWords,
+    discount: row.discount,
+    afterDiscount: row.afterDiscount,
+    igst: row.igst,
+    transportationFreight: row.transportationFreight,
+    roundOff: row.roundOff,
+    finalAmount: row.finalAmount,
+    poDate: row.poDate,
+ unit:row.unit,
     // batchNumber:row.batchNumber,
     mfgDate:row.mfgDate,
     quantity:row.quantity,
@@ -113,7 +141,7 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
         <TableCell>{row.materialName}</TableCell>
         {/* <TableCell>{row.batchNumber}</TableCell> */}
         <TableCell>{new Date(row.mfgDate).toLocaleDateString()}</TableCell>
-        <TableCell>{`${row.quantity} KG`}</TableCell>
+        <TableCell>{`${row.quantity} ${row.unit}`}</TableCell>
         <TableCell style={{ whiteSpace: 'nowrap' }}>₹ {`${row.price}`}</TableCell>
         <TableCell>{row.pan}</TableCell>
         <TableCell>{row.gst}</TableCell>
@@ -157,13 +185,15 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
             Delete 
           </MenuItem>
 
-          <MenuItem
-            sx={{ color: 'primary.main' }}
-            onClick={() => generatePocpdf(row)}
-          >
-            <Iconify icon='solar:download-bold' />
-            Download PDF
-          </MenuItem>
+          <MenuItem sx={{ color: 'primary.main' }} onClick={handleDownload}>
+        <Iconify icon='solar:download-bold' />
+        Download PDF
+      </MenuItem>
+
+      {/* Hidden container for HTML2PDF */}
+      <div style={{ display: 'none' }}>
+        <PurchaseOrder pdfData={orderData} ref={pdfRef} />
+      </div>
         </MenuList>
       </Popover>
     </>

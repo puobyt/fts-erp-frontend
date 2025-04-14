@@ -132,6 +132,9 @@ useEffect(()=>{
                   { id: 'inspectionNumber', label: 'Inspection Number' },
                   { id: 'productName', label: 'Product Name' },
                   { id: 'inpsectionResults', label: 'Inpsection Results' },
+                  { id: 'date', label: 'Date' },
+                  { id: 'batchNumber', label: 'Batch Number' },
+                  { id: 'quantity', label: 'Quantity' },
                 ]}
               />
               <TableBody>

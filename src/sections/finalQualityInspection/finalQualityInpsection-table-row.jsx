@@ -30,7 +30,11 @@ export function FinalQualityInpsectionTableRow ({
     qualityInspectionId: row._id,
     inspectionNumber: row.inspectionNumber,
     productName: row.productName,
-    inspectionResults: row.inspectionResults
+    inspectionResults: row.inspectionResults,
+    date:row.date,
+    batchNumber:row.batchNumber,
+    quantity:row.quantity
+
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -110,6 +114,9 @@ export function FinalQualityInpsectionTableRow ({
         >
           {row.inspectionResults}
         </TableCell>
+        <TableCell> {row.date}</TableCell>
+        <TableCell>{row.batchNumber}</TableCell>
+        <TableCell>{row.quantity}</TableCell>
 
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>

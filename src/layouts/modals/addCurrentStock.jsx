@@ -41,13 +41,13 @@ export default function CurrentStockForm ({
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const navigate = useNavigate()
-  const [batchNumberType, setBatchNumberType] = useState('');
+  const [grnNumberType, setGrnNumberType] = useState('');
   const [formData, setFormData] = useState({
     materialName: '',
     materialCode:'',
     quantity: '',
     price: '',
-    batchNumber: '',
+    grn: '',
     storageLocation: '',
     vendorName: '',
     dateRecieved: '',
@@ -58,16 +58,16 @@ export default function CurrentStockForm ({
   const validateForm = () => {
     const newErrors = {}
 
-    if (batchNumberType == 'manual') {
+    if (grnNumberType == 'manual') {
       if (!formData.batchNumber)
-        newErrors.batchNumber = 'Batch Number is required'
+        newErrors.grn = 'Grn is required'
     }
     if (!formData.materialCode)
       newErrors.materialCode = 'Material Code is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
-    if (!batchNumberType) {
-      newErrors.batchNumberType = 'Please select a batch number type'
+    if (!grnNumberType) {
+      newErrors.grnNumberType = 'Please select a Grn type'
     }
     if (!formData.quantity) {
       newErrors.quantity = 'Quantity is required'
@@ -93,7 +93,7 @@ export default function CurrentStockForm ({
   }
 
   const handleRadioChange = event => {
-    setBatchNumberType(event.target.value)
+    setGrnNumberType(event.target.value)
   }
 
   const handleSubmit = async e => {
@@ -110,7 +110,7 @@ export default function CurrentStockForm ({
         setFormData({
           materialName: '',
           materialCode:'',
-          batchNumber: '',
+          grn: '',
           quantity: '',
           price: '',
           storageLocation: '',
@@ -180,28 +180,28 @@ export default function CurrentStockForm ({
               }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <FormControl error={!!errors.batchNumberType}>
-                    <FormLabel>Batch Number Type</FormLabel>
+                  <FormControl error={!!errors.grnNumberType}>
+                    <FormLabel>GRN Type</FormLabel>
                     <RadioGroup
                       row
-                      name='batchNumberType'
-                      value={batchNumberType}
+                      name='grnNumberType'
+                      value={grnNumberType}
                       onChange={handleRadioChange}
                     >
                       <FormControlLabel
                         value='manual'
                         control={<Radio />}
-                        label='Manual Batch Number'
+                        label='Manual GRN'
                       />
                       <FormControlLabel
                         value='automated'
                         control={<Radio />}
-                        label='Automated Batch Number'
+                        label='Automated GRN'
                       />
                     </RadioGroup>
-                    {errors.batchNumberType && (
+                    {errors.GrnNumberType && (
                       <Typography variant='body2' color='error'>
-                        {errors.batchNumberType}
+                        {errors.GrnNumberType}
                       </Typography>
                     )}
                   </FormControl>
@@ -253,17 +253,17 @@ export default function CurrentStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={formData.batchNumber}
+                    label='GRN'
+                    name='grn'
+                    value={formData.grn}
                     onChange={handleChange}
-                    error={!!errors.batchNumber}
-                    helperText={errors.batchNumber}
+                    error={!!errors.grn}
+                    helperText={errors.grn}
                     variant='outlined'
                     InputProps={{
                       style: { borderRadius: 8 }
                     }}
-                    disabled={batchNumberType !== 'manual'}
+                    disabled={grnNumberType !== 'manual'}
                   />
                 </Grid>
 

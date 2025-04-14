@@ -33,7 +33,7 @@ export function CurrentStockTableRow ({
     currentStockId: row._id,
     materialName: row.materialName,
     materialCode: row.materialCode,
-    batchNumber: row.batchNumber,
+    grn: row.grn,
     quantity: row.quantity,
     price: row.price,
     storageLocation: row.storageLocation,
@@ -104,7 +104,7 @@ export function CurrentStockTableRow ({
         </TableCell> */}
         <TableCell> {row.materialName}</TableCell>
         <TableCell> {row.materialCode}</TableCell>
-        <TableCell>{row.batchNumber}</TableCell>
+        <TableCell>{row.grn}</TableCell>
         <TableCell>{`${row.quantity} KG`}</TableCell>
         <TableCell
           style={{ whiteSpace: 'nowrap' }}

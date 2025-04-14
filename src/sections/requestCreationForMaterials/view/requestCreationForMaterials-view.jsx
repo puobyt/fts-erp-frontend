@@ -136,10 +136,12 @@ export function RequestCreationForMaterialsView () {
                 // }
                 headLabel={[
                   { id: 'requestNumber', label: 'Request Number' },
+                  { id: 'finishedGoodsName', label: 'Finished Goods Name' },
                   { id: 'materialsList', label: 'Materials List' },
                   { id: 'quantity', label: 'quantity' },
                   { id: 'materialCode', label: 'Material Code' },
                   { id: 'requiredDate', label: 'Required Date' },
+                  { id: 'status', label: 'Status' },
                 
                 ]}
               />

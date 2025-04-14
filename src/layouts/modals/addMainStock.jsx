@@ -38,11 +38,11 @@ export default function MainStockForm ({
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const [batchNumberType, setBatchNumberType] = useState('')
+  const [grnType, setGrnType] = useState('')
   const [formData, setFormData] = useState({
     materialName: '',
     materialCode: '',
-    batchNumber:'',
+    grn:'',
     quantity: '',
     price: '',
     storageLocation: '',
@@ -63,12 +63,12 @@ export default function MainStockForm ({
     }
     if (!formData.materialCode)
       newErrors.materialCode = 'Material Code is required'
-    if (batchNumberType == 'manual') {
-      if (!formData.batchNumber)
-        newErrors.batchNumber = 'Batch Number is required'
+    if (grnType == 'manual') {
+      if (!formData.grn)
+        newErrors.grn = ' GRN is required'
     }
-    if (!batchNumberType) {
-      newErrors.batchNumberType = 'Please select a batch number type'
+    if (!grnType) {
+      newErrors.grnType = 'Please select a GRN type'
     }
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
@@ -83,7 +83,7 @@ export default function MainStockForm ({
   }
 
   const handleRadioChange = event => {
-    setBatchNumberType(event.target.value)
+    setGrnType(event.target.value)
   }
   const handleChange = e => {
     const { name, value } = e.target
@@ -104,7 +104,7 @@ export default function MainStockForm ({
         setFormData({
           materialName: '',
           materialCode: '',
-          batchNumber:'',
+          grn:'',
           quantity: '',
           price: '',
           storageLocation: '',
@@ -170,12 +170,12 @@ export default function MainStockForm ({
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <FormControl error={!!errors.batchNumberType}>
+                  <FormControl error={!!errors.grnType}>
                     <FormLabel>Batch Number Type</FormLabel>
                     <RadioGroup
                       row
-                      name='batchNumberType'
-                      value={formData.batchNumberType}
+                      name='grnType'
+                      value={formData.grnType}
                       onChange={handleRadioChange}
                     >
                       <FormControlLabel
@@ -189,9 +189,9 @@ export default function MainStockForm ({
                         label='Automated Batch Number'
                       />
                     </RadioGroup>
-                    {errors.batchNumberType && (
+                    {errors.grnType && (
                       <Typography variant='body2' color='error'>
-                        {errors.batchNumberType}
+                        {errors.grnType}
                       </Typography>
                     )}
                   </FormControl>
@@ -228,17 +228,17 @@ export default function MainStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={formData.batchNumber}
+                    label='GRN'
+                    name='grn'
+                    value={formData.grn}
                     onChange={handleChange}
-                    error={!!errors.batchNumber}
-                    helperText={errors.batchNumber}
+                    error={!!errors.grn}
+                    helperText={errors.grn}
                     variant='outlined'
                     InputProps={{
                       style: { borderRadius: 8 }
                     }}
-                    disabled={batchNumberType !== 'manual'}
+                    disabled={grnType !== 'manual'}
                   />
                 </Grid>
                 <Grid item xs={6}>

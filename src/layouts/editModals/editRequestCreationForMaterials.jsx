@@ -34,13 +34,18 @@ export default function EditRequestCreationForMaterialsForm ({
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const navigate = useNavigate()
+  const formattedDate = requestMaterialsData.requiredDate
+  ? new Date(requestMaterialsData.requiredDate).toISOString().split('T')[0]
+  : ''
   const [formData, setFormData] = useState({
     authPassword: '',
+    finishedGoodsName: requestMaterialsData.finishedGoodsName,
+    status: requestMaterialsData.status,
     // batchNumber: requestMaterialsData.batchNumber,
     materials: requestMaterialsData.materials,
     requestMaterialsId: requestMaterialsData.requestMaterialsId,
     requestNumber: requestMaterialsData.requestNumber,
-    requiredDate: requestMaterialsData.requiredDate
+    requiredDate: formattedDate
   })
   const [errors, setErrors] = useState({})
 
@@ -52,7 +57,12 @@ export default function EditRequestCreationForMaterialsForm ({
       newErrors.requestNumber = 'Request Number is required'
     // if (!formData.batchNumber)
     //   newErrors.batchNumber = 'Batch Number is required'
-    if (formData.materials.some(mat => !mat.materialsList || !mat.quantity || !mat.materialCode)) {
+    if (
+      formData.materials.some(
+        mat =>
+          !mat.materialsList || !mat.quantity || !mat.unit || !mat.materialCode
+      )
+    ) {
       newErrors.materials = 'All material fields must be filled'
     } else if (
       formData.materials.some(mat => !Number.isFinite(Number(mat.quantity)))
@@ -86,9 +96,13 @@ export default function EditRequestCreationForMaterialsForm ({
           setFormData({
             authPassword: '',
             requestMaterialsId: '',
+            finishedGoodsName: '',
+            status: '',
             requestNumber: '',
             // batchNumber: '',
-            materials: [{ materialsList: '', quantity: '',materialCode:'' }],
+            materials: [
+              { materialsList: '', quantity: '', unit: '', materialCode: '' }
+            ],
             requiredDate: ''
           })
           setUpdate(prev => !prev)
@@ -109,29 +123,29 @@ export default function EditRequestCreationForMaterialsForm ({
     }
   }
 
-
   const handleMaterialChange = (e, index) => {
-    const { name, value } = e.target;
-  
-    const updatedMaterials = [...formData.materials];
-    updatedMaterials[index][name] = value;
-  
+    const { name, value } = e.target
+
+    const updatedMaterials = [...formData.materials]
+    updatedMaterials[index][name] = value
+
     if (name === 'materialsList') {
       const selectedMaterial = materialNames.find(
         material => material.materialName === value
-      );
-      updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
+      )
+      updatedMaterials[index].materialCode =
+        selectedMaterial?.materialCode || ''
     }
-  
-    setFormData({ ...formData, materials: updatedMaterials });
-  };
+
+    setFormData({ ...formData, materials: updatedMaterials })
+  }
 
   const addMaterial = () => {
     setFormData(prevFormData => ({
       ...prevFormData,
       materials: [
         ...prevFormData.materials,
-        { materialsList: '', quantity: '' }
+        { materialsList: '', quantity: '', unit: '', materialCode: '' }
       ]
     }))
   }
@@ -207,7 +221,7 @@ export default function EditRequestCreationForMaterialsForm ({
                 </Grid>
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                       <TextField
                         fullWidth
                         select
@@ -235,7 +249,9 @@ export default function EditRequestCreationForMaterialsForm ({
                           </MenuItem>
                         ))}
                         <MenuItem
-                          onClick={() => navigate('/vendor-stock-management/current-stock')}
+                          onClick={() =>
+                            navigate('/vendor-stock-management/current-stock')
+                          }
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Material +
@@ -254,17 +270,19 @@ export default function EditRequestCreationForMaterialsForm ({
                         ))}
 
                         <MenuItem
-                          onClick={() => navigate('/finished-goods-invoicing/finished-goods')}
+                          onClick={() =>
+                            navigate('/finished-goods-invoicing/finished-goods')
+                          }
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Finished Goods +
                         </MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                       <TextField
                         fullWidth
-                        label='Quantity In KG'
+                        label='Quantity'
                         name='quantity'
                         error={!!errors.quantity}
                         value={material.quantity}
@@ -274,7 +292,27 @@ export default function EditRequestCreationForMaterialsForm ({
                         InputProps={{ style: { borderRadius: 8 } }}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        value={material.unit}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.materials}
+                        helperText={errors.materials}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                          <MenuItem key={unit} value={unit}>
+                            {unit}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={3}>
                       <TextField
                         fullWidth
                         label='Material Code'
@@ -286,7 +324,7 @@ export default function EditRequestCreationForMaterialsForm ({
                         variant='outlined'
                         InputProps={{
                           style: { borderRadius: 8 },
-                          readOnly: true 
+                          readOnly: true
                         }}
                       />
                     </Grid>
@@ -355,6 +393,47 @@ export default function EditRequestCreationForMaterialsForm ({
                       shrink: true
                     }}
                   />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Finished Goods Name'
+                    name='finishedGoodsName'
+                    value={formData.finishedGoodsName}
+                    onChange={handleChange}
+                    error={!!errors.finishedGoodsName}
+                    helperText={errors.finishedGoodsName}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <TextField
+                    select
+                    fullWidth
+                    label='Status'
+                    name='status'
+                    value={formData.status}
+                    onChange={handleChange}
+                    error={!!errors.status}
+                    helperText={errors.status}
+                    variant='outlined'
+                    InputProps={{
+                      style: { borderRadius: 8 }
+                    }}
+                  >
+                    <MenuItem value=''>None</MenuItem>
+                    <MenuItem
+                      value='Return'
+                      sx={{ color: 'blue', fontWeight: 'bold' }}
+                    >
+                      Return
+                    </MenuItem>
+                  </TextField>
                 </Grid>
 
                 <Grid item xs={6}>
