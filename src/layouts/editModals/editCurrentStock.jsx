@@ -289,7 +289,7 @@ export default function EditCurrentStockForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Quantity In Quantity'
+                    label='Quantity In Kg'
                     name='quantity'
                     value={formData.quantity}
                     onChange={handleChange}

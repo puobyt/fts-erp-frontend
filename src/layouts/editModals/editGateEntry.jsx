@@ -308,7 +308,7 @@ export default function EditGateEntryForm ({
                     <Grid item xs={6}>
                       <TextField
                         fullWidth
-                        select
+                    
                         label='Materials Name'
                         name='materialName'
                         value={material.materialName}
@@ -318,13 +318,8 @@ export default function EditGateEntryForm ({
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
                       >
-                        <MenuItem
-                          disabled
-                          sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
-                        >
-                          Materials
-                        </MenuItem>
-                        <MenuItem value='hai'>hai</MenuItem>
+                
+                  
                         {/* {materialNames?.map((materialName, index) => (
                                           <MenuItem
                                             key={`product-${index}`}
@@ -333,16 +328,7 @@ export default function EditGateEntryForm ({
                                             {materialName.materialsList}
                                           </MenuItem>
                                         ))} */}
-                        <MenuItem
-                          onClick={() =>
-                            navigate(
-                              '/vendor-stock-management/request-creation-for-materials'
-                            )
-                          }
-                          sx={{ fontStyle: 'italic' }}
-                        >
-                          Add New Material +
-                        </MenuItem>
+             
                       </TextField>
                     </Grid>
                     <Grid item xs={6}>
@@ -350,9 +336,9 @@ export default function EditGateEntryForm ({
                         fullWidth
                         label='Quantity'
                         name='quantity'
-                        error={!!errors.quantity}
+                        error={!!errors.materials}
                         value={material.quantity}
-                        helperText={errors.quantity}
+                        helperText={errors.materials}
                         onChange={e => handleMaterialChange(e, index)}
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}

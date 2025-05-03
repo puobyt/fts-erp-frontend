@@ -419,19 +419,7 @@ export default function EditPurchaseOrderCreationForm ({
                     }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Quantity'
-                    name='quantity'
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    error={!!errors.quantity}
-                    helperText={errors.quantity}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
+      
 
                 <Grid item xs={6}>
                   <TextField
@@ -480,19 +468,7 @@ export default function EditPurchaseOrderCreationForm ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Price/Kg'
-                    name='price'
-                    value={formData.price}
-                    onChange={handleChange}
-                    error={!!errors.price}
-                    helperText={errors.price}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
+         
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

@@ -249,7 +249,6 @@ const navigate = useNavigate();
                     <Grid item xs={6}>
                       <TextField
                         fullWidth
-                        select
                         label='Materials Name'
                         name='materialName'
                         value={material.materialName}
@@ -259,7 +258,7 @@ const navigate = useNavigate();
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
                       >
-                        <MenuItem
+                        {/* <MenuItem
                           disabled
                           sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
                         >
@@ -267,10 +266,10 @@ const navigate = useNavigate();
                         </MenuItem>
                         <MenuItem
                      
-                            value='hai'
+                            value='None'
                           >
-                           hai
-                          </MenuItem>
+                           None
+                          </MenuItem> */}
                         {/* {materialNames?.map((materialName, index) => (
                           <MenuItem
                             key={`product-${index}`}
@@ -279,12 +278,12 @@ const navigate = useNavigate();
                             {materialName.materialsList}
                           </MenuItem>
                         ))} */}
-                        <MenuItem
-                          onClick={() => navigate('/vendor-stock-management/request-creation-for-materials')}
+                        {/* <MenuItem
+                          onClick={() => navigate('/vendor-stock-management/purchase-order-creation')}
                           sx={{ fontStyle: 'italic' }}
                         >
                           Add New Material +
-                        </MenuItem>
+                        </MenuItem> */}
 
                       </TextField>
                     </Grid>
@@ -293,9 +292,9 @@ const navigate = useNavigate();
                         fullWidth
                         label='Quantity'
                         name='quantity'
-                        error={!!errors.quantity}
+                        error={!!errors.materials}
                         value={material.quantity}
-                        helperText={errors.quantity}
+                        helperText={errors.materials}
                         onChange={e => handleMaterialChange(e, index)}
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
