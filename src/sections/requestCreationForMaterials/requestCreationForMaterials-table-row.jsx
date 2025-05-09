@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/iconify';
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast'
+import ViewRequestCreationForMaterialsForm from '../../layouts/viewModals/viewRequestCreationMaterials';
 // ----------------------------------------------------------------------
 
 
@@ -164,7 +165,7 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
           }}
         >
         <EditRequestCreationForMaterialsForm setUpdate={setUpdate} requestMaterialsData={requestMaterialsData} materialNames={materialNames} finishedGoods={finishedGoods} />
-
+        <ViewRequestCreationForMaterialsForm  requestMaterialsData={requestMaterialsData} />
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 

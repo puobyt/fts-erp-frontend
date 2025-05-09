@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/iconify'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast'
+import ViewMaterialAssignmentForm from '../../layouts/viewModals/viewMaterialAssignment'
 // ----------------------------------------------------------------------
 
 export function MaterialAssignmentTableRow ({
@@ -167,6 +168,7 @@ export function MaterialAssignmentTableRow ({
           }}
         >
           <EditMaterialAssignmentForm setUpdate={setUpdate} materialAssignmentData={materialAssignmentData} materialNames={materialNames} finishedGoods={finishedGoods} processOrderNumbers={processOrderNumbers}/>
+          <ViewMaterialAssignmentForm materialAssignmentData={materialAssignmentData} />
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon='solar:trash-bin-trash-bold' />
             Delete

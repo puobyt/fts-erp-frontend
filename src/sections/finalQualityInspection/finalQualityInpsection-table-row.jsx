@@ -16,6 +16,7 @@ import EditQualityInspectionForm from '../../layouts/editModals/editFinalQuality
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import ViewQualityInspectionForm from '../../layouts/viewModals/viewQualityInspection'
 // ----------------------------------------------------------------------
 
 export function FinalQualityInpsectionTableRow ({
@@ -31,10 +32,9 @@ export function FinalQualityInpsectionTableRow ({
     inspectionNumber: row.inspectionNumber,
     productName: row.productName,
     inspectionResults: row.inspectionResults,
-    date:row.date,
-    batchNumber:row.batchNumber,
-    quantity:row.quantity
-
+    date: row.date,
+    batchNumber: row.batchNumber,
+    quantity: row.quantity
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -51,7 +51,7 @@ export function FinalQualityInpsectionTableRow ({
         `/removeFinalQualityInspection?qualityInspectionId=${qualityInspectionId}`
       )
       if (result) {
-        toast.success(result.data.message);
+        toast.success(result.data.message)
         setUpdate(prev => !prev)
       }
     } catch (err) {
@@ -153,6 +153,8 @@ export function FinalQualityInpsectionTableRow ({
             qualityInspectionData={qualityInspectionData}
             productNames={productNames}
           />
+
+          <ViewQualityInspectionForm   qualityInspectionData={qualityInspectionData} />
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}
             sx={{ color: 'error.main' }}

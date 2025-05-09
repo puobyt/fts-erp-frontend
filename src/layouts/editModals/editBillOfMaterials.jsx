@@ -154,10 +154,10 @@ export default function EditBillOfMaterialsForm ({
           </Typography>
         </Box> */}
 
-        <Container maxWidth='sm' sx={{ mt: 8 }}>
+        <Container maxWidth='lg' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
-            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}
+            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 2 }}
           >
             <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Typography
@@ -167,7 +167,7 @@ export default function EditBillOfMaterialsForm ({
                 color='primary'
                 gutterBottom
               >
-                Add New Bill Of Material
+                Edit Bill Of Material
               </Typography>
               <Typography variant='body2' color='textSecondary'>
                 Bill Of Material Management

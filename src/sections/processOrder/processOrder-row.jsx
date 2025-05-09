@@ -15,6 +15,7 @@ import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import EditProcessOrderForm from '../../layouts/editModals/editProcessOrder'
+import ViewProcessOrderForm from '../../layouts/viewModals/viewProcessOrder'
 // ----------------------------------------------------------------------
 
 export function ProcessOrderTableRow ({
@@ -24,19 +25,19 @@ export function ProcessOrderTableRow ({
   onSelectRow
 }) {
   const [openPopover, setOpenPopover] = useState(null)
-  
+
   const processOrderData = {
     processOrderId: row._id,
     processOrderNumber: row.processOrderNumber,
-    plant:row.plant,
-    equipment:row.equipment,
-    startDate:row.startDate,
-    finishDate:row.finishDate,
-    productName:row.productName,
-    productCode:row.productCode,
-    batch:row.batch,
-    orderQuantity:row.orderQuantity,
-    materialInput:row.materialInput
+    plant: row.plant,
+    equipment: row.equipment,
+    startDate: row.startDate,
+    finishDate: row.finishDate,
+    productName: row.productName,
+    productCode: row.productCode,
+    batch: row.batch,
+    orderQuantity: row.orderQuantity,
+    materialInput: row.materialInput
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -103,19 +104,18 @@ export function ProcessOrderTableRow ({
         <TableCell> {row.processOrderNumber}</TableCell>
         <TableCell>{row.plant}</TableCell>
         <TableCell> {row.equipment}</TableCell>
-        <TableCell sx={{ minWidth: 120 }} >{row.startDate}</TableCell>
+        <TableCell sx={{ minWidth: 120 }}>{row.startDate}</TableCell>
         <TableCell sx={{ minWidth: 120 }}>{row.finishDate}</TableCell>
         <TableCell sx={{ minWidth: 150 }}>{row.productName}</TableCell>
 
         <TableCell> {row.productCode}</TableCell>
-      
 
         <TableCell>{row.batch}</TableCell>
         <TableCell>{row.orderQuantity}</TableCell>
 
         <TableCell>
           {row.materialInput.map((material, index) => (
-       <div key={index}>{`${material.materialCode}`}</div>
+            <div key={index}>{`${material.materialCode}`}</div>
           ))}
         </TableCell>
 
@@ -137,7 +137,7 @@ export function ProcessOrderTableRow ({
 
         <TableCell>
           {row.materialOutput?.map((material, index) => (
-    <div key={index}>{`${material.materialCode}`}</div>
+            <div key={index}>{`${material.materialCode}`}</div>
           ))}
         </TableCell>
 
@@ -204,6 +204,10 @@ export function ProcessOrderTableRow ({
         >
           <EditProcessOrderForm
             setUpdate={setUpdate}
+            processOrderData={processOrderData}
+          />
+
+          <ViewProcessOrderForm
             processOrderData={processOrderData}
           />
           <MenuItem

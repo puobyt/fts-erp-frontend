@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/iconify'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import ViewBillOfMaterialsForm from '../../layouts/viewModals/viewBillOfMaterials'
 // ----------------------------------------------------------------------
 
 export function BillOfMaterialsTableRow ({
@@ -30,8 +31,7 @@ export function BillOfMaterialsTableRow ({
     billOfMaterialsId: row._id,
     bomNumber: row.bomNumber,
     productName: row.productName,
-    materials: row.materials,
-
+    materials: row.materials
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -48,7 +48,7 @@ export function BillOfMaterialsTableRow ({
         `/removeBillOfMaterials?billOfMaterialsId=${billOfMaterialsId}`
       )
       if (result) {
-        toast.success(result.data.message);
+        toast.success(result.data.message)
         setUpdate(prev => !prev)
       }
     } catch (err) {
@@ -101,7 +101,8 @@ export function BillOfMaterialsTableRow ({
         <TableCell>
           {row.materials.map((material, index) => (
             <div key={index}>
-              <strong>{material.materialsList}</strong>: {`${material.quantity} KG`}
+              <strong>{material.materialsList}</strong>:{' '}
+              {`${material.quantity} KG`}
             </div>
           ))}
         </TableCell>
@@ -151,6 +152,12 @@ export function BillOfMaterialsTableRow ({
             billOfMaterialsData={billOfMaterialsData}
             productNames={productNames}
             materialNames={materialNames}
+          />
+
+          <ViewBillOfMaterialsForm
+       
+            billOfMaterialsData={billOfMaterialsData}
+
           />
 
           <MenuItem

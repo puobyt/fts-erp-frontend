@@ -127,7 +127,7 @@ try{
           </Typography>
         </Box> */}
 
-<Container maxWidth="sm" sx={{ mt: 8 }}>
+<Container maxWidth="lg" sx={{ mt: 8 }}>
       <Paper elevation={4} sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}>
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <Typography component="h1" variant="h5" fontWeight="bold" color="primary" gutterBottom>

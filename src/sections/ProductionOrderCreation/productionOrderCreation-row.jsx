@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/iconify'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import ViewProductionOrderCreationForm from '../../layouts/viewModals/viewProductionOrderCreation'
 // ----------------------------------------------------------------------
 
 export function ProductionOrderCreationTableRow ({
@@ -30,7 +31,7 @@ export function ProductionOrderCreationTableRow ({
     processOrder: row.processOrder,
     plant: row.plant,
     productName: row.productName,
-    productQuantity:row.productQuantity,
+    productQuantity: row.productQuantity,
     productDescription: row.productDescription,
     batch: row.batch,
     materials: row.materials,
@@ -115,7 +116,9 @@ export function ProductionOrderCreationTableRow ({
           </div>
         </TableCell>
         <TableCell style={{ minWidth: '180px' }}>{row.productName}</TableCell>
-        <TableCell style={{ minWidth: '180px' }}>{` ${row.productQuantity} KG`}</TableCell>
+        <TableCell
+          style={{ minWidth: '180px' }}
+        >{` ${row.productQuantity} KG`}</TableCell>
         <TableCell>{row.batch}</TableCell>
         <TableCell
           style={{
@@ -150,15 +153,20 @@ export function ProductionOrderCreationTableRow ({
         </TableCell>
         <TableCell
           style={{
-            minWidth: row.instructions.length > 50 ? '400px' : '200px',
-            maxWidth: '800px', // Prevent it from growing too large
-            whiteSpace: 'normal', // Enable wrapping for better readability
-            wordWrap: 'break-word', // Break long words if necessary
-            overflow: 'hidden' // Avoid breaking layout
+            minWidth: row.instructions.length > 50 ? '600px' : '200px',
+            maxWidth: '800px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            WebkitLineClamp: 4, // Limit to 4 lines
+            WebkitBoxOrient: 'vertical',
+            whiteSpace: 'normal', // Important to allow wrapping
+            wordWrap: 'break-word'
           }}
         >
           {row.instructions}
         </TableCell>
+
         <TableCell>{new Date(row.startDate).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(row.endDate).toLocaleDateString()}</TableCell>
 
@@ -196,6 +204,10 @@ export function ProductionOrderCreationTableRow ({
             setUpdate={setUpdate}
             productionOrderData={productionOrderData}
             materialNames={materialNames}
+          />
+
+          <ViewProductionOrderCreationForm
+            productionOrderData={productionOrderData}
           />
 
           <MenuItem

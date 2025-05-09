@@ -16,6 +16,7 @@ import Swal from 'sweetalert2'
 import { CircularProgress } from '@mui/material';
 import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast'
+import ViewFinishedGoodsForm from '../../layouts/viewModals/viewFinishedGoods';
 // ----------------------------------------------------------------------
 
 
@@ -136,7 +137,7 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
           }}
         >
        <EditFinishedGoodsForm setUpdate={setUpdate} finishedGoodsData={finishedGoodsData}/>
-
+       <ViewFinishedGoodsForm finishedGoodsData={finishedGoodsData}/>
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 

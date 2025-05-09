@@ -154,7 +154,7 @@ export default function CurrentStockForm ({
           </Typography>
         </Box> */}
 
-        <Container maxWidth='sm' sx={{ mt: 8 }}>
+        <Container maxWidth='lg' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
             sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}

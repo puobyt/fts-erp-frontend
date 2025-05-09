@@ -16,6 +16,7 @@ import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import EditInvoiceCreationForm from '../../layouts/editModals/editInvoiceCreation'
+import ViewInvoiceCreationForm from '../../layouts/viewModals/viewInvoiceCreations'
 // ----------------------------------------------------------------------
 
 export function InvoiceCreationTableRow ({
@@ -52,7 +53,7 @@ export function InvoiceCreationTableRow ({
         `/removeInvoiceCreation?invoiceId=${invoiceId}`
       )
       if (result) {
-        toast.success(result.data.message);
+        toast.success(result.data.message)
         setUpdate(prev => !prev)
       }
     } catch (err) {
@@ -77,7 +78,6 @@ export function InvoiceCreationTableRow ({
     }).then(result => {
       if (result.isConfirmed) {
         handleDelete()
-
       }
     })
   }
@@ -143,6 +143,12 @@ export function InvoiceCreationTableRow ({
             setUpdate={setUpdate}
             invoiceData={invoiceData}
             itemNames={itemNames}
+          />
+
+          <ViewInvoiceCreationForm
+         
+            invoiceData={invoiceData}
+         
           />
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}

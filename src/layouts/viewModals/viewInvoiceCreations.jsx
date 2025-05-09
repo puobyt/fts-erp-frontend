@@ -9,8 +9,8 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
-import '../../global.css'
 import { useNavigate } from 'react-router-dom'
+import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
@@ -24,17 +24,21 @@ const style = {
   p: 4
 }
 
-export default function ViewQualityInspectionForm ({ qualityInspectionData }) {
+export default function ViewInvoiceCreationForm ({ invoiceData }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const navigate = useNavigate()
   const handleClose = () => setOpen(false)
+  const navigate = useNavigate();
+  const formattedDate = invoiceData.invoiceDate
+  ? new Date(invoiceData.invoiceDate).toISOString().split('T')[0]
+  : ''
+
 
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
       <MenuItem onClick={handleOpen}>
-             <Iconify icon='solar:eye-bold' />
+         <Iconify icon='solar:eye-bold' />
         View
       </MenuItem>
       <Modal
@@ -43,6 +47,8 @@ export default function ViewQualityInspectionForm ({ qualityInspectionData }) {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
+  
+
         <Container maxWidth='xl' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
@@ -56,30 +62,22 @@ export default function ViewQualityInspectionForm ({ qualityInspectionData }) {
                 color='primary'
                 gutterBottom
               >
-                View Quality Inspection Details
+                View Inovice Creation Details
               </Typography>
               <Typography variant='body2' color='textSecondary'>
-                Quality Inspection Management
+                Invoice Creation Management
               </Typography>
             </Box>
-            <Box component='form'>
+            <Box component='form' >
               <Grid container spacing={2}>
+    
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Product Name'
-                    name='productName'
-                    value={qualityInspectionData?.productName}
-                    variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                  ></TextField>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Inspection Number'
-                    name='inspectionNumber'
-                    value={qualityInspectionData?.inspectionNumber}
+                    label='Invoice Number'
+                    name='invoiceNumber'
+                    value={invoiceData.invoiceNumber}
+                  
                     variant='filled'
                     InputProps={{
                       style: { borderRadius: 8 },readOnly:true,
@@ -90,58 +88,108 @@ export default function ViewQualityInspectionForm ({ qualityInspectionData }) {
                     }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Inspection Results'
-                    name='inspectionResults'
-                    value={qualityInspectionData?.inspectionResults}
-                    variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                  ></TextField>
-                </Grid>
-
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Date'
-                    name='date'
-                    type='text'
-                    value={qualityInspectionData?.date}
+                    label='customer ID'
+                    name='customerId'
+                    value={invoiceData.customerId}
+                 
                     variant='filled'
                     InputProps={{
-                      style: { borderRadius: 8 },readOnly:true
+                      style: { borderRadius: 8 },readOnly:true,
+                      placeholder: 'Auto-Generate'
                     }}
                     InputLabelProps={{
                       shrink: true
                     }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={qualityInspectionData?.batchNumber}
+                    label='Invoice Date'
+                    name='invoiceDate'
+                    type='text'
+                    value={invoiceData.invoiceDate}
+                 
                     variant='filled'
-                    InputProps={{
-                      style: { borderRadius: 8 },readOnly:true
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputLabelProps={{
+                      shrink: true
                     }}
                   />
                 </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Customer Name'
+                    name='customerName'
+                    value={invoiceData.customerName}
+                  
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Customer Address'
+                    name='customerAddress'
+                    value={invoiceData.customerAddress}
+                 
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                <TextField
+                    fullWidth
+             
+                    label='Item Name'
+                    name='itemName'
+                    value={invoiceData.itemName}
+                 
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                  >
+                
 
+        
+                  </TextField>
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Quantity'
                     name='quantity'
-                    value={qualityInspectionData?.quantity}
+                    value={invoiceData.quantity}
+                  
                     variant='filled'
-                    InputProps={{
-                      style: { borderRadius: 8 },readOnly:true
-                    }}
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Price'
+                    name='price'
+                    value={invoiceData.price}
+                
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Invoice Prepared By:'
+                    name='invoicePreparedBy'
+                    value={invoiceData.invoicePreparedBy}
+                 
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+              
                   />
                 </Grid>
               </Grid>

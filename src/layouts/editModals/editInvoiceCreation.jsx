@@ -29,12 +29,15 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData,itemNa
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const navigate = useNavigate();
+  const formattedDate = invoiceData.invoiceDate
+  ? new Date(invoiceData.invoiceDate).toISOString().split('T')[0]
+  : ''
   const [formData, setFormData] = useState({
     authPassword: '',
     invoiceId: invoiceData.invoiceId,
     invoiceNumber: invoiceData.invoiceNumber,
     customerId: invoiceData.customerId,
-    invoiceDate: invoiceData.invoiceDate,
+    invoiceDate: formattedDate,
     customerName: invoiceData.customerName,
     customerAddress: invoiceData.customerAddress,
     itemName: invoiceData.itemName,
@@ -134,10 +137,10 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData,itemNa
           </Typography>
         </Box> */}
 
-        <Container maxWidth='sm' sx={{ mt: 8 }}>
+        <Container maxWidth='lg' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
-            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}
+            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 2 }}
           >
             <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Typography

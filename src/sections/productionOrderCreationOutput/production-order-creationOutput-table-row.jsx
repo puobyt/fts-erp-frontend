@@ -16,6 +16,7 @@ import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import EditProductionOrderCreationOutputForm from '../../layouts/editModals/editProductionOrderCreationOutput'
+import ViewProductionOrderCreationOutputForm from '../../layouts/viewModals/viewProductionCreationOutput'
 // ----------------------------------------------------------------------
 
 export function ProductionOrderCreationOutputTableRow ({
@@ -149,10 +150,16 @@ export function ProductionOrderCreationOutputTableRow ({
           }}
         >
           <EditProductionOrderCreationOutputForm
-          batches={batches}
+            batches={batches}
             setUpdate={setUpdate}
             productionOrderOutputData={productionOrderOutputData}
             products={products}
+          />
+
+          <ViewProductionOrderCreationOutputForm
+          
+            productionOrderOutputData={productionOrderOutputData}
+        
           />
 
           <MenuItem

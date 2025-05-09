@@ -167,19 +167,11 @@ export default function EditGateEntryForm ({
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        {/* <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box> */}
 
-        <Container maxWidth='sm' sx={{ mt: 8 }}>
+        <Container maxWidth='lg' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
-            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}
+            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 2 }}
           >
             <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Typography

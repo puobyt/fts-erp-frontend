@@ -10,8 +10,7 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import '../../global.css'
-import { useNavigate } from 'react-router-dom'
-import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -24,17 +23,19 @@ const style = {
   p: 4
 }
 
-export default function ViewQualityInspectionForm ({ qualityInspectionData }) {
+export default function ViewFinishedGoodsForm ({finishedGoodsData}) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const navigate = useNavigate()
   const handleClose = () => setOpen(false)
+  const formattedDate = finishedGoodsData.productionDate
+  ? new Date(finishedGoodsData.productionDate).toISOString().split('T')[0]
+  : ''
 
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
       <MenuItem onClick={handleOpen}>
-             <Iconify icon='solar:eye-bold' />
+          <Iconify icon='solar:eye-bold' />
         View
       </MenuItem>
       <Modal
@@ -43,6 +44,8 @@ export default function ViewQualityInspectionForm ({ qualityInspectionData }) {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
+
+
         <Container maxWidth='xl' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
@@ -56,96 +59,65 @@ export default function ViewQualityInspectionForm ({ qualityInspectionData }) {
                 color='primary'
                 gutterBottom
               >
-                View Quality Inspection Details
+                Edit Finished Goods Details
               </Typography>
               <Typography variant='body2' color='textSecondary'>
-                Quality Inspection Management
+                Finished Goods Management
               </Typography>
             </Box>
-            <Box component='form'>
+            <Box component='form' >
               <Grid container spacing={2}>
+
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Product Name'
-                    name='productName'
-                    value={qualityInspectionData?.productName}
+                    label='Finished Goods Name'
+                    name='finishedGoodsName'
+                    value={finishedGoodsData.finishedGoodsName}
+                
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                  ></TextField>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Inspection Number'
-                    name='inspectionNumber'
-                    value={qualityInspectionData?.inspectionNumber}
-                    variant='filled'
-                    InputProps={{
-                      style: { borderRadius: 8 },readOnly:true,
-                      placeholder: 'Auto-Generate'
-                    }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
                   />
                 </Grid>
-
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Inspection Results'
-                    name='inspectionResults'
-                    value={qualityInspectionData?.inspectionResults}
-                    variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                  ></TextField>
-                </Grid>
-
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Date'
-                    name='date'
-                    type='text'
-                    value={qualityInspectionData?.date}
-                    variant='filled'
-                    InputProps={{
-                      style: { borderRadius: 8 },readOnly:true
-                    }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                  />
-                </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Batch Number'
                     name='batchNumber'
-                    value={qualityInspectionData?.batchNumber}
+                    value={finishedGoodsData.batchNumber}
+                 
                     variant='filled'
-                    InputProps={{
-                      style: { borderRadius: 8 },readOnly:true
-                    }}
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Quantity'
-                    name='quantity'
-                    value={qualityInspectionData?.quantity}
+                    label='Production Date'
+                    name='productionDate'
+                    type='date'
+                    value={formattedDate}
+                  
                     variant='filled'
-                    InputProps={{
-                      style: { borderRadius: 8 },readOnly:true
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
                     }}
                   />
                 </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Quantity Produced'
+                    name='quantityProduced'
+                    value={finishedGoodsData.quantityProduced}
+                 
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                  />
+                </Grid>
               </Grid>
-
+         
             </Box>
           </Paper>
         </Container>

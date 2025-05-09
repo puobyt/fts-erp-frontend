@@ -169,7 +169,7 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
           </Typography>
         </Box> */}
 
-        <Container maxWidth='sm' sx={{ mt: 8 }}>
+        <Container maxWidth='lg' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
             sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}
@@ -319,6 +319,10 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
                   >
                     <MenuItem value='Accepted' sx={{ color: 'green' }}>
                       Accepted
+                    </MenuItem>
+
+                    <MenuItem sx={{ color: 'purple' }} value='Quarantine'>
+                      Quarantine
                     </MenuItem>
 
                     <MenuItem sx={{ color: 'red' }} value='Rejected'>
