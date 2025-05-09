@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/iconify'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import ViewQualityCheck from '../../layouts/viewModals/viewQualityCheck'
 // ----------------------------------------------------------------------
 
 export function QualityCheckTableRow ({
@@ -31,7 +32,7 @@ export function QualityCheckTableRow ({
     qualityCheckId: row._id,
     batchNumber: row.batchNumber,
     materialName: row.materialName,
-    materialCode:row.materialCode,
+    materialCode: row.materialCode,
     inspectionDate: row.inspectionDate,
     inspectorName: row.inspectorName,
     qualityStatus: row.qualityStatus,
@@ -52,7 +53,7 @@ export function QualityCheckTableRow ({
         `/removeQualityCheck?qualityCheckId=${qualityCheckId}`
       )
       if (result) {
-        toast.success(result.data.message);
+        toast.success(result.data.message)
         setUpdate(prev => !prev)
       }
     } catch (err) {
@@ -158,6 +159,7 @@ export function QualityCheckTableRow ({
             products={products}
             batches={batches}
           />
+          <ViewQualityCheck qualityCheckData={qualityCheckData} />
 
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}

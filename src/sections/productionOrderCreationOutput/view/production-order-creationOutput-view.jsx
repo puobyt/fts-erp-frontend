@@ -116,8 +116,8 @@ useEffect(()=>{
           }}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+    
+          <TableContainer sx={{ overflow: 'auto' }}>
             <Table sx={{ minWidth: 800 }}>
               <ProductionOrderCreationOutputTableHead
                 order={table.order}
@@ -173,7 +173,7 @@ useEffect(()=>{
               </TableBody>
             </Table>
           </TableContainer>
-        </Scrollbar>
+     
 
         <TablePagination
           component="div"

@@ -119,8 +119,8 @@ export function RequestCreationForMaterialsView () {
           }}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+
+          <TableContainer sx={{ overflow: 'auto' }}>
             <Table sx={{ minWidth: 800 }}>
               <RequestCreationForMaterialsTableHead
                 order={table.order}
@@ -176,7 +176,7 @@ export function RequestCreationForMaterialsView () {
               </TableBody>
             </Table>
           </TableContainer>
-        </Scrollbar>
+  
 
         <TablePagination
           component='div'

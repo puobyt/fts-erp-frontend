@@ -186,7 +186,7 @@ export default function EditReworkForm ({ setUpdate,reworkData,batches }) {
                 color='primary'
                 gutterBottom
               >
-                Edit New Rework Details
+                Edit Rework Details
               </Typography>
               <Typography variant='body2' color='textSecondary'>
                 Rework Management

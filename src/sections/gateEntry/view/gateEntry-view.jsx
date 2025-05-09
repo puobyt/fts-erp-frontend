@@ -110,8 +110,8 @@ export function GateEntryView () {
           }}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+  
+          <TableContainer sx={{ overflow: 'auto' }}>
             <Table sx={{ minWidth: 800 }}>
               <GateEntryTableHead
                 order={table.order}
@@ -176,7 +176,7 @@ export function GateEntryView () {
               onRowsPerPageChange={table.onChangeRowsPerPage}
             />
           </TableContainer>
-        </Scrollbar>
+   
       </Card>
     </DashboardContent>
   )

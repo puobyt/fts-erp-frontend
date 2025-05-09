@@ -111,8 +111,8 @@ export function InvoiceCreationView () {
           }}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+    
+          <TableContainer sx={{ overflow: 'auto' }}>
             <Table sx={{ minWidth: 800 }}>
               <InvoiceCreationTableHead
                 order={table.order}
@@ -177,7 +177,7 @@ export function InvoiceCreationView () {
               onRowsPerPageChange={table.onChangeRowsPerPage}
             />
           </TableContainer>
-        </Scrollbar>
+      
       </Card>
     </DashboardContent>
   )

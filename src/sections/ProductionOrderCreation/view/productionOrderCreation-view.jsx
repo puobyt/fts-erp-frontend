@@ -115,8 +115,8 @@ export function ProductionOrderCreationView () {
           }}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+   
+          <TableContainer sx={{ overflow: 'auto' }}>
             <Table sx={{ minWidth: 800 }}>
               <ProductionOrderCreationTableHead
                 order={table.order}
@@ -176,7 +176,7 @@ export function ProductionOrderCreationView () {
               </TableBody>
             </Table>
           </TableContainer>
-        </Scrollbar>
+ 
 
         <TablePagination
           component='div'

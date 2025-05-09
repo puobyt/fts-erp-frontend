@@ -15,7 +15,7 @@ import { Iconify } from 'src/components/iconify'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
-
+import ViewCurrentStock from '../../layouts/viewModals/ViewCurrentStock'
 // ----------------------------------------------------------------------
 
 export function CurrentStockTableRow ({
@@ -152,6 +152,11 @@ export function CurrentStockTableRow ({
             vendors={vendors}
           />
 
+          <ViewCurrentStock
+            currentStockData={currentStockData}
+      
+          />
+
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}
             sx={{ color: 'error.main' }}
@@ -159,7 +164,11 @@ export function CurrentStockTableRow ({
             <Iconify icon='solar:trash-bin-trash-bold' />
             Delete
           </MenuItem>
-          <MenuItem sx={{ color: 'primary.main' }} onClick={()=>generateMaterialsReport(row)}  disabled={loading}>
+          <MenuItem
+            sx={{ color: 'primary.main' }}
+            onClick={() => generateMaterialsReport(row)}
+            disabled={loading}
+          >
             <Iconify icon='solar:download-bold' />
             Download PDF
           </MenuItem>

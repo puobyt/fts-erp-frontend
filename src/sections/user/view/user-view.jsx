@@ -108,8 +108,9 @@ export function UserView () {
           }}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+     
+          <TableContainer sx={{ overflow: 'auto' }}>
+      
             <Table sx={{ minWidth: 800 }}>
               <UserTableHead
                 order={table.order}
@@ -176,8 +177,9 @@ export function UserView () {
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
+       
           </TableContainer>
-        </Scrollbar>
+      
 
 
       </Card>

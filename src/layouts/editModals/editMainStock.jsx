@@ -223,7 +223,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Quantity In KG'
+                    label='Quantity In unit'
                     name='quantity'
                     value={formData.quantity}
                     onChange={handleChange}
@@ -236,7 +236,7 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Price/Kg'
+                    label='Price/Unit'
                     name='price'
                     value={formData.price}
                     onChange={handleChange}

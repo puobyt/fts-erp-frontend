@@ -115,8 +115,8 @@ export function ProcessOrderView () {
           }}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+     
+          <TableContainer sx={{ overflow: 'auto' }}>
             <Table sx={{ minWidth: 800 }}>
               <ProcessOrderTableHead
                 order={table.order}
@@ -181,7 +181,7 @@ export function ProcessOrderView () {
               </TableBody>
             </Table>
           </TableContainer>
-        </Scrollbar>
+      
 
         <TablePagination
           component='div'

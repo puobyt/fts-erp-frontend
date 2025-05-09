@@ -108,8 +108,8 @@ export function FinishedGoodsView () {
           }}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+    
+          <TableContainer sx={{ overflow: 'auto' }}>
             {/* {loading && renderFallback} */}
             <Table sx={{ minWidth: 800 }}>
               <FinishedGoodsTableHead
@@ -170,7 +170,7 @@ export function FinishedGoodsView () {
               onRowsPerPageChange={table.onChangeRowsPerPage}
             />
           </TableContainer>
-        </Scrollbar>
+      
       </Card>
     </DashboardContent>
   )

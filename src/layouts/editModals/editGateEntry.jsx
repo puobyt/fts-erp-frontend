@@ -201,7 +201,7 @@ export default function EditGateEntryForm ({
                     overflowY: 'auto',
                     paddingRight: 2
                   }}>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} sx={{ mt: 0.1 }}>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -222,7 +222,7 @@ export default function EditGateEntryForm ({
                     label='Entry Time'
                     name='entryTime'
                     type='time'
-                    value={formData.entryTime}
+                    value={convertTo24HourFormat(formData.entryTime)}
                     onChange={handleChange}
                     error={!!errors.entryTime}
                     helperText={errors.entryTime}

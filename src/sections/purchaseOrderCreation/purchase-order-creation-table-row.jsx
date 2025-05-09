@@ -18,6 +18,7 @@ import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast'
 import generatePocpdf from '../../utils/purchaseOrderCreation';
+import ViewPurchaseOrderCreation from '../../layouts/viewModals/viewPurchaseOrder';
 
 // ----------------------------------------------------------------------
 
@@ -179,7 +180,7 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
           }}
         >
       <EditPurchaseOrderCreationForm setUpdate={setUpdate} orderData={orderData} firms={firms}/>
-
+      <ViewPurchaseOrderCreation orderData={orderData}/>
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 
@@ -193,6 +194,7 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
       {/* Hidden container for HTML2PDF */}
       <div style={{ display: 'none' }}>
         <PurchaseOrder pdfData={orderData} ref={pdfRef} />
+        
       </div>
         </MenuList>
       </Popover>

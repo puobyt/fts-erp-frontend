@@ -116,8 +116,8 @@ useEffect(()=>{
           }}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
+
+          <TableContainer sx={{ overflow: 'auto' }}>
             <Table sx={{ minWidth: 800 }}>
               <BillOfMaterialsTableHead
                 order={table.order}
@@ -175,7 +175,7 @@ useEffect(()=>{
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
           </TableContainer>
-        </Scrollbar>
+  
 
 
       </Card>

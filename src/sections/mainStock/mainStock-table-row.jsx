@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/iconify'
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
+import ViewMainStock from '../../layouts/viewModals/ViewMainStock'
 // ----------------------------------------------------------------------
 
 export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
@@ -22,8 +23,8 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
   const mainStockData = {
     mainStockId: row._id,
     materialName: row.materialName,
-    materialCode:row.materialCode,
-    grn:row.grn,
+    materialCode: row.materialCode,
+    grn: row.grn,
     quantity: row.quantity,
     price: row.price,
     storageLocation: row.storageLocation,
@@ -45,7 +46,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
         `/removeMainStock?mainStockId=${mainStockId}`
       )
       if (result) {
-        toast.success(result.data.message);
+        toast.success(result.data.message)
         setUpdate(prev => !prev)
       }
     } catch (err) {
@@ -97,8 +98,10 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
         <TableCell>{row.grn}</TableCell>
         <TableCell>{`${row.quantity} KG`}</TableCell>
 
-        <TableCell style={{ whiteSpace: 'nowrap' }}>{`₹ ${row.price}`}</TableCell>
-       
+        <TableCell
+          style={{ whiteSpace: 'nowrap' }}
+        >{`₹ ${row.price}`}</TableCell>
+
         <TableCell>{row.storageLocation}</TableCell>
         <TableCell>{row.vendorName}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
@@ -136,6 +139,10 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
         >
           <EditMainStockForm
             setUpdate={setUpdate}
+            mainStockData={mainStockData}
+          />
+
+          <ViewMainStock
             mainStockData={mainStockData}
           />
 

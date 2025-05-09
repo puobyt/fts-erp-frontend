@@ -17,7 +17,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { Link } from '@mui/material'
 // ----------------------------------------------------------------------
 
-export function TracebilityRow ({ setUpdate,setProduction, row, selected, onSelectRow }) {
+export function TracebilityRow ({ setUpdate,setQC,setProduction, row, selected, onSelectRow }) {
 
 
 
@@ -29,8 +29,15 @@ export function TracebilityRow ({ setUpdate,setProduction, row, selected, onSele
 
       if (result && result.data.productionData) {
         console.log('result for production',result.data.productionData)
+        console.log('result for QC ',result.data.qcDetails)
         setProduction(result.data.productionData)
-      } else {
+        if(result.data.qcDetails){
+          setQC(result.data.qcDetails);
+        }
+      
+      }
+      
+      else {
         console.log('No production data found.')
       }
     } catch (err) {

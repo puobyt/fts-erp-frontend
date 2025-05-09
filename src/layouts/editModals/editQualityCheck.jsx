@@ -282,7 +282,7 @@ export default function EditQualityCheckForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    select
+               
                     label='Batch Number'
                     name='batchNumber'
                     value={formData.batchNumber}
@@ -291,20 +291,23 @@ export default function EditQualityCheckForm ({
                     helperText={errors.batchNumber}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
                   >
-                    {batches.map((batch, index) => (
+                    {/* {batches.map((batch, index) => (
                       <MenuItem key={index} value={batch.batchNumber}>
                         {batch.batchNumber}
                       </MenuItem>
-                    ))}
+                    ))} */}
 
                     {/* This item only triggers navigation, not a form selection */}
-                    <MenuItem
+                    {/* <MenuItem
                       onClick={() => navigate('/vendor-stock-management/current-stock')}
                       sx={{ fontStyle: 'italic' }} // Optional styling
                     >
                       Add New Batch +
-                    </MenuItem>
+                    </MenuItem> */}
                   </TextField>
                 </Grid>
 

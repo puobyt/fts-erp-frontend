@@ -15,6 +15,7 @@ import { Iconify } from 'src/components/iconify';
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast'
+import ViewGateEntry from '../../layouts/viewModals/viewGateEntry';
 // ----------------------------------------------------------------------
 
 
@@ -158,7 +159,7 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
           }}
         >
    <EditGateEntryForm firmNames={firmNames} setUpdate={setUpdate} gateEntryData={gateEntryData}/>
-
+   <ViewGateEntry  gateEntryData={gateEntryData}/>
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 

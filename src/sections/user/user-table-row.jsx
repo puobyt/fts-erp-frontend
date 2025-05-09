@@ -10,6 +10,7 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import EditVendorManagementForm from '../../layouts/editModals/editVendorManagement';
+import ViewVendorManagement from '../../layouts/viewModals/viewVendorManagement';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import axiosInstance from 'src/configs/axiosInstance';
@@ -151,6 +152,7 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
           </MenuItem> */}
         
 <EditVendorManagementForm setUpdate={setUpdate} vendorData ={vendorData}/>
+<ViewVendorManagement vendorData ={vendorData}/>
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete 

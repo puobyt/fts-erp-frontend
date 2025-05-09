@@ -147,10 +147,10 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
           </Typography>
         </Box> */}
 
-        <Container maxWidth='sm' sx={{ mt: 8 }}>
+        <Container maxWidth='lg' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
-            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}
+            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 2 }}
           >
             <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Typography
@@ -160,7 +160,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
                 color='primary'
                 gutterBottom
               >
-                Edit Vendor Details
+              Edit Vendor Details
               </Typography>
               <Typography variant='body2' color='textSecondary'>
                 Vendor Management

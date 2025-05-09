@@ -22,6 +22,7 @@ import { TracebilityProductionRow } from '../production-tracebility-row'
 import { TableEmptyRows } from '../table-empty-rows'
 import { emptyRows, applyFilter, getComparator } from '../utils'
 import VendorManagementForm from '../../../layouts/modals/addVendorManagement'
+import { TracebilityQCRow } from '../qc-tracebility-row'
 import axiosInstance from 'src/configs/axiosInstance'
 import LinearProgress, {
   linearProgressClasses
@@ -40,8 +41,9 @@ export function TracebilityView () {
   const [isTableVisible, setIsTableVisible] = useState(false)
   const [isTableVisible2, setIsTableVisible2] = useState(false)
   const [isTableVisible3, setIsTableVisible3] = useState(false)
-
+  const [isTableVisibleQC, setIsTableVisibleQC] = useState(false)
   const [production, setProduction] = useState([])
+  const [qcDetails, setQcDetails] = useState([])
   const [shipping, setShipping] = useState([])
   const handleSearchMaterialsResults = (results) => {
   
@@ -53,6 +55,14 @@ export function TracebilityView () {
     setProduction(results);
     setIsTableVisible(false);
     setIsTableVisible2(true)
+   
+  };
+
+
+  const handleQCResults = (results) => {
+    setQcDetails(results);
+    setIsTableVisible(false);
+    setIsTableVisibleQC(true)
    
   };
 
@@ -72,6 +82,10 @@ export function TracebilityView () {
   }
   const handleToggle3 = () => {
     setIsTableVisible3(prev => !prev)
+  }
+
+  const handleToggleQC = () => {
+    setIsTableVisibleQC(prev => !prev)
   }
   const fetchVendorManagement = async () => {
     try {
@@ -101,6 +115,12 @@ export function TracebilityView () {
 
   const dataFilteredProduction = applyFilter({
     inputData: production,
+    comparator: getComparator(table.order, table.orderBy),
+    filterName
+  })
+
+  const dataFilteredQC = applyFilter({
+    inputData: qcDetails,
     comparator: getComparator(table.order, table.orderBy),
     filterName
   })
@@ -247,6 +267,7 @@ export function TracebilityView () {
                     )
                     .map((row, index) => (
                       <TracebilityRow
+                      setQC={handleQCResults}
                       setProduction={handleProductionResults}
                         setUpdate={setUpdate}
                         key={index}
@@ -281,6 +302,128 @@ export function TracebilityView () {
           </Scrollbar>
         </Collapse>
       </Card>
+
+      <Card
+        sx={{
+          p: 2,
+          width: '100%',
+          maxWidth: '1200px',
+          mx: 'auto',
+          mt: 2
+        }}
+      >
+   
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2
+          }}
+        >
+          <Typography
+            variant='h8'
+            sx={{
+              ml: 2,
+              backgroundColor: '#0aa155', // Blue background
+              padding: '4px 15px', // Padding inside the Typography
+              borderRadius: '8px', // More curved edges
+              color: 'white', // White text for contrast
+            }}
+          >
+            QC Details
+          </Typography>
+          <Button
+              color="inherit"
+            variant='contained'
+            onClick={handleToggleQC}
+            sx={{
+              textTransform: 'none'
+            }}
+          >
+            {isTableVisibleQC ? 'Hide ' : 'Show '}
+          </Button>
+        </Box>
+        <Collapse in={isTableVisibleQC}>
+        {loading && renderFallback}
+          <TracebilityBar
+            sort={table.onSort}
+            numSelected={table.selected.length}
+            filterName={filterName}
+            onFilterName={event => {
+              setFilterName(event.target.value)
+              table.onResetPage()
+            }}
+          />
+
+          <Scrollbar>
+            <TableContainer sx={{ overflow: 'unset' }}>
+              <Table sx={{ minWidth: 800 }}>
+                <TracebilityHead
+                  order={table.order}
+                  orderBy={table.orderBy}
+                  rowCount={vendors.length}
+                  numSelected={table.selected.length}
+                  onSort={table.onSort}
+                  // onSelectAllRows={(checked) =>
+                  //   table.onSelectAllRows(
+                  //     checked,
+                  //     _users.map((user) => user.id)
+                  //   )
+                  // }
+                  headLabel={[
+                    { id: 'batchNumber', label: 'Batch Number' },
+                    { id: 'materialName', label: 'Material Name' },
+                    { id: 'materialCode', label: 'Material Code' },
+                    { id: 'inspectionDate', label: 'Inspection Date' },
+                    { id: 'inspectorName', label: 'Inspector Name' },
+                    { id: 'qualityStatus', label: 'Quality Status' },
+                    { id: 'comments', label: 'Comments' },
+                  ]}
+                />
+                <TableBody>
+                  {dataFilteredQC
+                    .slice(
+                      table.page * table.rowsPerPage,
+                      table.page * table.rowsPerPage + table.rowsPerPage
+                    )
+                    .map((row, index) => (
+                      <TracebilityQCRow
+                        setUpdate={setUpdate}
+                  
+                        key={index}
+                        row={row}
+                        selected={table.selected.includes(row.id)}
+                        onSelectRow={() => table.onSelectRow(row.id)}
+                      />
+                    ))}
+
+                  <TableEmptyRows
+                    height={68}
+                    emptyRows={emptyRows(
+                      table.page,
+                      table.rowsPerPage,
+                      vendors.length
+                    )}
+                  />
+
+                  {notFound && <TableNoData searchQuery={filterName} />}
+                </TableBody>
+              </Table>
+              <TablePagination
+                component='div'
+                page={table.page}
+                count={vendors.length}
+                rowsPerPage={table.rowsPerPage}
+                onPageChange={table.onChangePage}
+                rowsPerPageOptions={[5, 10, 25]}
+                onRowsPerPageChange={table.onChangeRowsPerPage}
+              />
+            </TableContainer>
+          </Scrollbar>
+        </Collapse>
+      </Card>
+
 
       <Card
         sx={{
