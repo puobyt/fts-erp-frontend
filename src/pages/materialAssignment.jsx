@@ -5,7 +5,6 @@ import ProtectedLayout from '../utils/protectedRoute'
 
 import { MaterialAssignmentView } from '../sections/materialAssignment/view/materialAssignment-view'
 
-// ----------------------------------------------------------------------
 
 export default function Page () {
   return (

@@ -3,15 +3,14 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { Input } from '@nextui-org/react'
 import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+import { UNIT_OPTIONS } from '../../utils/Unit'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -33,7 +32,7 @@ export default function GateEntryForm ({ setUpdate, firmNames }) {
     vehicleNumber: '',
     vendorName: '',
     docNumber: '',
-    materials: [{ materialName: '', quantity: ''}],
+    materials: [{ materialName: '', quantity: '',unit:""}],
     date: ''
   })
   const [errors, setErrors] = useState({})
@@ -85,7 +84,7 @@ const navigate = useNavigate();
           vehicleNumber: '',
           vendorName: '',
           docNumber: '',
-          materials: [{ materialName: '', quantity: ''}],
+          materials: [{ materialName: '', quantity: '',unit:''}],
           date: ''
         })
         setUpdate(prev => !prev)
@@ -118,7 +117,7 @@ const navigate = useNavigate();
       ...prevFormData,
       materials: [
         ...prevFormData.materials,
-        { materialName: '', quantity: '' }
+        { materialName: '', quantity: '',unit:"" }
       ]
     }))
   }
@@ -299,6 +298,24 @@ const navigate = useNavigate();
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
                       />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        error={!!errors.unit}
+                        value={material.unit}
+                        helperText={errors.unit}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {UNIT_OPTIONS.map((unit)=>(
+                          <MenuItem key={unit} value={unit}>{unit}</MenuItem>
+                        ))}
+                      </TextField>
                     </Grid>
                     <Grid
                       item

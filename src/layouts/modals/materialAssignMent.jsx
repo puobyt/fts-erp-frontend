@@ -439,14 +439,13 @@ export default function MaterialAssignmentForm ({
                       </MenuItem>
                     ))}
 
-                    {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
                       onClick={() =>
                         navigate(
                           '/production-workflow/production-order-creation'
                         )
                       }
-                      sx={{ fontStyle: 'italic' }} // Optional styling
+                      sx={{ fontStyle: 'italic' }} 
                     >
                       Add New Process Order Number +
                     </MenuItem>

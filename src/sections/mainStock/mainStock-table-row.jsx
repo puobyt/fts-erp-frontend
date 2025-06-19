@@ -16,6 +16,7 @@ import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import ViewMainStock from '../../layouts/viewModals/ViewMainStock'
+import { colorChangeOfExpiry, isExpired, isNearExpiry } from '../../utils/expiryHelper'
 // ----------------------------------------------------------------------
 
 export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
@@ -83,7 +84,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
   }
   return (
     <>
-      <TableRow>
+      <TableRow style={{backgroundColor:colorChangeOfExpiry(row.expiryDate)}}>
         {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell> */}

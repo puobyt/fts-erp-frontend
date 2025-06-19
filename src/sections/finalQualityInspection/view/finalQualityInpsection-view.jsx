@@ -133,7 +133,7 @@ useEffect(()=>{
                   { id: 'productName', label: 'Product Name' },
                   { id: 'inpsectionResults', label: 'Inpsection Results' },
                   { id: 'date', label: 'Date' },
-                  { id: 'batchNumber', label: 'Batch Number' },
+                  { id: 'batchNumber', label: 'GRN' },
                   { id: 'quantity', label: 'Quantity' },
                 ]}
               />

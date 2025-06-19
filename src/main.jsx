@@ -16,7 +16,7 @@ const CenteredFallback = () => (
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      height: "100vh", // Full viewport height
+      height: "100vh", 
     }}
   >
     <CircularProgress />
@@ -27,7 +27,6 @@ root.render(
     <HelmetProvider>
       <NextUIProvider>
         <BrowserRouter>
-          {/* Add a fallback for Suspense */}
           <Suspense fallback={<CenteredFallback/>}>
             <App />
           </Suspense>

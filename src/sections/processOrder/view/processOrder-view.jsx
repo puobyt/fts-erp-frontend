@@ -138,7 +138,7 @@ export function ProcessOrderView () {
                   { id: 'finishDate', label: 'Finish Date' },
                   { id: 'productName', label: 'Product Name' },
                   { id: 'productCode', label: ' Product Code' },
-                  { id: 'batchNumber', label: 'Batch Number' },
+                  { id: 'batchNumber', label: 'GRN' },
                   { id: 'orderQuantity', label: 'Order Quantity' },
                   { id: 'materialCode', label: 'Material Code(Material Input)' },
                   { id: 'materialQuantity', label: 'Material Quantity(Material Input) ' },

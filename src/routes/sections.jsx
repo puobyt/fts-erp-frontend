@@ -11,6 +11,7 @@ import LinearProgress, {
 import { varAlpha } from 'src/theme/styles'
 import { AuthLayout } from 'src/layouts/auth'
 import { DashboardLayout } from 'src/layouts/dashboard'
+import QCParameterTable from '../sections/qcParameters/view/qcParameterTable'
 
 // ----------------------------------------------------------------------
 
@@ -97,6 +98,7 @@ export function Router () {
         { path: 'vendor-stock-management/current-stock', element: <CurrentStock /> },
         { path: 'vendor-stock-management/main-stock', element: <MainStock /> },
         { path: 'quality-control/quality-check', element: <QualityCheck /> },
+        { path: 'quality-control/qcparameters', element: <QCParameterTable /> },
         { path: 'quality-control/rework', element: <Rework /> },
         {
           path: 'production-workflow/production-order-creation',

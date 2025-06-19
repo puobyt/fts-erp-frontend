@@ -1,21 +1,14 @@
 import { useState, useCallback } from 'react'
-import Swal from 'sweetalert2'
-import Box from '@mui/material/Box'
-import Avatar from '@mui/material/Avatar'
 import Popover from '@mui/material/Popover'
 import TableRow from '@mui/material/TableRow'
 import Checkbox from '@mui/material/Checkbox'
 import MenuList from '@mui/material/MenuList'
 import TableCell from '@mui/material/TableCell'
 import IconButton from '@mui/material/IconButton'
-import MenuItem, { menuItemClasses } from '@mui/material/MenuItem'
-import EditVendorManagementForm from '../../layouts/editModals/editVendorManagement'
-import { Label } from 'src/components/label'
+import  { menuItemClasses } from '@mui/material/MenuItem'
 import { Iconify } from 'src/components/iconify'
-import axiosInstance from 'src/configs/axiosInstance'
-import toast, { Toaster } from 'react-hot-toast'
-import { Link } from '@mui/material'
-// ----------------------------------------------------------------------
+import  { Toaster } from 'react-hot-toast'
+import { ViewQcDetails } from './ViewQcDetails'
 
 export function TracebilityQCRow ({ setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null)
@@ -94,6 +87,9 @@ export function TracebilityQCRow ({ setUpdate, row, selected, onSelectRow }) {
         <TableCell>{row.inspectorName}</TableCell>
         <TableCell>{row.qualityStatus}</TableCell>
         <TableCell>{row.comments}</TableCell>
+        <TableCell>
+          <ViewQcDetails qcData={row}/>
+        </TableCell>
 
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>

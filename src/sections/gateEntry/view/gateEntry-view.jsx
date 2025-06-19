@@ -85,7 +85,7 @@ export function GateEntryView () {
     <DashboardContent>
       <Box display='flex' alignItems='center' mb={5}>
         <Typography variant='h4' flexGrow={1}>
-          Gate Entry
+          Gate Entry1
         </Typography>
         {/* <Button
           variant="contained"
@@ -182,13 +182,12 @@ export function GateEntryView () {
   )
 }
 
-// ----------------------------------------------------------------------
 
 export function useTable () {
   const [page, setPage] = useState(0)
   const [orderBy, setOrderBy] = useState('name')
   const [rowsPerPage, setRowsPerPage] = useState(5)
-  const [selected, setSelected] = useState([]) // Ensure this is an array
+  const [selected, setSelected] = useState([]) 
   const [order, setOrder] = useState('asc')
 
   const onSort = useCallback(

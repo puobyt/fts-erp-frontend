@@ -20,8 +20,15 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
         const materials = response?.data?.materials
         if (materials && materials.length > 0) {
             toast.success(response.data.message)
-          const results = response.data.materials
-          onSearchMaterials(results)
+          const results = response.data
+          console.log("RESULT",results)
+          if(results.qcDetails)
+          {
+            onSearchMaterials({materials:results.materials,qcDetails:results.qcDetails})
+          }
+          else{
+            onSearchMaterials({materials:results.materials})
+          }
         } else {
           toast.error('No materials found for the given code.')
         
@@ -49,7 +56,17 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
         if (materials && materials.length > 0) {
             toast.success(response.data.message)
           const results = response.data.materials
-          onSearchMaterials(results)
+          if(results.qcDetails)
+          {
+            onSearchMaterials({
+              materials:results,
+              qcDetails:results.qcDetails
+            })
+          }
+          else{
+            onSearchMaterials({materials:results})
+          }
+
         } else {
           toast.error('No materials found for the given code.')
         

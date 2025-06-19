@@ -1,34 +1,41 @@
 import * as React from 'react'
 import { useState } from 'react'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { Input } from '@nextui-org/react'
 import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
-import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { TextField, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem } from '@mui/material'
+import axiosInstance from 'src/configs/axiosInstance'
 
-import axios from 'axios'
-import '../../global.css'
-import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 700,
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4
 }
 
-export default function ViewRework ({reworkData }) {
+export default function ViewRework({ reworkData }) {
   const [open, setOpen] = useState(false)
-  const navigate = useNavigate();
-  const handleOpen = () => setOpen(true)
+  const [reworkParameters, setReworkParameters] = useState([])
+  const navigate = useNavigate()
+  const handleOpen = async () => {
+    setOpen(true)
+    // Optionally fetch related rework parameter records
+    try {
+      const res = await axiosInstance.get(`/rework-parameters?reworkId=${reworkData._id}`)
+      setReworkParameters(res.data || [])
+    } catch {
+      setReworkParameters([])
+      // toast.error("Unable to fetch rework parameters")  // Optional
+    }
+  }
   const handleClose = () => setOpen(false)
 
   return (
@@ -44,8 +51,6 @@ export default function ViewRework ({reworkData }) {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-
-
         <Container maxWidth='xl' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
@@ -65,34 +70,27 @@ export default function ViewRework ({reworkData }) {
                 Rework Management
               </Typography>
             </Box>
-            <Box component='form'>
+            <Box>
               <Grid container spacing={2}>
-   
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Batch Number'
                     name='batchNumber'
                     value={reworkData.batchNumber}
-                 
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                  >
-                 
-                  </TextField>
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                  />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                
                     label='Material Name'
                     name='materialName'
                     value={reworkData.materialName}
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                  >
-                   
-                  </TextField>
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                  />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -102,10 +100,8 @@ export default function ViewRework ({reworkData }) {
                     type='text'
                     value={reworkData.inspectionDate}
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                    InputLabelProps={{ shrink: true }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -115,7 +111,7 @@ export default function ViewRework ({reworkData }) {
                     name='inspectorName'
                     value={reworkData.inspectorName}
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -125,7 +121,7 @@ export default function ViewRework ({reworkData }) {
                     name='issueDescription'
                     value={reworkData.issueDescription}
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -135,7 +131,7 @@ export default function ViewRework ({reworkData }) {
                     name='proposedReworkAction'
                     value={reworkData.proposedReworkAction}
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -146,10 +142,8 @@ export default function ViewRework ({reworkData }) {
                     type='text'
                     value={reworkData.reworkStartDate}
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                    InputLabelProps={{ shrink: true }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -160,10 +154,8 @@ export default function ViewRework ({reworkData }) {
                     type='date'
                     value={reworkData.reworkCompletionDate}
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                    InputLabelProps={{ shrink: true }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -172,9 +164,8 @@ export default function ViewRework ({reworkData }) {
                     label='Quantity For Rework In Unit'
                     name='quantityForRework'
                     value={reworkData.quantityForRework}
-
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -183,9 +174,8 @@ export default function ViewRework ({reworkData }) {
                     label='Rework Status'
                     name='reworkStatus'
                     value={reworkData.reworkStatus}
-
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -195,12 +185,48 @@ export default function ViewRework ({reworkData }) {
                     name='comments'
                     value={reworkData.comments}
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
               </Grid>
-
             </Box>
+
+            {/* Rework Parameters Table */}
+            <Box sx={{ mt: 4 }}>
+              <Typography variant='h6' sx={{ mb: 2 }}>
+                Rework Parameters
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Step Name</TableCell>
+                      <TableCell>Description</TableCell>
+                      <TableCell>Result</TableCell>
+                      <TableCell>Remarks</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {reworkParameters.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={4} align="center">
+                          No rework steps/parameters found.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                    {reworkParameters.map((param, idx) => (
+                      <TableRow key={param._id || idx}>
+                        <TableCell>{param.stepName}</TableCell>
+                        <TableCell>{param.description}</TableCell>
+                        <TableCell>{param.result}</TableCell>
+                        <TableCell>{param.remarks}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+
           </Paper>
         </Container>
       </Modal>

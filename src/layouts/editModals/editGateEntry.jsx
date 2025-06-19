@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+import { UNIT_OPTIONS } from '../../utils/Unit'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -44,7 +45,11 @@ export default function EditGateEntryForm ({
     vendorName: gateEntryData.vendorName,
     date: formattedDate,
     docNumber:gateEntryData.docNumber ,
-    materials: gateEntryData.materials
+    materials: gateEntryData.materials?.map(m=>({
+      materialName:m.materialName||"",
+      quantity:m.quantity||"",
+      unit:m.unit||""  
+      }))||[]
   })
   const [errors, setErrors] = useState({})
   const navigate = useNavigate()
@@ -56,6 +61,10 @@ export default function EditGateEntryForm ({
       formData.materials.some(mat => !Number.isFinite(Number(mat.quantity)))
     ) {
       newErrors.quantity = 'Assigned Quantity must be a number'
+    }
+    if(formData.materials.some(mat=>!mat.unit))
+    {
+      newErrors.materials="Unit must be selected for all materials!"
     }
     if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
@@ -71,6 +80,7 @@ export default function EditGateEntryForm ({
   }
 
   function convertTo24HourFormat(time12h) {
+    if(!time12h ||typeof tiem12h!=='string'||!time12h.includes(":"))return ""
     const [time, modifier] = time12h.split(' ');
     let [hours, minutes] = time.split(':').map(Number);
   
@@ -110,7 +120,7 @@ export default function EditGateEntryForm ({
       ...prevFormData,
       materials: [
         ...prevFormData.materials,
-        { materialName: '', quantity: '' }
+        { materialName: '', quantity: '',unit:"" }
       ]
     }))
   }
@@ -336,6 +346,24 @@ export default function EditGateEntryForm ({
                         InputProps={{ style: { borderRadius: 8 } }}
                       />
                     </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        error={!!errors.unit}
+                        value={material.unit}
+                        helperText={errors.unit}
+                        onChange={e => handleMaterialChange(e, index)}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {UNIT_OPTIONS.map((unit)=>(
+                          <MenuItem key={unit} value={unit}>{unit}</MenuItem>
+                        ))}
+                      </TextField>
+                      </Grid>
                     <Grid
                       item
                       xs={12}

@@ -1,15 +1,10 @@
-import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { Input } from '@nextui-org/react'
 import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
-import axiosInstance from 'src/configs/axiosInstance'
-import toast, { Toaster } from 'react-hot-toast'
+import  { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import '../../global.css'
 import { TextField, MenuItem, Container, Grid, Paper } from '@mui/material'
 
@@ -35,7 +30,7 @@ export default function ViewPurchaseOrderCreation ({
   const formattedDate = orderData.date
   ? new Date(orderData.date).toISOString().split('T')[0]
   : ''
-
+  console.log("ORDERDATA",orderData)
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
@@ -120,20 +115,16 @@ export default function ViewPurchaseOrderCreation ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    select
-                    label='Name Of The Firm'
-                    name='nameOfTheFirm'
-                    value={orderData.nameOfTheFirm}
-                  
-                    variant='filled'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  >
-    
-                  </TextField>
-                </Grid>
+               <Grid item xs={6}>
+              <TextField
+             fullWidth
+              label='Name Of The Firm'
+              name='nameOfTheFirm'
+              value={orderData.nameOfTheFirm}
+              variant='filled'
+              InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+              />
+              </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -221,20 +212,16 @@ export default function ViewPurchaseOrderCreation ({
                 </Grid>
       
 
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    select
-                    label='Unit'
-                    name='unit'
-                    value={orderData.unit}
-                
-                    variant='filled'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  >
-           
-                  </TextField>
-                </Grid>
+               <Grid item xs={6}>
+  <TextField
+    fullWidth
+    label='Unit'
+    name='unit'
+    value={orderData.unit}
+    variant='filled'
+    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+  />
+</Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

@@ -196,7 +196,7 @@ export default function ViewGateEntry ({
                         label='Quantity'
                         name='quantity'
                      
-                        value={material.quantity}
+                        value={`${material.quantity} ${material.unit||"KG"}`}
                  
                     
                         variant='filled'

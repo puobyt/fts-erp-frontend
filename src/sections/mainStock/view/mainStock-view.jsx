@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
@@ -10,8 +9,6 @@ import TablePagination from '@mui/material/TablePagination';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { _users } from 'src/_mock';
-import { Iconify } from 'src/components/iconify';
-import { Scrollbar } from 'src/components/scrollbar';
 
 import { TableNoData } from '../table-no-data';
 
@@ -26,6 +23,7 @@ import LinearProgress, {
   linearProgressClasses
 } from '@mui/material/LinearProgress'
 import { varAlpha } from 'src/theme/styles'
+import ColorOfExpiry from '../../../utils/ColorOfExpiry';
 
 
 
@@ -93,11 +91,12 @@ useEffect(()=>{
         >
           New user
         </Button> */}
-
+     
       <MainStockForm setUpdate={setUpdate}/>
     
       </Box>
-
+     
+ <ColorOfExpiry/>
       <Card>
       {loading && renderFallback}
         <MainStockTableToolbar

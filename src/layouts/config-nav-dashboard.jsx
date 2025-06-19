@@ -1,5 +1,3 @@
-import { Children } from 'react';
-import { Label } from 'src/components/label';
 import { SvgColor } from 'src/components/svg-color';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
@@ -11,6 +9,7 @@ import ProductionQuantityLimitsTwoToneIcon from '@mui/icons-material/ProductionQ
 
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import VerifiedUserTwoToneIcon from '@mui/icons-material/VerifiedUserTwoTone';
+import TuneTwoToneIcon from '@mui/icons-material/TuneTwoTone';
 import RemoveRedEyeTwoToneIcon from '@mui/icons-material/RemoveRedEyeTwoTone';
 import VerifiedTwoToneIcon from '@mui/icons-material/VerifiedTwoTone';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -25,7 +24,6 @@ import AssignmentTurnedInTwoToneIcon from '@mui/icons-material/AssignmentTurnedI
 import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import ContentPasteSearchTwoToneIcon from '@mui/icons-material/ContentPasteSearchTwoTone';
-// ----------------------------------------------------------------------
 const icons = (IconComponent) => <IconComponent style={{ fontSize: 24 }} />;
 const icon = (name) => (
   <SvgColor width="100%" height="100%" src={`/assets/icons/navbar/${name}.svg`} />
@@ -82,6 +80,11 @@ export const navData = [
         title: 'Inward Quality Check',
         path: '/quality-control/quality-check',
         icon: icons(VerifiedUserTwoToneIcon),
+      },
+      {
+        title:"Qc Parameters",
+        path:"/quality-control/qcparameters",
+        icon:icons(TuneTwoToneIcon)
       },
       {
         title: 'Rework',

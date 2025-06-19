@@ -15,7 +15,6 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import { Link } from '@mui/material'
-// ----------------------------------------------------------------------
 
 export function TracebilityRow ({ setUpdate,setQC,setProduction, row, selected, onSelectRow }) {
 
@@ -25,8 +24,8 @@ export function TracebilityRow ({ setUpdate,setQC,setProduction, row, selected, 
     try {
       const result = await axiosInstance.get(
         `/search/production?materialCode=${materialCode}`
-      )
-
+      ) 
+      console.log("RESULT",result)
       if (result && result.data.productionData) {
         console.log('result for production',result.data.productionData)
         console.log('result for QC ',result.data.qcDetails)
@@ -53,7 +52,7 @@ export function TracebilityRow ({ setUpdate,setQC,setProduction, row, selected, 
 
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null)
-  }, [])
+  }, [])  
 
   const handleDelete = async () => {
     try {
@@ -73,7 +72,16 @@ export function TracebilityRow ({ setUpdate,setQC,setProduction, row, selected, 
       )
     }
   }
-
+  const handleRowClick=()=>{
+    if(row.qcDetails)
+    {
+      props.setQc(row.qcDetails)
+    }
+    else if(row.qcData)
+    {
+      props.setQc(row.qcData)
+    }
+  }
   const confirmDelete = () => {
     Swal.fire({
       title: 'Are you sure?',

@@ -1,23 +1,22 @@
-import * as React from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { Input } from '@nextui-org/react'
 import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
-import axios from 'axios'
 import {
   Radio,
   RadioGroup,
   FormControlLabel,
   FormControl,
-  FormLabel
+  FormLabel,
+  MenuItem
 } from '@mui/material'
 import '../../global.css'
-import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, Grid, Paper } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -35,7 +34,9 @@ export default function MainStockForm ({
   purchaseOrderData,
   materials
 }) {
+  const navigate=useNavigate()
   const [open, setOpen] = useState(false)
+  const [vendors,setVendors]=useState([])
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [grnType, setGrnType] = useState('')
@@ -51,7 +52,20 @@ export default function MainStockForm ({
     expiryDate: ''
   })
   const [errors, setErrors] = useState({})
+useEffect(()=>{
+  const fetchVendors=async()=>{
+    try {
+       const result=await axiosInstance.get('/vendorManagement')
+       console.log("result",result)
+       setVendors(result.data.data)
+    } catch (error) {
+      throw new Error("Failed to fetch venrods")
+    }
 
+  }
+  fetchVendors()
+ 
+},[])
   const validateForm = () => {
     const newErrors = {}
     if (!formData.materialName)
@@ -79,7 +93,7 @@ export default function MainStockForm ({
     if (!formData.expiryDate) newErrors.expiryDate = 'Expiry is required'
 
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0 // Returns true if there are no errors
+    return Object.keys(newErrors).length === 0 
   }
 
   const handleRadioChange = event => {
@@ -89,7 +103,9 @@ export default function MainStockForm ({
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
-
+  const handleAddVendor=()=>{
+  navigate
+  }
   const handleSubmit = async e => {
     e.preventDefault()
 
@@ -291,7 +307,15 @@ export default function MainStockForm ({
                     helperText={errors.vendorName}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                    select>
+                    {vendors.map((vendor)=>(
+                    <MenuItem key={vendor.id} value={vendor.name}>
+                    {vendor.name}
+                    </MenuItem>
+                    ))}
+                    <MenuItem value='addventor' onClick={handleAddVendor}>Add vendor</MenuItem>
+                    </TextField>
+                  
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

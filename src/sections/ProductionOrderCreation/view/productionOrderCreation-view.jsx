@@ -137,7 +137,7 @@ export function ProductionOrderCreationView () {
                   { id: 'productDescription', label: 'Product Description' },
                   { id: 'productName', label: 'Product Name' },
                   { id: 'productQuantity', label: 'Product Quantity' },
-                  { id: 'batch', label: 'Batch' },
+                  { id: 'batch', label: 'GRN' },
                   { id: 'materialList', label: 'Material List' },
                   { id: 'requiredQuantity', label: 'Required Quantity' },
                   { id: 'materialCode', label: 'Material Code' },

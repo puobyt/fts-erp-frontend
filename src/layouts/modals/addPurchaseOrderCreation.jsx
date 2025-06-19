@@ -1,18 +1,14 @@
-import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { Input } from '@nextui-org/react'
 import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import '../../global.css'
-import { TextField, MenuItem, Container, Grid, Paper } from '@mui/material'
-import { CircularProgress, Backdrop } from '@mui/material'
+import { TextField, MenuItem, Container, Grid, Paper, FormControlLabel,Checkbox } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -24,14 +20,14 @@ const style = {
   boxShadow: 24,
   p: 4
 }
-
 export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const [sameAsBilling,setSameAsBilling]=useState(false)
+  const [deliveryAddress,setDeliveryAddress]=useState('')
   const [loading, setLoading] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  // const [materials, setMaterials] = useState([])
   const [formData, setFormData] = useState({
     purchaseOrderNumber: '',
     date: '',
@@ -55,32 +51,17 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     vendorId: '',
     materialName: '',
     unit: '',
-    // batchNumber: '',
     mfgDate: '',
     quantity: '',
     price: '',
     pan: '',
     gst: ''
   })
-
   const handleFirmChange = event => {
     const selectedFirmName = event.target.value
-
-    // const matchingFirms = firms.filter(
-    //   firm => firm.nameOfTheFirm === selectedFirmName
-    // )
-
-    // if (matchingFirms.length > 0) {
-    //   const aggregatedMaterials = matchingFirms.flatMap(
-    //     firm => firm.material || []
-    //   )
-
-    //   setMaterials(aggregatedMaterials)
-    // }
     const selectedFirm = firms.find(
       firm => firm.nameOfTheFirm === selectedFirmName
     )
-
     if (selectedFirm) {
       setFormData({
         ...formData,
@@ -96,13 +77,13 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
       })
     }
   }
-
   const [errors, setErrors] = useState({})
-
   const validateForm = () => {
     const newErrors = {}
-    // if (!formData.purchaseOrderNumber)
-    //   newErrors.purchaseOrderNumber = 'Purchase Order Number is required'
+    if(!sameAsBilling && !deliveryAddress)
+    {
+      newErrors.deliveryAddress="Delivery address is required!  "
+    }
     if (!formData.date) newErrors.date = 'Date is required'
     if (!formData.nameOfTheFirm)
       newErrors.nameOfTheFirm = 'Name Of The Firm is required'
@@ -113,12 +94,9 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
       newErrors.contactPersonName = 'Contact Person Name is required'
     if (!formData.contactPersonDetails)
       newErrors.contactPersonDetails = 'Contact Person Details are required'
-    // if (!formData.vendorId) newErrors.vendorId = 'Vendor Id is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
     if (!formData.mfgDate) newErrors.mfgDate = 'Mfg Date is required'
-    // if (!formData.batchNumber)
-    //   newErrors.batchNumber = 'Batch Number is required'
     if (!formData.quantity) {
       newErrors.quantity = 'Quantity is required'
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
@@ -127,31 +105,31 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.pan) newErrors.pan = 'PAN is required'
     if (!formData.gst) newErrors.gst = 'GST is required'
-
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0 // Returns true if there are no errors
+    return Object.keys(newErrors).length === 0 
   }
-
   const handleChange = e => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
-
   const handleSubmit = async e => {
     e.preventDefault()
-
     if (!validateForm()) {
       return
     }
     try {
       setLoading(true)
+      const dataToSubmit={
+        ...formData,
+        deliveryAddress:sameAsBilling?formData.address:deliveryAddress
+      }
       const result = await axiosInstance.post(
         '/newPurchaseOrderCreation',
-        formData
+        dataToSubmit,
+        
       )
       if (result) {
         toast.success(result.data.message)
-
         setFormData({
           purchaseOrderNumber: '',
           date: '',
@@ -175,14 +153,12 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
           finalAmount: '',
           poDate: '',
           unit: '',
-          // batchNumber: '',
           mfgDate: '',
           quantity: '',
           price: '',
           pan: '',
           gst: ''
         })
-
         handleClose()
         setTimeout(() => {
           setLoading(false)
@@ -197,14 +173,12 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
       )
     }
   }
-
   const handleMaterialChange = (e, index) => {
     const { name, value } = e.target
     const updatedMaterials = [...formData.materials]
     updatedMaterials[index][name] = value
     setFormData({ ...formData, materials: updatedMaterials })
   }
-
   const addMaterial = () => {
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -254,9 +228,9 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
               component='form'
               onSubmit={handleSubmit}
               sx={{
-                maxHeight: '65vh', // Restrict height to 70% of viewport height
-                overflowY: 'auto', // Enable vertical scrolling
-                paddingRight: 2 // Add padding to avoid scrollbar overlap with content
+                maxHeight: '65vh', 
+                overflowY: 'auto', 
+                paddingRight: 2 
               }}
             >
               <Grid container spacing={2} sx={{ mt: 0.5 }}>
@@ -278,13 +252,11 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                         {firm.nameOfTheFirm}
                       </MenuItem>
                     ))}
-
-                    {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
                       onClick={() =>
                         navigate('/vendor-stock-management/vendor-management')
                       }
-                      sx={{ fontStyle: 'italic' }} // Optional styling
+                      sx={{ fontStyle: 'italic' }} 
                     >
                       Add New Firm +
                     </MenuItem>
@@ -339,7 +311,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -379,6 +350,28 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
+                <Grid item xs={6}>
+                  <FormControlLabel control={<Checkbox checked={sameAsBilling}
+                  onChange={(e)=>{
+                    setSameAsBilling(e.target.checked)
+                    if(e.target.checked)
+                    {
+                      setDeliveryAddress(formData.address)
+                    }
+                  }} 
+                  color='primary'/>
+                }  
+                label='Same as billing address'/>
+
+                <Grid item xs={6}>
+                  <TextField fullWidth label='Delivery Address' name='delivery address' value={sameAsBilling ? formData.address:deliveryAddress}
+                  onChange={(e)=>setDeliveryAddress(e.target.value)}
+                  disabled={sameAsBilling}
+                  error={!!errors.deliveryAddress}
+                  variant='outlined'
+                  InputProps={{style:{borderRadius:8}}}/>
+                </Grid>
+                </Grid>
                 {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -392,7 +385,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid> */}
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -424,7 +416,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                         {material}
                       </MenuItem>
                     ))}
-
                     <MenuItem
                       onClick={() => navigate('/vendor-management')}
                       sx={{ fontStyle: 'italic' }}
@@ -446,7 +437,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid> */}
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -460,7 +450,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -494,7 +483,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -538,7 +526,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -552,7 +539,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -566,7 +552,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -580,7 +565,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -594,7 +578,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -608,7 +591,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -622,7 +604,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -636,7 +617,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -650,7 +630,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -664,7 +643,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -691,7 +669,6 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth

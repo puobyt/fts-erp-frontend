@@ -2,22 +2,17 @@ import { useState, useCallback } from 'react';
 import { useRef } from 'react';
 import html2pdf from 'html2pdf.js';
 import PurchaseOrder from '../../components/pdf/purchaseOrder';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import EditPurchaseOrderCreationForm from '../../layouts/editModals/editPurchaseOrderCreation';
-import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance';
-import toast, { Toaster } from 'react-hot-toast'
-import generatePocpdf from '../../utils/purchaseOrderCreation';
+import toast from 'react-hot-toast'
 import ViewPurchaseOrderCreation from '../../layouts/viewModals/viewPurchaseOrder';
 
 // ----------------------------------------------------------------------
@@ -191,7 +186,6 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
         Download PDF
       </MenuItem>
 
-      {/* Hidden container for HTML2PDF */}
       <div style={{ display: 'none' }}>
         <PurchaseOrder pdfData={orderData} ref={pdfRef} />
         

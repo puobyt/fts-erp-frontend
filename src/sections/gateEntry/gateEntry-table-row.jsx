@@ -1,20 +1,16 @@
 import { useState, useCallback } from 'react';
 import moment from "moment";
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import EditGateEntryForm from '../../layouts/editModals/editGateEntry';
-import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import Swal from 'sweetalert2'
 import axiosInstance from 'src/configs/axiosInstance';
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import ViewGateEntry from '../../layouts/viewModals/viewGateEntry';
 // ----------------------------------------------------------------------
 
@@ -29,7 +25,8 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
     vehicleNumber:row.vehicleNumber,
     date:row.date,
     docNumber:row.docNumber,
-    materials:row.materials
+    materials:row.materials,
+    unit:row.unit
   
   }
   const handleOpenPopover = useCallback((event) => {
@@ -106,8 +103,7 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
                     key={index}
                     style={{ marginRight: '10px' }}
                   >
-                    <strong>{material.materialName}</strong>:{' '}
-                    {`${material.quantity} KG`}
+                    <strong>{material.materialName}</strong>{' '}
                   </div>
                   
                 ))}
@@ -115,7 +111,7 @@ export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectR
       
               <TableCell>
                 {row.materials.map((material, index) => (
-                  <div key={index}>{`${material.quantity} KG`}</div>
+                  <div key={index}>{`${material.quantity} ${material.unit||"KG"}`}</div>
                 ))}
               </TableCell>
            <TableCell>  {row.docNumber}</TableCell>
