@@ -168,7 +168,7 @@ const PurchaseOrder = forwardRef(({ pdfData }, ref) => {
                 ['Subtotal', `${pdfData.totalAmount}`],
                 ['Discount', `${pdfData.discount}`],
                 ['After Discount', `${pdfData.afterDiscount}`],
-                ['IGST 18%', `${pdfData.igst}`],
+                ['GST 18%', `${pdfData.igst}`],
                 ['Transportation Freight', `${pdfData.transportationFreight}`],
                 ['Round Off', `${pdfData.roundOff}`],
                 ['Total', `${pdfData.finalAmount}`],
