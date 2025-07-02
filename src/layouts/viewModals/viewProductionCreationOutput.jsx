@@ -1,18 +1,14 @@
 import * as React from 'react'
 import { useState } from 'react'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { Input } from '@nextui-org/react'
 import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
-import axiosInstance from 'src/configs/axiosInstance'
-import toast, { Toaster } from 'react-hot-toast'
-import axios from 'axios'
+import { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -26,9 +22,7 @@ const style = {
 }
 
 export default function ViewProductionOrderCreationOutputForm ({
-
   productionOrderOutputData,
-
 }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -53,8 +47,6 @@ export default function ViewProductionOrderCreationOutputForm ({
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-      
-
         <Container maxWidth='xl' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
@@ -76,29 +68,22 @@ export default function ViewProductionOrderCreationOutputForm ({
             </Box>
             <Box component='form' >
               <Grid container spacing={2}>
-              <Grid item xs={6}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
-
                     label='Product Name'
                     name='productName'
                     value={productionOrderOutputData.productName}
-                 
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true  }}
-                  >
-             
-                
-                  </TextField>
+                  />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Produced Quantity'
                     name='producedQuantity'
                     value={productionOrderOutputData.producedQuantity}
-                  
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true  }}
                   />
@@ -110,45 +95,36 @@ export default function ViewProductionOrderCreationOutputForm ({
                     name='productionCompletionDate'
                     type='text'
                     value={formattedDate}
-                
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true  }}
                   />
                 </Grid>
-      
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Storage Location for Output'
                     name='storageLocationforOutput'
                     value={productionOrderOutputData.storageLocationforOutput}
-                 
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true  }}
                   />
                 </Grid>
                 <Grid item xs={6}>
-                          <TextField
-                            fullWidth
-                       
-                            label='Batch Number For Output'
-                            name='batchNumberforOutput'
-                            value={productionOrderOutputData.batchNumberforOutput}
-                          
-                            variant='filled'
-                            InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                          >
-                    
-                     
-                          </TextField>
-                        </Grid>
+                  <TextField
+                    fullWidth
+                    label='Batch Number For Output'
+                    name='batchNumberforOutput'
+                    value={productionOrderOutputData.batchNumberforOutput}
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                  />
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Production Notes'
                     name='productionNotes'
                     value={productionOrderOutputData.productionNotes}
-                 
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true }}
                   />
@@ -159,7 +135,6 @@ export default function ViewProductionOrderCreationOutputForm ({
                     label='Yield'
                     name='Yield'
                     value={productionOrderOutputData.Yield}
-                 
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true }}
                   />
@@ -170,7 +145,6 @@ export default function ViewProductionOrderCreationOutputForm ({
                     label='Output Quality Rating'
                     name='outputQualityRating'
                     value={productionOrderOutputData.outputQualityRating}
-                 
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true }}
                   />
@@ -181,13 +155,57 @@ export default function ViewProductionOrderCreationOutputForm ({
                     label='Output Handling Instructions'
                     name='outputHandlingInstructions'
                     value={productionOrderOutputData.outputHandlingInstructions}
-               
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true }}
                   />
                 </Grid>
+                {/* Packing Materials Section */}
+                {Array.isArray(productionOrderOutputData.packingMaterials) &&
+                  productionOrderOutputData.packingMaterials.length > 0 && (
+                    <>
+                      <Grid item xs={12} sx={{ mt: 3 }}>
+                        <Typography
+                          variant='subtitle2'
+                          fontWeight='bold'
+                          sx={{ mb: 1 }}
+                        >
+                          Packing Materials
+                        </Typography>
+                      </Grid>
+                      {productionOrderOutputData.packingMaterials.map((pm, idx) => (
+                        <React.Fragment key={idx}>
+                          <Grid item xs={4}>
+                            <TextField
+                              fullWidth
+                              label='Type'
+                              value={pm.type}
+                              variant='filled'
+                              InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                            />
+                          </Grid>
+                          <Grid item xs={4}>
+                            <TextField
+                              fullWidth
+                              label='Quantity'
+                              value={pm.quantity}
+                              variant='filled'
+                              InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                            />
+                          </Grid>
+                          <Grid item xs={4}>
+                            <TextField
+                              fullWidth
+                              label='Unit'
+                              value={pm.unit}
+                              variant='filled'
+                              InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                            />
+                          </Grid>
+                        </React.Fragment>
+                      ))}
+                    </>
+                  )}
               </Grid>
-       
             </Box>
           </Paper>
         </Container>

@@ -92,7 +92,7 @@ try{
    
 
 }catch(err){
-    toast.success(err.response.data.message);
+    toast.error(err.response.data.message);
     console.error('Error occured in adding vendor management client side');
 }
     

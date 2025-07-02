@@ -85,7 +85,7 @@ export function GateEntryView () {
     <DashboardContent>
       <Box display='flex' alignItems='center' mb={5}>
         <Typography variant='h4' flexGrow={1}>
-          Gate Entry1
+          Gate Entry
         </Typography>
         {/* <Button
           variant="contained"

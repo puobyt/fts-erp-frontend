@@ -40,7 +40,8 @@ export function ProductionOrderCreationOutputTableRow ({
     productionNotes: row.productionNotes,
     Yield: row.Yield,
     outputQualityRating: row.outputQualityRating,
-    outputHandlingInstructions: row.outputHandlingInstructions
+    outputHandlingInstructions: row.outputHandlingInstructions,
+    packingMaterials:row.packingMaterials,
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)

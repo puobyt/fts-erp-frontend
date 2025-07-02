@@ -27,6 +27,7 @@ import LinearProgress, {
   linearProgressClasses
 } from '@mui/material/LinearProgress'
 import { varAlpha } from 'src/theme/styles'
+import ColorOfExpiry from '../../../utils/ColorOfExpiry';
 
 
 
@@ -90,7 +91,7 @@ useEffect(()=>{
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-      Current Stock Management
+      Current Stock Management1
         </Typography>
         {/* <Button
           variant="contained"
@@ -99,12 +100,13 @@ useEffect(()=>{
         >
           New user
         </Button> */}
-
+       
         <CurrentStockForm setUpdate={setUpdate} purchaseOrderData={purchaseOrderData} materials={materials} vendors={vendors}/>
     
       </Box>
 
       <Card>
+         <ColorOfExpiry/>
       {loading && renderFallback}
         <CurrentStockTableToolbar
            sort={table.onSort}

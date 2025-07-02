@@ -67,7 +67,8 @@ export default function EditPurchaseOrderCreationForm ({
     quantity: orderData.quantity,
     price: orderData.price,
     pan: orderData.pan,
-    gst: orderData.gst
+    gst: orderData.gst,
+    termsAndConditions:orderData.termsAndConditions
   })
   const [errors, setErrors] = useState({})
   const handleFirmChange = event => {
@@ -174,7 +175,8 @@ export default function EditPurchaseOrderCreationForm ({
             quantity: '',
             price: '',
             pan: '',
-            gst: ''
+            gst: '',
+            termsAndConditions:''
           })
           setUpdate(prev => !prev)
         })
@@ -658,6 +660,22 @@ export default function EditPurchaseOrderCreationForm ({
                     onChange={handleChange}
                     error={!!errors.poDate}
                     helperText={errors.poDate}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Terms and conditions'
+                    name='termsAndConditions'
+                    value={formData.termsAndConditions}
+                    onChange={handleChange}
+                    error={!!errors.termsAndConditions}
+                    helperText={errors.termsAndConditions}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{

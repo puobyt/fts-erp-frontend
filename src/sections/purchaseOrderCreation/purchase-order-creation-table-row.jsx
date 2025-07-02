@@ -63,7 +63,8 @@ export function PurchaseOrderCreationTableRow({setUpdate,firms, row, selected, o
     quantity:row.quantity,
     price:row.price,
     pan:row.pan,
-    gst:row.gst
+    gst:row.gst,
+    termsAndConditions:row.termsAndConditions
   }
   const handleOpenPopover = useCallback((event) => {
     setOpenPopover(event.currentTarget);

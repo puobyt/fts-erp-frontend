@@ -210,6 +210,21 @@ export default function ViewPurchaseOrderCreation ({
                     }}
                   />
                 </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Terms and conditions'
+                    name='termsAndConditions'
+                    type='text'
+                    value={orderData.termsAndConditions}
+                
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                  />
+                </Grid>
       
 
                <Grid item xs={6}>

@@ -79,7 +79,7 @@ const PurchaseOrder = forwardRef(({ pdfData }, ref) => {
                 C13 AND C14, SIPCOT INDUSTRIAL AREA,
                 <br />
                 KRISHNAGIRI DISTRICT, TAMIL NADU - 635 304
-                <br />
+                <br />  
                 GST: 33AACCF4218J0ZH
                 <br />
                 PH: +91 73566 89998
@@ -158,11 +158,7 @@ const PurchaseOrder = forwardRef(({ pdfData }, ref) => {
         <Grid item>
           <Typography fontWeight="bold"> Terms & Conditions</Typography>
           <Typography variant="body2">
-            1: *************
-            <br />
-            2: ************
-            <br />
-            3: *********
+            {pdfData.termsAndConditions}
           </Typography>
         </Grid>
         <Grid item>

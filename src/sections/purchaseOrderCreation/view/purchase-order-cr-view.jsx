@@ -44,6 +44,7 @@ const fetchPurchaseOrderCreation = async ()=>{
 try{
   setLoading(true)
 const result = await axiosInstance.get('/purchaseOrderCreation');
+console.log('purchase order',result)
 if(result.data.data){
   setPurchaseCreations(result.data.data);
   setFirms(result.data.firms);
