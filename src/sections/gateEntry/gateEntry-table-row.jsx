@@ -18,17 +18,24 @@ import ViewGateEntry from '../../layouts/viewModals/viewGateEntry';
 
 export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
-  const gateEntryData= {
-    gateEntryId:row._id,
-    entryTime:row.entryTime,
-    vendorName:row.vendorName,
-    vehicleNumber:row.vehicleNumber,
-    date:row.date,
-    docNumber:row.docNumber,
-    materials:row.materials,
-    unit:row.unit
-  
-  }
+  const gateEntryData = {
+  gateEntryId: row._id,
+  entryTime: row.entryTime,
+  vendorName: row.vendorName,
+  vehicleNumber: row.vehicleNumber,
+  date: row.date,
+  docNumber: row.docNumber,
+  returnReason:row.returnReason,
+  returnedBy:row.returnedBy,
+  materials: row.materials,
+  gateType: row.gateType,
+  qcDocuments: row.qcDocuments,
+  returnType: row.returnType,
+  replacementRequired: row.replacementRequired,
+  isPartialReturn: row.isPartialReturn,
+  removed: row.removed,
+  enabled: row.enabled,
+};
   const handleOpenPopover = useCallback((event) => {
     setOpenPopover(event.currentTarget);
   }, []);

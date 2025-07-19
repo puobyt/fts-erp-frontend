@@ -1,220 +1,225 @@
 import * as React from 'react'
 import { useState } from 'react'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import { Input } from '@nextui-org/react'
-import Modal from '@mui/material/Modal'
+import {
+  Box,
+  Typography,
+  Modal,
+  TextField,
+  Container,
+  MenuItem,
+  Grid,
+  Paper,
+  Button,
+  Link
+} from '@mui/material'
 import { Iconify } from 'src/components/iconify'
-import axiosInstance from 'src/configs/axiosInstance'
-import toast, { Toaster } from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 
-import axios from 'axios'
-import '../../global.css'
-import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 600,
+  maxHeight: '90vh',
+  overflowY: 'auto',
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
-  p: 4
+  p: 4,
+  borderRadius: 2
 }
 
-export default function ViewGateEntry ({
-  setUpdate,
-  gateEntryData
-}) {
+export default function ViewGateEntry({ setUpdate, gateEntryData }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const formattedDate = gateEntryData.date
-    ? new Date(gateEntryData.date).toISOString().split('T')[0]
-    : ''
+  console.log('gateentrydata',gateEntryData)
 
- 
+  const isQcReturn = gateEntryData.gateType === 'qc_return_entry'
+  const isExit = gateEntryData.gateType === 'return_exit'
+  const isEntry = gateEntryData.gateType === 'entry'
 
-  function convertTo24HourFormat(time12h) {
-    const [time, modifier] = time12h.split(' ');
-    let [hours, minutes] = time.split(':').map(Number);
-  
-    if (modifier === 'PM' && hours < 12) {
-      hours += 12;
-    }
-    if (modifier === 'AM' && hours === 12) {
-      hours = 0;
-    }
-  
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-  }
-  
-  
+  const fileUrl = (path) => `${import.meta.env.VITE_BACKEND_URL}/${path.replace(/\\/g, '/')}`
+
   return (
-    <div>
+    <>
       <Toaster position='top-center' reverseOrder={false} />
       <MenuItem onClick={handleOpen}>
-         <Iconify icon='solar:eye-bold' />
+        <Iconify icon='solar:eye-bold' />
         View
       </MenuItem>
-      <Modal
+
+      <Modal  
         open={open}
         onClose={handleClose}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
+        aria-labelledby='modal-title'
+        aria-describedby='modal-description'
       >
-        {/* <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box> */}
-
         <Container maxWidth='xl' sx={{ mt: 8 }}>
-          <Paper
-            elevation={4}
-            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 1 }}
-          >
+          <Paper elevation={4} sx={style}>
             <Box sx={{ textAlign: 'center', mb: 3 }}>
-              <Typography
-                component='h1'
-                variant='h5'
-                fontWeight='bold'
-                color='primary'
-                gutterBottom
-              >
+              <Typography variant='h5' fontWeight='bold' color='primary' gutterBottom>
                 View Gate Entry Details
               </Typography>
               <Typography variant='body2' color='textSecondary'>
-                Gate Entry Management
+                Gate Type: {gateEntryData.gateType?.replace(/_/g, ' ')}
               </Typography>
             </Box>
-            <Box component='form' 
-                  sx={{
-                    maxHeight: '65vh',
-                    overflowY: 'auto',
-                    paddingRight: 2
-                  }}>
-              <Grid container spacing={2}  sx={{ mt: 0.1 }}>
-         
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Entry Time'
-                    name='entryTime'
-                    type='text'
-                    value={gateEntryData.entryTime}
-                 
-                    variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                  />
-                </Grid>
+
+            <Grid container spacing={2}>
+              {/* Entry / Exit Time */}
+             {(gateEntryData.entryTime || gateEntryData.exitTime) && (
+  <Grid item xs={6}>
+    <TextField
+      fullWidth
+      label={(isQcReturn || isExit) ? 'Exit Time' : 'Entry Time'}
+      value={(isQcReturn || isExit) ? gateEntryData.exitTime : gateEntryData.entryTime}
+      variant='filled'
+      InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+    />
+  </Grid>
+)}
+
+              {/* Vehicle Number */}
+              {gateEntryData.vehicleNumber && (
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Vehicle Number'
-                    name='vehicleNumber'
                     value={gateEntryData.vehicleNumber}
-                  
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
+              )}
+
+              {/* Document Number */}
+              {gateEntryData.docNumber && (
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Doc Number'
-                    name='docNumber'
                     value={gateEntryData.docNumber}
-                 
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
+              )}
+
+              {/* Vendor */}
+              {gateEntryData.vendorName && (
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Vendor Name'
-                    name='vendorName'
                     value={gateEntryData.vendorName}
-                 
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                  >
-                 
-                  </TextField>
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                  />
                 </Grid>
+              )}
+
+              {/* Date */}
+              {gateEntryData.date && (
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Date'
-                    name='date'
                     type='date'
-                    value={gateEntryData.date}
-                
+                    value={new Date(gateEntryData.date).toISOString().split('T')[0]}
+                    InputLabelProps={{ shrink: true }}
                     variant='filled'
-                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
-                {gateEntryData.materials?.map((material, index) => (
-                  <React.Fragment key={index}>
+              )}
+
+              {/* QC-specific fields */}
+              {(isQcReturn || isExit) && (
+  <>
+    <Grid item xs={6}>
+      <TextField
+        fullWidth
+        label='Return Reason'
+        value={gateEntryData.returnReason}
+        variant='filled'
+        InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+      />
+    </Grid>
+
+    <Grid item xs={6}>
+      <TextField
+        fullWidth
+        label='Returned By'
+        value={gateEntryData.returnedBy}
+        variant='filled'
+        InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+      />
+    </Grid>
+  </>
+)}
+
+
+              {/* Materials */}
+              {gateEntryData.materials?.length > 0 &&
+                gateEntryData.materials.map((mat, idx) => (
+                  <React.Fragment key={idx}>
                     <Grid item xs={6}>
                       <TextField
                         fullWidth
-                    
-                        label='Materials Name'
-                        name='materialName'
-                        value={material.materialName}
-                   
+                        label='Material Name'
+                        value={mat.materialName}
                         variant='filled'
-                        InputProps={{ style: { borderRadius: 8 },readOnly:true }}
-                      >
-                
-                  
-                        {/* {materialNames?.map((materialName, index) => (
-                                          <MenuItem
-                                            key={`product-${index}`}
-                                            value={materialName.materialsList}
-                                          >
-                                            {materialName.materialsList}
-                                          </MenuItem>
-                                        ))} */}
-             
-                      </TextField>
+                        InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                      />
                     </Grid>
                     <Grid item xs={6}>
                       <TextField
                         fullWidth
                         label='Quantity'
-                        name='quantity'
-                     
-                        value={`${material.quantity} ${material.unit||"KG"}`}
-                 
-                    
+                        value={`${mat.returnedQuantity || mat.quantity || '0'} ${mat.unit || ''}`}
                         variant='filled'
-                        InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                        InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                       />
                     </Grid>
-         
                   </React.Fragment>
                 ))}
 
-        
-  
-              </Grid>
+              {/* QC Documents */}
+              {gateEntryData.qcDocuments?.length > 0 &&
+                gateEntryData.qcDocuments.map((doc, i) => (
+                  <Grid item xs={12} key={i}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        border: '1px solid #ccc',
+                        p: 1.5,
+                        borderRadius: 2,
+                        backgroundColor: '#fff'
+                      }}
+                    >
+                      <Typography variant='body2'>{doc.originalName}</Typography>
+                     <Button
+  variant="outlined"
+  size="small"
+  component={Link}
+  href={fileUrl(doc.path)}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  View
+</Button>
 
-            </Box>
+                    </Box>
+                  </Grid>
+                ))}
+            </Grid>
           </Paper>
         </Container>
       </Modal>
-    </div>
+    </>
   )
 }

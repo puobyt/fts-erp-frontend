@@ -1,17 +1,34 @@
-import * as React from 'react'
-import { useState, useEffect } from 'react'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import { Input } from '@nextui-org/react'
-import Modal from '@mui/material/Modal'
-import { Iconify } from 'src/components/iconify'
-import axiosInstance from 'src/configs/axiosInstance'
-import toast, { Toaster } from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import '../../global.css'
-import { TextField, MenuItem, Container, Grid, Paper } from '@mui/material'
+import * as React from 'react';
+import { useState, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import { Iconify } from 'src/components/iconify';
+import axiosInstance from 'src/configs/axiosInstance';
+import toast, { Toaster } from 'react-hot-toast';
+import IconButton from '@mui/material/IconButton';
+import { useNavigate } from 'react-router-dom';
+import '../../global.css';
+import { TextField, MenuItem, Container, Grid, Paper, FormControlLabel, Checkbox } from '@mui/material';
+
+// Delivery address options
+const DELIVERY_ADDRESSES = [
+  {
+    value: 'Dharmapuri',
+    label: 'Dharmapuri (Main Office)',
+    address: 'FRUITION NATURAL EXTRACTS PVT LTD, C13 AND C14, SIPCOT INDUSTRIAL AREA, KRISHNAGIRI DISTRICT, TAMIL NADU - 635 304'
+  },
+  {
+    value: 'Pathalam',
+    label: 'Pathalam (Kerala Office)',
+    address: 'FRUITION NATURAL EXTRACTS PVT LTD, Pathalam Industrial Area, Ernakulam, Kerala - 682303'
+  },
+  {
+    value: 'custom',
+    label: 'Custom Address'
+  }
+];
 
 const style = {
   position: 'absolute',
@@ -22,21 +39,49 @@ const style = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
-  p: 4
-}
+  p: 4,
+};
 
-export default function EditPurchaseOrderCreationForm ({
-  setUpdate,
-  orderData,
-  firms
-}) {
-  const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
-  const formattedDate = orderData.date
-    ? new Date(orderData.date).toISOString().split('T')[0]
-    : ''
+export default function EditPurchaseOrderCreationForm({ setUpdate, orderData, firms }) {
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Delivery address state
+  const [sameAsBilling, setSameAsBilling] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [selectedDeliveryOption, setSelectedDeliveryOption] = useState('');
+
+  // Initialize delivery address from orderData
+  useEffect(() => {
+    if (open && orderData.deliveryAddress) {
+      const predefinedAddress = DELIVERY_ADDRESSES.find(addr => 
+        addr.address === orderData.deliveryAddress
+      );
+      
+      if (predefinedAddress) {
+        setSelectedDeliveryOption(predefinedAddress.value);
+        setDeliveryAddress(predefinedAddress.address);
+      } else {
+        setSelectedDeliveryOption('custom');
+        setDeliveryAddress(orderData.deliveryAddress);
+      }
+    }
+  }, [open, orderData.deliveryAddress]);
+
+  // Ensure array for terms
+  const initialTerms = Array.isArray(orderData.termsAndConditions)
+    ? orderData.termsAndConditions
+    : (orderData.termsAndConditions
+        ? orderData.termsAndConditions.split('\n').filter(x=>x.trim()!=='')
+        : ['']);
+
+  const [terms, setTerms] = useState(initialTerms);
+
+  const formattedDate = orderData.date ? new Date(orderData.date).toISOString().split('T')[0] : '';
+
   const [formData, setFormData] = useState({
     authPassword: '',
     orderId: orderData.orderId,
@@ -60,91 +105,170 @@ export default function EditPurchaseOrderCreationForm ({
     contactPersonName: orderData.contactPersonName,
     contactPersonDetails: orderData.contactPersonDetails,
     vendorId: orderData.vendorId,
-    materialName: orderData.materialName,
-    unit:orderData.unit,
-    // batchNumber: orderData.batchNumber,
-    mfgDate: orderData.mfgDate,
-    quantity: orderData.quantity,
-    price: orderData.price,
     pan: orderData.pan,
     gst: orderData.gst,
-    termsAndConditions:orderData.termsAndConditions
-  })
-  const [errors, setErrors] = useState({})
-  const handleFirmChange = event => {
-    const selectedFirmName = event.target.value
-    const selectedFirm = firms.find(
-      firm => firm.nameOfTheFirm === selectedFirmName
-    )
+    termsAndConditions: initialTerms,
+    materials: orderData.materials && Array.isArray(orderData.materials)
+      ? orderData.materials
+      : [
+        {
+          materialName: "",
+          mfgDate: "",
+          price: "",
+          unit: "",
+          quantity: ""
+        }
+      ]
+  });
 
-    // Update form values with selected firm's details
+  const handleDeliveryOptionChange = (event) => {
+    const option = event.target.value;
+    setSelectedDeliveryOption(option);
+    
+    if (option !== 'custom') {
+      const selectedAddress = DELIVERY_ADDRESSES.find(addr => addr.value === option);
+      setDeliveryAddress(selectedAddress.address);
+    } else {
+      setDeliveryAddress('');
+    }
+  };
+
+  const handleMaterialChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedMaterials = [...formData.materials];
+    updatedMaterials[index][name] = value;
+    setFormData({ ...formData, materials: updatedMaterials });
+  };
+
+  const addMaterial = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      materials: [
+        ...prevFormData.materials,
+        { materialName: '', quantity: '', unit: '', price: '', mfgDate: '' }
+      ]
+    }));
+  };
+
+  const removeMaterial = index => {
+    const updatedMaterials = formData.materials.filter((_, i) => i !== index);
+    setFormData({ ...formData, materials: updatedMaterials });
+  };
+
+  const [errors, setErrors] = useState({});
+
+  // Sync terms from orderData when modal opens
+  useEffect(() => {
+    if (open && orderData.termsAndConditions) {
+      let arr = Array.isArray(orderData.termsAndConditions)
+        ? orderData.termsAndConditions
+        : orderData.termsAndConditions.split('\n').filter(x=>x.trim()!=='');
+      setTerms(arr.length > 0 ? arr : ['']);
+      setFormData((prev) => ({
+        ...prev,
+        termsAndConditions: arr.length > 0 ? arr : [''],
+      }));
+    }
+  }, [open, orderData.termsAndConditions]);
+
+  // Sync formData.termsAndConditions with terms before submit and on edit
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      termsAndConditions: terms,
+    }));
+  }, [terms]);
+
+  const handleFirmChange = (event) => {
+    const selectedFirmName = event.target.value;
+    const selectedFirm = firms.find((firm) => firm.nameOfTheFirm === selectedFirmName);
+
     if (selectedFirm) {
-      setFormData({
-        ...formData,
+      setFormData((prev) => ({
+        ...prev,
         nameOfTheFirm: selectedFirm.nameOfTheFirm,
         contactNumber: selectedFirm.contactNumber,
         pan: selectedFirm.pan,
         gst: selectedFirm.gst,
         address: selectedFirm.address,
-        materialName: selectedFirm.material,
         contactPersonName: selectedFirm.contactPersonName,
         contactPersonDetails: selectedFirm.contactPersonDetails,
-        vendorId: selectedFirm._id
-      })
+        vendorId: selectedFirm._id,
+      }));
     }
-  }
+  };
+
   const validateForm = () => {
-    const newErrors = {}
-    if (!formData.authPassword)
-      newErrors.authPassword = 'Authorization Password is required'
-    // if (!formData.purchaseOrderNumber)
-    //   newErrors.purchaseOrderNumber = 'Purchase Order Number is required'
-    if (!formData.date) newErrors.date = 'Date is required'
-    if (!formData.nameOfTheFirm)
-      newErrors.nameOfTheFirm = 'Name Of The Firm is required'
-    if (!formData.address) newErrors.address = 'Address is required'
-    if (!formData.contactNumber)
-      newErrors.contactNumber = 'Contact Number is required'
-    if (!formData.contactPersonName)
-      newErrors.contactPersonName = 'Contact Person Name is required'
-    if (!formData.contactPersonDetails)
-      newErrors.contactPersonDetails = 'Contact Person Details are required'
-    // if (!formData.vendorId) newErrors.vendorId = 'Vendor Id is required'
-    if (!formData.materialName)
-      newErrors.materialName = 'Material Name is required'
-    if (!formData.mfgDate) newErrors.mfgDate = 'Mfg Date is required'
-    // if (!formData.batchNumber)
-    //   newErrors.batchNumber = 'Batch Number is required'
-    if (!formData.quantity) {
-      newErrors.quantity = 'Quantity is required'
-    } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
-      newErrors.quantity = 'Quantity must be a valid number'
+    const newErrors = {};
+    if (!formData.authPassword) newErrors.authPassword = 'Authorization Password is required';
+    if (!formData.date) newErrors.date = 'Date is required';
+    if (!formData.nameOfTheFirm) newErrors.nameOfTheFirm = 'Name Of The Firm is required';
+    if (!formData.address) newErrors.address = 'Address is required';
+    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required';
+    if (!formData.contactPersonName) newErrors.contactPersonName = 'Contact Person Name is required';
+    if (!formData.contactPersonDetails) newErrors.contactPersonDetails = 'Contact Person Details are required';
+    if (!formData.pan) newErrors.pan = 'PAN is required';
+    if (!formData.gst) newErrors.gst = 'GST is required';
+
+    // Delivery Address validation
+    if (!sameAsBilling) {
+      if (!selectedDeliveryOption) {
+        newErrors.deliveryOption = 'Please select a delivery option';
+      } else if (selectedDeliveryOption === 'custom' && !deliveryAddress.trim()) {
+        newErrors.deliveryAddress = 'Custom delivery address is required';
+      }
     }
-    if (!formData.price) newErrors.price = 'Price is required'
-    if (!formData.pan) newErrors.pan = 'PAN is required'
-    if (!formData.gst) newErrors.gst = 'GST is required'
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0 // Returns true if there are no errors
-  }
-
-  const handleChange = e => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
-
-  const handleSubmit = async e => {
-    e.preventDefault()
-
-    if (!validateForm()) {
-      return
+    // Validate materials array
+    if (!formData.materials || !formData.materials.length) {
+      newErrors.materials = "At least one material is needed";
+    } else {
+      formData.materials.forEach((mat, idx) => {
+        if (!mat.materialName) newErrors[`materials_${idx}_materialName`] = "Material Name is required";
+        if (!mat.quantity) newErrors[`materials_${idx}_quantity`] = "Quantity is required";
+        if (!mat.unit) newErrors[`materials_${idx}_unit`] = "Unit is required";
+        if (!mat.price) newErrors[`materials_${idx}_price`] = "Price is required";
+        if (!mat.mfgDate) newErrors[`materials_${idx}_mfgDate`] = "Mfg Date is required";
+      });
     }
+
+    // Terms validation
+    if (!terms || !Array.isArray(terms) || terms.length === 0 || terms.every(term => term.trim() === '')) {
+      newErrors.termsAndConditions = 'At least one term is required';
+    } else {
+      terms.forEach((term, idx) => {
+        if (!term || !term.trim()) {
+          newErrors[`term_${idx}`] = 'This term cannot be empty';
+        }
+      });
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
     try {
+      const updatedData = { 
+        ...formData, 
+        termsAndConditions: terms,
+        deliveryAddress: sameAsBilling ? formData.address : deliveryAddress
+      };
+      
       await axiosInstance
-        .put('/editPurchaseOrderCreation', formData)
-        .then(result => {
-          toast.success(result.data.message)
-          handleClose()
+        .put('/editPurchaseOrderCreation', updatedData)
+        .then((result) => {
+          toast.success(result.data.message);
+          handleClose();
           setFormData({
             authPassword: '',
             orderId: '',
@@ -156,7 +280,6 @@ export default function EditPurchaseOrderCreationForm ({
             contactPersonName: '',
             contactPersonDetails: '',
             vendorId: '',
-            materialName: '',
             quotationReferenceNumber: '',
             hsn: '',
             description: '',
@@ -169,130 +292,141 @@ export default function EditPurchaseOrderCreationForm ({
             roundOff: '',
             finalAmount: '',
             poDate: '',
-            unit: '',
-            // batchNumber: '',
-            mfgDate: '',
-            quantity: '',
-            price: '',
             pan: '',
             gst: '',
-            termsAndConditions:''
-          })
-          setUpdate(prev => !prev)
+            termsAndConditions: [''],
+            materials: [
+              {
+                materialName: "",
+                mfgDate: "",
+                price: "",
+                unit: "",
+                quantity: ""
+              }
+            ]
+          });
+          setTerms(['']);
+          setDeliveryAddress('');
+          setSelectedDeliveryOption('');
+          setSameAsBilling(false);
+          setUpdate((prev) => !prev);
         })
-        .catch(err => {
-          toast.error(err.response.data.message)
-          console.error(
-            'Error occured in adding new purchase order creation client side',
-            err.message
-          )
-        })
+        .catch((err) => {
+          toast.error(err?.response?.data?.message || 'An error occurred');
+        });
     } catch (err) {
-      console.error(
-        'Error occured in adding new purchase order creation client side',
-        err.message
-      )
+      toast.error('Error occurred during update');
     }
-  }
+  };
+
   return (
     <div>
-      <Toaster position='top-center' reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
       <MenuItem onClick={handleOpen}>
-        <Iconify icon='solar:pen-bold' />
+        <Iconify icon="solar:pen-bold" />
         Edit
       </MenuItem>
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
-        <Container maxWidth='lg' sx={{ mt: 8 }}>
-          <Paper
-            elevation={4}
-            sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 2 }}
-          >
+        <Container maxWidth="lg" sx={{ mt: 8 }}>
+          <Paper elevation={4} sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
             <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Typography
-                component='h1'
-                variant='h5'
-                fontWeight='bold'
-                color='primary'
+                component="h1"
+                variant="h5"
+                fontWeight="bold"
+                color="primary"
                 gutterBottom
               >
                 Edit Purchase Order Creation
               </Typography>
-              <Typography variant='body2' color='textSecondary'>
+              <Typography variant="body2" color="textSecondary">
                 Purchase Order Management
               </Typography>
             </Box>
             <Box
-              component='form'
+              component="form"
               onSubmit={handleSubmit}
               sx={{
-                maxHeight: '65vh', // Restrict height to 70% of viewport height
-                overflowY: 'auto', // Enable vertical scrolling
-                paddingRight: 2 // Add padding to avoid scrollbar overlap with content
+                maxHeight: '65vh',
+                overflowY: 'auto',
+                paddingRight: 2,
               }}
             >
               <Grid container spacing={2} sx={{ mt: 0.5 }}>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Authorization Password'
-                    type='password'
-                    name='authPassword'
+                    label="Authorization Password"
+                    type={showPassword ? 'text' : 'password'}
+                    name="authPassword"
                     value={formData.authPassword}
                     onChange={handleChange}
                     error={!!errors.authPassword}
                     helperText={errors.authPassword}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    variant="outlined"
+                    InputProps={{
+                      style: { borderRadius: 8 },
+                      endAdornment: (
+                        <IconButton
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                          onClick={() => setShowPassword((show) => !show)}
+                          edge="end"
+                          tabIndex={-1}
+                        >
+                          <Iconify icon={showPassword ? "solar:eye-closed-bold" : "solar:eye-bold"} />
+                        </IconButton>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Purchase Order Number'
-                    name='purchaseOrderNumber'
+                    label="Purchase Order Number"
+                    name="purchaseOrderNumber"
                     value={formData.purchaseOrderNumber}
                     onChange={handleChange}
                     error={!!errors.purchaseOrderNumber}
                     helperText={errors.purchaseOrderNumber}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{
                       style: { borderRadius: 8, marginTop: '2px' },
-                      placeholder: 'Auto-Generate'
+                      placeholder: 'Auto-Generate',
                     }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Date'
-                    name='date'
-                    type='date'
+                    label="Date"
+                    name="date"
+                    type="date"
                     value={formData.date}
                     onChange={handleChange}
                     error={!!errors.date}
                     helperText={errors.date}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Address'
-                    name='address'
+                    label="Address"
+                    name="address"
                     value={formData.address}
                     onChange={handleChange}
                     error={!!errors.address}
                     helperText={errors.address}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
@@ -300,13 +434,13 @@ export default function EditPurchaseOrderCreationForm ({
                   <TextField
                     fullWidth
                     select
-                    label='Name Of The Firm'
-                    name='nameOfTheFirm'
+                    label="Name Of The Firm"
+                    name="nameOfTheFirm"
                     value={formData.nameOfTheFirm}
                     onChange={handleFirmChange}
                     error={!!errors.nameOfTheFirm}
                     helperText={errors.nameOfTheFirm}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
                     {firms.map((firm, index) => (
@@ -314,13 +448,9 @@ export default function EditPurchaseOrderCreationForm ({
                         {firm.nameOfTheFirm}
                       </MenuItem>
                     ))}
-
-                    {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
-                      onClick={() =>
-                        navigate('/vendor-stock-management/vendor-management')
-                      }
-                      sx={{ fontStyle: 'italic' }} // Optional styling
+                      onClick={() => navigate('/vendor-stock-management/vendor-management')}
+                      sx={{ fontStyle: 'italic' }}
                     >
                       Add New Firm +
                     </MenuItem>
@@ -329,365 +459,439 @@ export default function EditPurchaseOrderCreationForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Contact Number'
-                    name='contactNumber'
+                    label="Contact Number"
+                    name="contactNumber"
                     value={formData.contactNumber}
                     onChange={handleChange}
                     error={!!errors.contactNumber}
                     helperText={errors.contactNumber}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Contact Person Name'
-                    name='contactPersonName'
+                    label="Contact Person Name"
+                    name="contactPersonName"
                     value={formData.contactPersonName}
                     onChange={handleChange}
                     error={!!errors.contactPersonName}
                     helperText={errors.contactPersonName}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Contact Person Details'
-                    name='contactPersonDetails'
+                    label="Contact Person Details"
+                    name="contactPersonDetails"
                     value={formData.contactPersonDetails}
                     onChange={handleChange}
                     error={!!errors.contactPersonDetails}
                     helperText={errors.contactPersonDetails}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-                {/* <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Vendor Id'
-                    name='vendorId'
-                    value={formData.vendorId}
-                    onChange={handleChange}
-                    error={!!errors.vendorId}
-                    helperText={errors.vendorId}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid> */}
+                {/* Delivery Address Section */}
                 <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Material Name'
-                    name='materialName'
-                    value={formData.materialName}
-                    onChange={handleChange}
-                    error={!!errors.materialName}
-                    helperText={errors.materialName}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                  <FormControlLabel
+                    control={
+                      <Checkbox 
+                        checked={sameAsBilling}
+                        onChange={(e) => {
+                          setSameAsBilling(e.target.checked)
+                          if (e.target.checked) {
+                            setDeliveryAddress(formData.address)
+                          }
+                        }}
+                        color='primary' 
+                      />
+                    }
+                    label='Same as billing address' 
                   />
-                </Grid>
-                {/* <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={formData.batchNumber}
-                    onChange={handleChange}
-                    error={!!errors.batchNumber}
-                    helperText={errors.batchNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid> */}
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='MFG Date'
-                    name='mfgDate'
-                    type='date'
-                    value={formData.mfgDate}
-                    onChange={handleChange}
-                    error={!!errors.mfgDate}
-                    helperText={errors.mfgDate}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                  />
-                </Grid>
-      
-
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    select
-                    label='Unit'
-                    name='unit'
-                    value={formData.unit}
-                    onChange={handleChange}
-                    error={!!errors.unit}
-                    helperText={errors.unit}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
-                      <MenuItem key={unit} value={unit}>
-                        {unit}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Price/unit'
-                    name='price'
-                    value={formData.price}
-                    onChange={handleChange}
-                    error={!!errors.price}
-                    helperText={errors.price}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  
+                  {!sameAsBilling && (
+                    <>
+                      <TextField
+                        fullWidth
+                        select
+                        label="Delivery Address Option"
+                        value={selectedDeliveryOption}
+                        onChange={handleDeliveryOptionChange}
+                        error={!!errors.deliveryOption}
+                        helperText={errors.deliveryOption}
+                        variant="outlined"
+                        sx={{ mb: 2 }}
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {DELIVERY_ADDRESSES.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                      
+                      {selectedDeliveryOption === 'custom' && (
+                        <TextField
+                          fullWidth
+                          label='Delivery Address'
+                          name='deliveryAddress'
+                          value={deliveryAddress}
+                          onChange={(e) => setDeliveryAddress(e.target.value)}
+                          error={!!errors.deliveryAddress}
+                          helperText={errors.deliveryAddress}
+                          variant='outlined'
+                          multiline
+                          rows={3}
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        />
+                      )}
+                      
+                      {selectedDeliveryOption && selectedDeliveryOption !== 'custom' && (
+                        <Box sx={{ 
+                          p: 2, 
+                          mt: 1, 
+                          mb: 2,
+                          border: '1px solid #ddd',
+                          borderRadius: 1,
+                          backgroundColor: '#f9f9f9'
+                        }}>
+                          <Typography variant="body2">
+                            {DELIVERY_ADDRESSES.find(opt => opt.value === selectedDeliveryOption)?.address}
+                          </Typography>
+                        </Box>
+                      )}
+                    </>
+                  )}
                 </Grid>
 
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Quantity'
-                    name='quantity'
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    error={!!errors.quantity}
-                    helperText={errors.quantity}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                {/* Materials Section */}
+                <Grid item xs={12}>
+                  {formData.materials.map((material, index) => (
+                    <Grid container spacing={2} key={index} sx={{ mb: 1 }}>
+                      <Grid item xs={3}>
+                        <TextField
+                          fullWidth
+                          label='Material Name'
+                          name='materialName'
+                          value={material.materialName}
+                          onChange={e => handleMaterialChange(e, index)}
+                          error={!!errors[`materials_${index}_materialName`]}
+                          helperText={errors[`materials_${index}_materialName`]}
+                          variant='outlined'
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <TextField
+                          fullWidth
+                          label='Quantity'
+                          name='quantity'
+                          value={material.quantity}
+                          onChange={e => handleMaterialChange(e, index)}
+                          error={!!errors[`materials_${index}_quantity`]}
+                          helperText={errors[`materials_${index}_quantity`]}
+                          variant='outlined'
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <TextField
+                          fullWidth
+                          select
+                          label='Unit'
+                          name='unit'
+                          value={material.unit}
+                          onChange={e => handleMaterialChange(e, index)}
+                          error={!!errors[`materials_${index}_unit`]}
+                          helperText={errors[`materials_${index}_unit`]}
+                          variant='outlined'
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        >
+                          {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                            <MenuItem key={unit} value={unit}>
+                              {unit}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <TextField
+                          fullWidth
+                          label='Price/unit'
+                          name='price'
+                          value={material.price}
+                          onChange={e => handleMaterialChange(e, index)}
+                          error={!!errors[`materials_${index}_price`]}
+                          helperText={errors[`materials_${index}_price`]}
+                          variant='outlined'
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <TextField
+                          fullWidth
+                          label='MFG Date'
+                          name='mfgDate'
+                          type='date'
+                          value={material.mfgDate ? new Date(material.mfgDate).toISOString().split('T')[0] : ''}
+                          onChange={e => handleMaterialChange(e, index)}
+                          error={!!errors[`materials_${index}_mfgDate`]}
+                          helperText={errors[`materials_${index}_mfgDate`]}
+                          variant='outlined'
+                          InputProps={{ style: { borderRadius: 8 } }}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                      </Grid>
+                      <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Button
+                          variant='text'
+                          color='error'
+                          onClick={() => removeMaterial(index)}
+                          size='small'
+                          disabled={formData.materials.length === 1}
+                        >
+                          Remove
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  ))}
+                  <Button variant='contained' color='primary' onClick={addMaterial} sx={{ mb: 2 }}>
+                    Add Material
+                  </Button>
                 </Grid>
-         
+
+                {/* Remaining fields */}
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Pan'
-                    name='pan'
+                    label="Pan"
+                    name="pan"
                     value={formData.pan}
                     onChange={handleChange}
                     error={!!errors.pan}
                     helperText={errors.pan}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='GST'
-                    name='gst'
+                    label="GST"
+                    name="gst"
                     value={formData.gst}
                     onChange={handleChange}
                     error={!!errors.gst}
                     helperText={errors.gst}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Quotation Reference Number'
-                    name='quoationReferenceNumber'
-                    value={formData.quoationReferenceNumber}
+                    label="Quotation Reference Number"
+                    name="quotationReferenceNumber"
+                    value={formData.quotationReferenceNumber}
                     onChange={handleChange}
-                    error={!!errors.quoationReferenceNumber}
-                    helperText={errors.quoationReferenceNumber}
-                    variant='outlined'
+                    error={!!errors.quotationReferenceNumber}
+                    helperText={errors.quotationReferenceNumber}
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='HSN'
-                    name='hsn'
+                    label="HSN"
+                    name="hsn"
                     value={formData.hsn}
                     onChange={handleChange}
                     error={!!errors.hsn}
                     helperText={errors.hsn}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Description'
-                    name='description'
+                    label="Description"
+                    name="description"
                     value={formData.description}
                     onChange={handleChange}
                     error={!!errors.description}
                     helperText={errors.description}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Total Amount'
-                    name='totalAmount'
+                    label="Total Amount"
+                    name="totalAmount"
                     value={formData.totalAmount}
                     onChange={handleChange}
                     error={!!errors.totalAmount}
                     helperText={errors.totalAmount}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Amount In Words'
-                    name='amountInWords'
+                    label="Amount In Words"
+                    name="amountInWords"
                     value={formData.amountInWords}
                     onChange={handleChange}
                     error={!!errors.amountInWords}
                     helperText={errors.amountInWords}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Discount'
-                    name='discount'
+                    label="Discount"
+                    name="discount"
                     value={formData.discount}
                     onChange={handleChange}
                     error={!!errors.discount}
                     helperText={errors.discount}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='After Discount'
-                    name='afterDiscount'
+                    label="After Discount"
+                    name="afterDiscount"
                     value={formData.afterDiscount}
                     onChange={handleChange}
                     error={!!errors.afterDiscount}
                     helperText={errors.afterDiscount}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Igst18%'
-                    name='igst'
-                    value={formData.igst}
-                    onChange={handleChange}
-                    error={!!errors.igst}
-                    helperText={errors.igst}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
-                </Grid>
-
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Transportation Freight'
-                    name='transportationFreight'
+                    label="Transportation Freight"
+                    name="transportationFreight"
                     value={formData.transportationFreight}
                     onChange={handleChange}
                     error={!!errors.transportationFreight}
                     helperText={errors.transportationFreight}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Round Off'
-                    name='roundOff'
+                    label="Round Off"
+                    name="roundOff"
                     value={formData.roundOff}
                     onChange={handleChange}
                     error={!!errors.roundOff}
                     helperText={errors.roundOff}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Final Amount'
-                    name='finalAmount'
+                    label="Final Amount"
+                    name="finalAmount"
                     value={formData.finalAmount}
                     onChange={handleChange}
                     error={!!errors.finalAmount}
                     helperText={errors.finalAmount}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='P.O Date'
-                    name='poDate'
-                    type='date'
+                    label="P.O Date"
+                    name="poDate"
+                    type="date"
                     value={formData.poDate}
                     onChange={handleChange}
                     error={!!errors.poDate}
                     helperText={errors.poDate}
-                    variant='outlined'
+                    variant="outlined"
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label='Terms and conditions'
-                    name='termsAndConditions'
-                    value={formData.termsAndConditions}
-                    onChange={handleChange}
-                    error={!!errors.termsAndConditions}
-                    helperText={errors.termsAndConditions}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                  />
+                {/* Terms and Conditions Array */}
+                <Grid item xs={12}>
+                  <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                    Terms and Conditions
+                  </Typography>
+                  {terms.map((term, index) => (
+                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <TextField
+                        fullWidth
+                        value={term}
+                        onChange={(e) => {
+                          const newTerms = [...terms];
+                          newTerms[index] = e.target.value;
+                          setTerms(newTerms);
+                        }}
+                        label={`Term ${index + 1}`}
+                        variant="outlined"
+                        error={!!errors[`term_${index}`]}
+                        helperText={errors[`term_${index}`]}
+                      />
+                      <Button
+                        onClick={() => {
+                          const newTerms = terms.filter((_, i) => i !== index);
+                          setTerms(newTerms.length ? newTerms : ['']);
+                        }}
+                        color="error"
+                        sx={{ ml: 1, minWidth: '40px' }}
+                        variant="outlined"
+                        disabled={terms.length === 1}
+                        title="Delete this term"
+                      >
+                        <Iconify icon="ic:round-delete" />
+                      </Button>
+                    </Box>
+                  ))}
+                  <Button
+                    onClick={() => setTerms([...terms, ''])}
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 1 }}
+                  >
+                    Add Term
+                  </Button>
+                  {errors.termsAndConditions && (
+                    <Typography color="error" sx={{ mt: 1 }}>
+                      {errors.termsAndConditions}
+                    </Typography>
+                  )}
                 </Grid>
               </Grid>
               <Button
-                type='submit'
+                type="submit"
                 fullWidth
-                variant='contained'
+                variant="contained"
                 sx={{
                   mt: 4,
                   py: 1.5,
@@ -700,8 +904,8 @@ export default function EditPurchaseOrderCreationForm ({
                   '&:hover': {
                     transform: 'scale(1.05)',
                     boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.3)',
-                    background: 'linear-gradient(90deg, #3b5998, #4a90e2)'
-                  }
+                    background: 'linear-gradient(90deg, #3b5998, #4a90e2)',
+                  },
                 }}
               >
                 Submit
@@ -711,5 +915,5 @@ export default function EditPurchaseOrderCreationForm ({
         </Container>
       </Modal>
     </div>
-  )
+  );
 }

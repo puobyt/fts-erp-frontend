@@ -1,14 +1,32 @@
-import { useState } from 'react'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Modal from '@mui/material/Modal'
-import { Iconify } from 'src/components/iconify'
-import axiosInstance from 'src/configs/axiosInstance'
-import toast, { Toaster } from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
-import '../../global.css'
-import { TextField, MenuItem, Container, Grid, Paper, FormControlLabel, Checkbox } from '@mui/material'
+import { useState } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import { Iconify } from 'src/components/iconify';
+import axiosInstance from 'src/configs/axiosInstance';
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import '../../global.css';
+import { TextField, MenuItem, Container, Grid, Paper, FormControlLabel, Checkbox } from '@mui/material';
+
+// Delivery address options
+const DELIVERY_ADDRESSES = [
+  {
+    value: 'Dharmapuri',
+    label: 'Dharmapuri (Main Office)',
+    address: 'FRUITION NATURAL EXTRACTS PVT LTD, C13 AND C14, SIPCOT INDUSTRIAL AREA, KRISHNAGIRI DISTRICT, TAMIL NADU - 635 304'
+  },
+  {
+    value: 'Pathalam',
+    label: 'Pathalam (Kerala Office)',
+    address: 'FRUITION NATURAL EXTRACTS PVT LTD, Pathalam Industrial Area, Ernakulam, Kerala - 682303'
+  },
+  {
+    value: 'custom',
+    label: 'Custom Address'
+  }
+];
 
 const style = {
   position: 'absolute',
@@ -20,16 +38,18 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4
-}
+};
 
-export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
-  const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
-  const [sameAsBilling, setSameAsBilling] = useState(false)
-  const [deliveryAddress, setDeliveryAddress] = useState('')
-  const [loading, setLoading] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
+  const [open, setOpen] = useState(false);
+  const [terms, setTerms] = useState(['']);
+  const [errors, setErrors] = useState({});
+  const [sameAsBilling, setSameAsBilling] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [selectedDeliveryOption, setSelectedDeliveryOption] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     purchaseOrderNumber: '',
     date: '',
@@ -53,15 +73,13 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
     vendorId: '',
     pan: '',
     gst: '',
-    termsAndConditions: "",
+    termsAndConditions: [''],
     materials: [{ materialName: '', quantity: '', unit: '', price: '', mfgDate: '' }]
-  })
+  });
 
   const handleFirmChange = event => {
-    const selectedFirmName = event.target.value
-    const selectedFirm = firms.find(
-      firm => firm.nameOfTheFirm === selectedFirmName
-    )
+    const selectedFirmName = event.target.value;
+    const selectedFirm = firms.find(firm => firm.nameOfTheFirm === selectedFirmName);
     if (selectedFirm) {
       setFormData(prev => ({
         ...prev,
@@ -73,61 +91,132 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
         contactPersonName: selectedFirm.contactPersonName,
         contactPersonDetails: selectedFirm.contactPersonDetails,
         vendorId: selectedFirm._id
-      }))
+      }));
     }
-  }
+  };
 
-  const [errors, setErrors] = useState({})
+  const handleDeliveryOptionChange = (event) => {
+    const option = event.target.value;
+    setSelectedDeliveryOption(option);
+    
+    if (option !== 'custom') {
+      const selectedAddress = DELIVERY_ADDRESSES.find(addr => addr.value === option);
+      setDeliveryAddress(selectedAddress.address);
+    } else {
+      setDeliveryAddress('');
+    }
+  };
 
   const validateForm = () => {
-    const newErrors = {}
-    if (!sameAsBilling && !deliveryAddress) {
-      newErrors.deliveryAddress = 'Delivery address is required!'
+    const newErrors = {};
+
+    // Prevent whitespace-only for all required string fields
+    const requiredFields = [
+      'date', 'nameOfTheFirm', 'address', 'contactNumber', 'contactPersonName',
+      'contactPersonDetails', 'pan', 'gst'
+    ];
+    requiredFields.forEach(field => {
+      if (!formData[field] || !formData[field].trim()) {
+        newErrors[field] = `${field.replace(/([A-Z])/g, ' $1')} is required`;
+      }
+    });
+
+    // GST Validation (strict)
+    const gstValue = formData.gst?.trim();
+    if (!gstValue) {
+      newErrors.gst = 'GST is required';
+    } else if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i.test(gstValue)) {
+      newErrors.gst = 'Invalid GST number';
     }
-    if (!formData.date) newErrors.date = 'Date is required'
-    if (!formData.nameOfTheFirm) newErrors.nameOfTheFirm = 'Name Of The Firm is required'
-    if (!formData.address) newErrors.address = 'Address is required'
-    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required'
-    if (!formData.contactPersonName) newErrors.contactPersonName = 'Contact Person Name is required'
-    if (!formData.contactPersonDetails) newErrors.contactPersonDetails = 'Contact Person Details are required'
-    if (!formData.pan) newErrors.pan = 'PAN is required'
-    if (!formData.gst) newErrors.gst = 'GST is required'
+
+    // Numeric fields must be > 0
+    const numericFields = [
+      { field: 'totalAmount', label: 'Total Amount' },
+      { field: 'discount', label: 'Discount' },
+      { field: 'afterDiscount', label: 'After Discount' },
+      { field: 'igst', label: 'IGST' },
+      { field: 'transportationFreight', label: 'Transportation Freight' },
+      { field: 'roundOff', label: 'Round Off' },
+      { field: 'finalAmount', label: 'Final Amount' }
+    ];
+
+    numericFields.forEach(({field, label}) => {
+      const value = parseFloat(formData[field]);
+      if (formData[field] !== undefined && formData[field] !== '') {
+        if (isNaN(value) || value <= 0) {
+          newErrors[field] = `${label} must be greater than 0`;
+        }
+      }
+    });
 
     // Materials validation
     formData.materials.forEach((mat, i) => {
-      if (!mat.materialName || !mat.quantity || !mat.unit) {
-        newErrors[`materials_${i}`] = 'All material fields are required'
-      } else if (!/^\d+(\.\d+)?$/.test(mat.quantity)) {
-        newErrors[`materials_${i}_quantity`] = 'Quantity must be a valid number'
+      if (
+        !mat.materialName ||
+        !mat.materialName.trim() ||
+        !mat.quantity ||
+        !mat.unit ||
+        !mat.price
+      ) {
+        newErrors[`materials_${i}`] = 'All material fields are required and must not be blank';
+      } else if (
+        isNaN(parseFloat(mat.quantity)) ||
+        parseFloat(mat.quantity) <= 0
+      ) {
+        newErrors[`materials_${i}_quantity`] = 'Quantity must be a number greater than 0';
+      } else if (
+        isNaN(parseFloat(mat.price)) ||
+        parseFloat(mat.price) <= 0
+      ) {
+        newErrors[`materials_${i}_price`] = 'Price must be a number greater than 0';
       }
-    })
+    });
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    // Terms and Conditions
+    if (!terms || !Array.isArray(terms) || terms.length === 0 || terms.every(term => !term.trim())) {
+      newErrors.termsAndConditions = 'At least one term is required';
+    } else {
+      terms.forEach((term, idx) => {
+        if (!term || !term.trim()) {
+          newErrors[`term_${idx}`] = 'This term cannot be empty';
+        }
+      });
+    }
+
+    // Delivery Address validation
+    if (!sameAsBilling) {
+      if (!selectedDeliveryOption) {
+        newErrors.deliveryOption = 'Please select a delivery option';
+      } else if (selectedDeliveryOption === 'custom' && !deliveryAddress.trim()) {
+        newErrors.deliveryAddress = 'Custom delivery address is required';
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = e => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async e => {
-    e.preventDefault()
-    if (!validateForm()) {
-      return
-    }
+    e.preventDefault();
+    if (!validateForm()) return;
     try {
-      setLoading(true)
+      setLoading(true);
       const dataToSubmit = {
         ...formData,
-        deliveryAddress: sameAsBilling ? formData.address : deliveryAddress
-      }
+        deliveryAddress: sameAsBilling ? formData.address : deliveryAddress,
+        termsAndConditions: terms
+      };
       const result = await axiosInstance.post(
         '/newPurchaseOrderCreation',
         dataToSubmit
-      )
+      );
       if (result) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
         setFormData({
           purchaseOrderNumber: '',
           date: '',
@@ -151,32 +240,32 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
           poDate: '',
           pan: '',
           gst: '',
-          termsAndConditions: "",
+          termsAndConditions: [''],
           materials: [{ materialName: '', quantity: '', unit: '', price: '', mfgDate: '' }]
-        })
-        setDeliveryAddress('')
-        setSameAsBilling(false)
-        handleClose()
+        });
+        setTerms(['']);
+        setDeliveryAddress('');
+        setSelectedDeliveryOption('');
+        setSameAsBilling(false);
+        handleClose();
         setTimeout(() => {
-          setLoading(false)
-        }, 1000)
-        setUpdate(prev => !prev)
+          setLoading(false);
+        }, 1000);
+        setUpdate(prev => !prev);
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Error occurred")
-      console.error(
-        'Error occured in adding new purchase order creation client side',
-        err.message
-      )
+      toast.error(err?.response?.data?.message || "Error occurred");
+      console.log(err);
+      setLoading(false);
     }
-  }
+  };
 
   const handleMaterialChange = (e, index) => {
-    const { name, value } = e.target
-    const updatedMaterials = [...formData.materials]
-    updatedMaterials[index][name] = value
-    setFormData({ ...formData, materials: updatedMaterials })
-  }
+    const { name, value } = e.target;
+    const updatedMaterials = [...formData.materials];
+    updatedMaterials[index][name] = value;
+    setFormData({ ...formData, materials: updatedMaterials });
+  };
 
   const addMaterial = () => {
     setFormData(prevFormData => ({
@@ -185,13 +274,27 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
         ...prevFormData.materials,
         { materialName: '', quantity: '', unit: '', price: '', mfgDate: '' }
       ]
-    }))
-  }
+    }));
+  };
 
   const removeMaterial = index => {
-    const updatedMaterials = formData.materials.filter((_, i) => i !== index)
-    setFormData({ ...formData, materials: updatedMaterials })
-  }
+    const updatedMaterials = formData.materials.filter((_, i) => i !== index);
+    setFormData({ ...formData, materials: updatedMaterials });
+  };
+
+  const handleTermChange = (index, value) => {
+    const newTerms = [...terms];
+    newTerms[index] = value;
+    setTerms(newTerms);
+  };
+
+  const handleDeleteTerm = (index) => {
+    const newTerms = terms.filter((_, i) => i !== index);
+    setTerms(newTerms.length ? newTerms : ['']);
+  };
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <div>
@@ -264,7 +367,7 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     </MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={6} sx={{mt:1}}>
                   <TextField
                     fullWidth
                     label='Purchase Order Number'
@@ -274,9 +377,9 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     error={!!errors.purchaseOrderNumber}
                     helperText={errors.purchaseOrderNumber}
                     variant='outlined'
+                    placeholder='Auto-Generate' 
                     InputProps={{
-                      style: { borderRadius: 8, marginTop: '2px' },
-                      placeholder: 'Auto-Generate'
+                      style: { borderRadius: 8, marginTop: '2px' }
                     }}
                     InputLabelProps={{
                       shrink: true
@@ -355,29 +458,75 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                 <Grid item xs={6}>
                   <FormControlLabel
                     control={
-                      <Checkbox checked={sameAsBilling}
+                      <Checkbox 
+                        checked={sameAsBilling}
                         onChange={(e) => {
                           setSameAsBilling(e.target.checked)
                           if (e.target.checked) {
                             setDeliveryAddress(formData.address)
                           }
                         }}
-                        color='primary' />
+                        color='primary' 
+                      />
                     }
-                    label='Same as billing address' />
-                  <TextField
-                    fullWidth
-                    label='Delivery Address'
-                    name='deliveryAddress'
-                    value={sameAsBilling ? formData.address : deliveryAddress}
-                    onChange={(e) => setDeliveryAddress(e.target.value)}
-                    disabled={sameAsBilling}
-                    error={!!errors.deliveryAddress}
-                    helperText={errors.deliveryAddress}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
+                    label='Same as billing address' 
                   />
+                  
+                  {!sameAsBilling && (
+                    <>
+                      <TextField
+                        fullWidth
+                        select
+                        label="Delivery Address Option"
+                        value={selectedDeliveryOption}
+                        onChange={handleDeliveryOptionChange}
+                        error={!!errors.deliveryOption}
+                        helperText={errors.deliveryOption}
+                        variant="outlined"
+                        sx={{ mb: 2 }}
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {DELIVERY_ADDRESSES.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                      
+                      {selectedDeliveryOption === 'custom' && (
+                        <TextField
+                          fullWidth
+                          label='Delivery Address'
+                          name='deliveryAddress'
+                          value={deliveryAddress}
+                          onChange={(e) => setDeliveryAddress(e.target.value)}
+                          error={!!errors.deliveryAddress}
+                          helperText={errors.deliveryAddress}
+                          variant='outlined'
+                          multiline
+                          rows={3}
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        />
+                      )}
+                      
+                      {selectedDeliveryOption && selectedDeliveryOption !== 'custom' && (
+                        <Box sx={{ 
+                          p: 2, 
+                          mt: 1, 
+                          mb: 2,
+                          border: '1px solid #ddd',
+                          borderRadius: 1,
+                          backgroundColor: '#f9f9f9'
+                        }}>
+                          <Typography variant="body2">
+                            {DELIVERY_ADDRESSES.find(opt => opt.value === selectedDeliveryOption)?.address}
+                          </Typography>
+                        </Box>
+                      )}
+                    </>
+                  )}
                 </Grid>
+
                 {/* MATERIALS SECTION */}
                 <Grid item xs={12}>
                   <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
@@ -436,6 +585,8 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                           name='price'
                           value={material.price}
                           onChange={e => handleMaterialChange(e, index)}
+                          error={!!errors[`materials_${index}_price`]}
+                          helperText={errors[`materials_${index}_price`]}
                           variant='outlined'
                           InputProps={{ style: { borderRadius: 8 } }}
                         />
@@ -656,19 +807,47 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
                     }}
                   />
                 </Grid>
+                {/* TERMS AND CONDITIONS ARRAY WITH DELETE */}
                 <Grid item xs={12}>
-                  <TextField
-                    label="Terms and Conditions"
-                    name='termsAndConditions'
-                    value={formData.termsAndConditions}
-                    onChange={handleChange}
-                    error={!!errors.termsAndConditions}
-                    helperText={errors.termsAndConditions}
-                    variant='outlined'
-                    multiline
-                    minRows={6}
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                    Terms and Conditions
+                  </Typography>
+                  {terms.map((term, index) => (
+                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <TextField
+                        fullWidth
+                        value={term}
+                        onChange={e => handleTermChange(index, e.target.value)}
+                        label={`Term ${index + 1}`}
+                        variant="outlined"
+                        error={!!errors[`term_${index}`]}
+                        helperText={errors[`term_${index}`]}
+                      />
+                      <Button
+                        onClick={() => handleDeleteTerm(index)}
+                        color="error"
+                        variant="outlined"
+                        sx={{ ml: 1, minWidth: 40 }}
+                        disabled={terms.length === 1}
+                        title="Delete this term"
+                      >
+                        <Iconify icon="ic:round-delete" />
+                      </Button>
+                    </Box>
+                  ))}
+                  <Button
+                    onClick={() => setTerms([...terms, ''])}
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 1 }}
+                  >
+                    Add Term
+                  </Button>
+                  {errors.termsAndConditions && (
+                    <Typography color="error" sx={{ mt: 1 }}>
+                      {errors.termsAndConditions}
+                    </Typography>
+                  )}
                 </Grid>
               </Grid>
               <Button
@@ -700,5 +879,5 @@ export default function PurchaseOrderCreationForm ({ setUpdate, firms }) {
         </Container>
       </Modal>
     </div>
-  )
+  );
 }
