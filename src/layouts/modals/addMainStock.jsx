@@ -29,21 +29,21 @@ const style = {
   p: 4
 }
 
-export default function MainStockForm ({
+export default function MainStockForm({
   setUpdate,
   purchaseOrderData,
   materials
 }) {
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
-  const [vendors,setVendors]=useState([])
+  const [vendors, setVendors] = useState([])
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [grnType, setGrnType] = useState('')
   const [formData, setFormData] = useState({
     materialName: '',
     materialCode: '',
-    grn:'',
+    grn: '',
     quantity: '',
     price: '',
     storageLocation: '',
@@ -52,20 +52,19 @@ export default function MainStockForm ({
     expiryDate: ''
   })
   const [errors, setErrors] = useState({})
-useEffect(()=>{
-  const fetchVendors=async()=>{
-    try {
-       const result=await axiosInstance.get('/vendorManagement')
-       console.log("result",result)
-       setVendors(result.data.data)
-    } catch (error) {
-      throw new Error("Failed to fetch venrods")
-    }
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        const result = await axiosInstance.get('/vendorManagement')
+        setVendors(result.data.data)
+      } catch (error) {
+        throw new Error("Failed to fetch venrods")
+      }
 
-  }
-  fetchVendors()
- 
-},[])
+    }
+    fetchVendors()
+
+  }, [])
   const validateForm = () => {
     const newErrors = {}
     if (!formData.materialName)
@@ -74,6 +73,9 @@ useEffect(()=>{
       newErrors.quantity = 'Quantity is required'
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
       newErrors.quantity = 'Quantity must be a valid number'
+    }
+    if (!formData.unit) {
+      newErrors.unit = 'Please select a unit'
     }
     if (!formData.materialCode)
       newErrors.materialCode = 'Material Code is required'
@@ -93,7 +95,7 @@ useEffect(()=>{
     if (!formData.expiryDate) newErrors.expiryDate = 'Expiry is required'
 
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0 
+    return Object.keys(newErrors).length === 0
   }
 
   const handleRadioChange = event => {
@@ -103,8 +105,8 @@ useEffect(()=>{
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
-  const handleAddVendor=()=>{
-  navigate
+  const handleAddVendor = () => {
+    navigate
   }
   const handleSubmit = async e => {
     e.preventDefault()
@@ -120,8 +122,9 @@ useEffect(()=>{
         setFormData({
           materialName: '',
           materialCode: '',
-          grn:'',
+          grn: '',
           quantity: '',
+          unit: '',
           price: '',
           storageLocation: '',
           vendorName: '',
@@ -183,7 +186,11 @@ useEffect(()=>{
                 Current Stock Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box component='form' onSubmit={handleSubmit} sx={{
+              maxHeight: '65vh', // Restrict height to 70% of viewport height
+              overflowY: 'auto', // Enable vertical scrolling
+              paddingRight: 2 // Add padding to avoid scrollbar overlap with content
+            }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <FormControl error={!!errors.grnType}>
@@ -238,7 +245,7 @@ useEffect(()=>{
                     InputProps={{
                       style: { borderRadius: 8 }
                     }}
-                
+
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -257,10 +264,10 @@ useEffect(()=>{
                     disabled={grnType !== 'manual'}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField
                     fullWidth
-                    label='Quantity In KG'
+                    label='Quantity'
                     name='quantity'
                     value={formData.quantity}
                     onChange={handleChange}
@@ -269,6 +276,26 @@ useEffect(()=>{
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -308,14 +335,14 @@ useEffect(()=>{
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     select>
-                    {vendors.map((vendor)=>(
-                    <MenuItem key={vendor.id} value={vendor.name}>
-                    {vendor.name}
-                    </MenuItem>
+                    {vendors.map((vendor) => (
+                      <MenuItem key={vendor.id} value={vendor.name}>
+                        {vendor.name}
+                      </MenuItem>
                     ))}
                     <MenuItem value='addventor' onClick={handleAddVendor}>Add vendor</MenuItem>
-                    </TextField>
-                  
+                  </TextField>
+
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

@@ -27,7 +27,21 @@ const style = {
 
 export default function ProcessOrderForm ({ setUpdate }) {
   const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
+  const [dropDownItems, setDropDownItems] = useState([])
+
+
+  const handleOpen = async () => {
+    setOpen(true)
+    if (dropDownItems.length <= 0) {
+      const items = await axiosInstance.get('/mainStock')
+
+      if (items?.data?.data && items?.data?.data.length >0) {
+        const updatedItems = items?.data?.data.map((item)=>({label:item.materialName, value:item.materialCode}))
+        setDropDownItems(updatedItems)
+      }
+
+    }
+  }
   const navigate = useNavigate()
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
@@ -335,16 +349,24 @@ export default function ProcessOrderForm ({ setUpdate }) {
                   <React.Fragment key={index}>
                     <Grid item xs={3} >
                       <TextField
+                        select
                         fullWidth
-                        label='Material Code'
-                        name='materialCode'
+                        label="Material Code"
+                        name="materialCode"
                         value={material.materialCode}
                         onChange={e => handleMaterialChange(e, index)}
                         error={!!errors.materialInput}
                         helperText={errors.materialInput}
-                        variant='outlined'
+                        variant="outlined"
                         InputProps={{ style: { borderRadius: 8 } }}
-                      />
+                      >
+                        {dropDownItems.map((item, idx) => (
+                          <MenuItem key={idx} value={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+
                     </Grid>
                     <Grid item xs={3} >
                       <TextField

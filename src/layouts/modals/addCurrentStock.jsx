@@ -31,7 +31,7 @@ const style = {
   p: 4
 }
 
-export default function CurrentStockForm ({
+export default function CurrentStockForm({
   setUpdate,
   purchaseOrderData,
   materials,
@@ -44,8 +44,9 @@ export default function CurrentStockForm ({
   const [grnNumberType, setGrnNumberType] = useState('');
   const [formData, setFormData] = useState({
     materialName: '',
-    materialCode:'',
+    materialCode: '',
     quantity: '',
+    unit:'',
     price: '',
     grn: '',
     storageLocation: '',
@@ -68,6 +69,9 @@ export default function CurrentStockForm ({
       newErrors.materialName = 'Material Name is required'
     if (!grnNumberType) {
       newErrors.grnNumberType = 'Please select a Grn type'
+    }
+    if (!formData.unit) {
+      newErrors.unit = 'Please select a unit'
     }
     if (!formData.quantity) {
       newErrors.quantity = 'Quantity is required'
@@ -109,9 +113,10 @@ export default function CurrentStockForm ({
         handleClose()
         setFormData({
           materialName: '',
-          materialCode:'',
+          materialCode: '',
           grn: '',
           quantity: '',
+          unit: '',
           price: '',
           storageLocation: '',
           vendorName: '',
@@ -173,11 +178,11 @@ export default function CurrentStockForm ({
                 Current Stock Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}   sx={{
-                maxHeight: '65vh', // Restrict height to 70% of viewport height
-                overflowY: 'auto', // Enable vertical scrolling
-                paddingRight: 2 // Add padding to avoid scrollbar overlap with content
-              }}>
+            <Box component='form' onSubmit={handleSubmit} sx={{
+              maxHeight: '65vh', // Restrict height to 70% of viewport height
+              overflowY: 'auto', // Enable vertical scrolling
+              paddingRight: 2 // Add padding to avoid scrollbar overlap with content
+            }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <FormControl error={!!errors.grnNumberType}>
@@ -247,7 +252,7 @@ export default function CurrentStockForm ({
                     InputProps={{
                       style: { borderRadius: 8 }
                     }}
-                
+                    
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -267,10 +272,10 @@ export default function CurrentStockForm ({
                   />
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField
                     fullWidth
-                    label='Quantity In KG'
+                    label='Quantity'
                     name='quantity'
                     value={formData.quantity}
                     onChange={handleChange}
@@ -280,10 +285,30 @@ export default function CurrentStockForm ({
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Price/Kg'
+                    label='Price/Unit'
                     name='price'
                     value={formData.price}
                     onChange={handleChange}
