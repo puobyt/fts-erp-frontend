@@ -17,14 +17,15 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 // ----------------------------------------------------------------------
 
-export function OutOfStockTableRow ({outOfStocks, setUpdate, row, selected, onSelectRow }) {
+export function OutOfStockTableRow({ outOfStocks, setUpdate, row, selected, onSelectRow, selectedTab }) {
   const [openPopover, setOpenPopover] = useState(null)
   const mainStockData = {
     mainStockId: row._id,
     materialName: row.materialName,
     materialCode: row.materialCode,
-    grn:row.grn,
+    grn: row.grn,
     quantity: row.quantity,
+    unit: row.unit,
     price: row.price,
     storageLocation: row.storageLocation,
     vendorName: row.vendorName,
@@ -93,15 +94,18 @@ export function OutOfStockTableRow ({outOfStocks, setUpdate, row, selected, onSe
           </Box>
         </TableCell> */}
         <TableCell> {row.materialName}</TableCell>
-        <TableCell> {row.materialCode}</TableCell>
-        <TableCell>{row.grn}</TableCell>
-        <TableCell>{`${row.quantity} KG`}</TableCell>
+        {selectedTab === 1 && <TableCell> {row.materialCode}</TableCell>}
 
-        <TableCell style={{ whiteSpace: 'nowrap' }}>{`₹ ${row.price}`}</TableCell>
+        {selectedTab === 0 && <TableCell>{row.grn}</TableCell>}
+        <TableCell>{`${row.quantity} ${' '} ${row.unit}`}</TableCell>
+        {selectedTab === 0 && <TableCell style={{ whiteSpace: 'nowrap' }}>{`₹ ${row.price}`}</TableCell>}
+
         <TableCell>{row.vendorName}</TableCell>
         <TableCell>{row.storageLocation}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
-        <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>
+        {selectedTab === 0 && <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>}
+
+
 
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
