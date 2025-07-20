@@ -26,7 +26,7 @@ const style = {
   p: 4
 }
 
-export default function EditMainStockForm ({ setUpdate, mainStockData }) {
+export default function EditMainStockForm({ setUpdate, mainStockData }) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const handleOpen = () => setOpen(true)
@@ -44,8 +44,9 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
     mainStockId: mainStockData.mainStockId,
     materialName: mainStockData.materialName,
     materialCode: mainStockData.materialCode,
-    grn:mainStockData.grn,
+    grn: mainStockData.grn,
     quantity: mainStockData.quantity,
+    unit: mainStockData?.unit,
     price: mainStockData.price,
     storageLocation: mainStockData.storageLocation,
     vendorName: mainStockData.vendorName,
@@ -68,7 +69,10 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
       newErrors.quantity = 'Quantity must be a valid number'
     }
-      if (!formData.grn) newErrors.grn = 'GRN is required'
+    if (!formData.unit)
+      newErrors.unit = 'unit is required'
+    
+    if (!formData.grn) newErrors.grn = 'GRN is required'
     if (!formData.price) newErrors.price = 'Price is required'
     if (!formData.storageLocation)
       newErrors.storageLocation = 'Storage Location is required'
@@ -101,7 +105,8 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
           materialName: '',
           materialCode: '',
           quantity: '',
-          grn:'',
+          unit: '',
+          grn: '',
           price: '',
           vendorName: '',
           storageLocation: '',
@@ -159,7 +164,11 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                 Main Stock Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box component='form' onSubmit={handleSubmit} sx={{
+              maxHeight: '65vh', // Restrict height to 70% of viewport height
+              overflowY: 'auto', // Enable vertical scrolling
+              paddingRight: 2 // Add padding to avoid scrollbar overlap with content
+            }}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
@@ -217,10 +226,10 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                       style: { borderRadius: 8 },
                       placeholder: 'Auto-Generate'
                     }}
-                  
+
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField
                     fullWidth
                     label='Quantity In unit'
@@ -232,6 +241,26 @@ export default function EditMainStockForm ({ setUpdate, mainStockData }) {
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

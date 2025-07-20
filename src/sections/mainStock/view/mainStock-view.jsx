@@ -128,7 +128,7 @@ useEffect(()=>{
                   { id: 'materialName', label: 'Material Name' },
                   { id: 'materialCode', label: 'Material Code' },
                   { id: 'grn', label: 'GRN' },
-                  { id: 'quantity', label: 'Quantity In Kg' },
+                  { id: 'quantity', label: 'Quantity' },
                   { id: 'price', label: 'Price' },
                   { id: 'storageLocation', label: 'Storage Location' },
                   { id: 'vendorName', label: 'vendorName' },

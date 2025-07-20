@@ -19,17 +19,17 @@ import ViewRequestCreationForMaterialsForm from '../../layouts/viewModals/viewRe
 // ----------------------------------------------------------------------
 
 
- 
-export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods,setUpdate, row, selected, onSelectRow }) {
+
+export function RequestCreationForMaterialsTableRow({ materialNames, finishedGoods, setUpdate, row, selected, onSelectRow }) {
   const [openPopover, setOpenPopover] = useState(null);
   const requestMaterialsData = {
-    requestMaterialsId:row._id,
-    requestNumber:row.requestNumber,
-    finishedGoodsName:row.finishedGoodsName,
-    batchNumber:row.batchNumber,
-    materials:row.materials,
-    requiredDate:row.requiredDate,
-    status:row.status,
+    requestMaterialsId: row._id,
+    requestNumber: row.requestNumber,
+    finishedGoodsName: row.finishedGoodsName,
+    batchNumber: row.batchNumber,
+    materials: row.materials,
+    requiredDate: row.requiredDate,
+    status: row.status,
   }
   const handleOpenPopover = useCallback((event) => {
     setOpenPopover(event.currentTarget);
@@ -39,52 +39,75 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
     setOpenPopover(null);
   }, []);
 
-  const handleDelete = async()=>{
-        try {
-    
-          const requestCreationId = row._id;
-          const result = await axiosInstance.delete(`/removeRequestCreationForMaterials?requestCreationId=${requestCreationId}`);
-          if (result) {
-            toast.success(result.data.message);
-            setUpdate(prev => !prev)
-        
-          }
-        } catch (err) {
-          toast.success(err.response.data.message)
-          console.error(
-            'Error occured in removing request creation materials in client side',
-            err.message
-          )
-        }
+  const handleDelete = async () => {
+    try {
+
+      const requestCreationId = row._id;
+      const result = await axiosInstance.delete(`/removeRequestCreationForMaterials?requestCreationId=${requestCreationId}`);
+      if (result) {
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
+
       }
-    
-      const confirmDelete = ()=>{
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!",
-          backdrop: false
-        }).then((result) => {
-          if (result.isConfirmed) {
-            handleDelete();
-          }
-        });
+    } catch (err) {
+      toast.success(err.response.data.message)
+      console.error(
+        'Error occured in removing request creation materials in client side',
+        err.message
+      )
+    }
+  }
+
+  const confirmDelete = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      backdrop: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete();
       }
-    
-      const handleMenuCloseAndConfirmDelete = () => {
-        handleClosePopover(); // Close the popover or menu first
-        setTimeout(() => {
-          confirmDelete();
-        }, 0); // Optional delay to ensure the popover is fully closed
-      };
+    });
+  }
+
+  const handleMenuCloseAndConfirmDelete = () => {
+    handleClosePopover(); // Close the popover or menu first
+    setTimeout(() => {
+      confirmDelete();
+    }, 0); // Optional delay to ensure the popover is fully closed
+  };
+
+    const getStatusLabel = (status) => {
+      switch (status) {
+        case 'Pending':
+          return (
+            <Typography sx={{ color: '#FFA500', fontWeight: 'bold' }}>
+              Pending
+            </Typography>
+          );
+        case 'Assigned':
+          return (
+            <Typography sx={{ color: '#4CAF50', fontWeight: 'bold' }}>
+              Assigned
+            </Typography>
+          );
+        default:
+          return (
+            <Typography sx={{ color: '#757575', fontWeight: 'bold' }}>
+              Unknown
+            </Typography>
+          );
+      }
+    }
   return (
     <>
       <TableRow>
-      {/* <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell> */}
         {/* <TableCell component="th" scope="row">
@@ -110,7 +133,7 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
               <strong>{material.materialsList}</strong>:{' '}
               {`${material.quantity} KG`}
             </div>
-            
+
           ))}
         </TableCell>
 
@@ -122,17 +145,13 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
         <TableCell>
           {row.materials.map((material, index) => (
             <div key={index}>{material.materialCode}</div>
-            
+
           ))}
         </TableCell>
         <TableCell>{new Date(row.requiredDate).toLocaleDateString()}</TableCell>
         <TableCell>
-  {row.status? (
-    <Typography sx={{ color: 'blue', fontWeight: 'bold' }}>Returned</Typography>
-  ) : (
-    ''
-  )}
-</TableCell>
+        {getStatusLabel(row.status)}
+        </TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>
@@ -164,11 +183,11 @@ export function RequestCreationForMaterialsTableRow({materialNames,finishedGoods
             },
           }}
         >
-        <EditRequestCreationForMaterialsForm setUpdate={setUpdate} requestMaterialsData={requestMaterialsData} materialNames={materialNames} finishedGoods={finishedGoods} />
-        <ViewRequestCreationForMaterialsForm  requestMaterialsData={requestMaterialsData} />
+          <EditRequestCreationForMaterialsForm setUpdate={setUpdate} requestMaterialsData={requestMaterialsData} materialNames={materialNames} finishedGoods={finishedGoods} />
+          <ViewRequestCreationForMaterialsForm requestMaterialsData={requestMaterialsData} />
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete 
+            Delete
           </MenuItem>
         </MenuList>
       </Popover>

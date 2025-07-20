@@ -32,7 +32,7 @@ const style = {
   p: 4
 }
 
-export default function EditCurrentStockForm ({
+export default function EditCurrentStockForm({
   purchaseOrderData,
   materials,
   setUpdate,
@@ -58,6 +58,7 @@ export default function EditCurrentStockForm ({
     materialCode: currentStockData.materialCode,
     grn: currentStockData.grn,
     quantity: currentStockData.quantity,
+    unit: currentStockData?.unit,
     price: currentStockData.price,
     storageLocation: currentStockData.storageLocation,
     vendorName: currentStockData.vendorName,
@@ -86,6 +87,10 @@ export default function EditCurrentStockForm ({
     } else if (!/^\d+(\.\d+)?$/.test(formData.quantity)) {
       newErrors.quantity = 'Quantity must be a valid number'
     }
+
+    if (!formData.unit)
+      newErrors.unit = 'unit is required'
+
     if (!grnNumberType) {
       newErrors.grnNumberType = 'Please select a grn number type'
     }
@@ -126,6 +131,7 @@ export default function EditCurrentStockForm ({
           materialCode: '',
           grn: '',
           quantity: '',
+          unit: '',
           price: '',
           storageLocation: '',
           vendorName: '',
@@ -183,7 +189,11 @@ export default function EditCurrentStockForm ({
                 Current Stock Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box component='form' onSubmit={handleSubmit} sx={{
+              maxHeight: '65vh', // Restrict height to 70% of viewport height
+              overflowY: 'auto', // Enable vertical scrolling
+              paddingRight: 2 // Add padding to avoid scrollbar overlap with content
+            }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <FormControl error={!!errors.grnNumberType}>
@@ -286,7 +296,7 @@ export default function EditCurrentStockForm ({
                     disabled={grnNumberType !== 'manual'}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField
                     fullWidth
                     label='Quantity In Unit'
@@ -298,6 +308,26 @@ export default function EditCurrentStockForm ({
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

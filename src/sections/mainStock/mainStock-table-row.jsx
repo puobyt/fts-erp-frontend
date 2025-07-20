@@ -27,6 +27,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
     materialCode: row.materialCode,
     grn: row.grn,
     quantity: row.quantity,
+    unit: row?.unit,
     price: row.price,
     storageLocation: row.storageLocation,
     vendorName: row.vendorName,
@@ -97,7 +98,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
         <TableCell> {row.materialName}</TableCell>
         <TableCell> {row.materialCode}</TableCell>
         <TableCell>{row.grn}</TableCell>
-        <TableCell>{`${row.quantity} KG`}</TableCell>
+        <TableCell>{`${row.quantity} ${row?.unit}`}</TableCell>
 
         <TableCell
           style={{ whiteSpace: 'nowrap' }}
