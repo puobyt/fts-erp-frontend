@@ -9,7 +9,19 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import '../../global.css'
-import { TextField, Container, MenuItem, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import {
+  TextField,
+  Container,
+  MenuItem,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material'
 
 const style = {
   position: 'absolute',
@@ -23,7 +35,7 @@ const style = {
   p: 4
 }
 
-export default function QualityCheckForm ({ setUpdate, batches, products }) {
+export default function QualityCheckForm({ setUpdate, batches, products }) {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -35,7 +47,9 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
     inspectionDate: '',
     inspectorName: '',
     qualityStatus: '',
-    comments: ''
+    comments: '',
+    rejectionReason: '',
+    quantityRejected: ''
   })
   const [parameterRows, setParameterRows] = useState([])
   const [errors, setErrors] = useState({})
@@ -43,18 +57,18 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
   // Fetch QC parameters for the selected material
   useEffect(() => {
     if (formData.materialName) {
-      // Replace with your API endpoint to get QC parameters for this material
       axiosInstance
         .get(`/qc-parameters?materialName=${formData.materialName}`)
         .then(res => {
           const params = res.data || []
-          // Add fields for user input (actualResult, remarks)
-          setParameterRows(params.map(row => ({
-            ...row,
-            actualResult: '',
-            remarks: '',
-            status: ''
-          })))
+          setParameterRows(
+            params.map(row => ({
+              ...row,
+              actualResult: '',
+              remarks: '',
+              status: ''
+            }))
+          )
         })
         .catch(() => setParameterRows([]))
     } else {
@@ -64,19 +78,17 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.batchNumber)
-      newErrors.batchNumber = 'Batch Number is required'
-    if (!formData.materialName)
-      newErrors.materialName = 'Material Name is required'
-    if (!formData.materialCode)
-      newErrors.materialCode = 'Material Code is required'
-    if (!formData.inspectionDate)
-      newErrors.inspectionDate = 'Inspection Date is required'
-    if (!formData.inspectorName)
-      newErrors.inspectorName = 'Inspector Name is required'
-    if (!formData.qualityStatus)
-      newErrors.qualityStatus = 'Quality Status is required'
+    if (!formData.batchNumber) newErrors.batchNumber = 'Batch Number is required'
+    if (!formData.materialName) newErrors.materialName = 'Material Name is required'
+    if (!formData.materialCode) newErrors.materialCode = 'Material Code is required'
+    if (!formData.inspectionDate) newErrors.inspectionDate = 'Inspection Date is required'
+    if (!formData.inspectorName) newErrors.inspectorName = 'Inspector Name is required'
+    if (!formData.qualityStatus) newErrors.qualityStatus = 'Quality Status is required'
     if (!formData.comments) newErrors.comments = 'Comments is required'
+    if (formData.qualityStatus === 'Rejected' && !formData.rejectionReason)
+      newErrors.rejectionReason = 'Rejection Reason is required'
+    if (formData.qualityStatus === 'Rejected' && !formData.quantityRejected)
+      newErrors.quantityRejected = 'Quantity Rejected is required'
     parameterRows.forEach((param, idx) => {
       if (param.actualResult === '' || isNaN(param.actualResult)) {
         newErrors[`param_${idx}_actualResult`] = 'Required'
@@ -165,9 +177,24 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
     if (!validateForm()) {
       return
     }
+
+    // Map qualityStatus to qcStatus for backend
+    const qcStatusMap = {
+      Accepted: 'approved',
+      Quarantine: 'pending',
+      Rejected: 'rejected'
+    }
+
+    const payload = {
+      ...formData,
+      qcStatus: qcStatusMap[formData.qualityStatus] || 'pending',
+      qcApproved: formData.qualityStatus === 'Accepted',
+       comments: formData.comments.split('\n')
+    }
+
     try {
-      const result = await axiosInstance.post('/newQualityCheck', formData)
-      const qcId = result.data.qcId 
+      const result = await axiosInstance.post('/newQualityCheck', payload)
+      const qcId = result.data.qcId
       await Promise.all(
         parameterRows.map(param =>
           axiosInstance.post('/newQualityCheckParameterResult', {
@@ -188,7 +215,9 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
         inspectionDate: '',
         inspectorName: '',
         qualityStatus: '',
-        comments: ''
+        comments: '',
+        rejectionReason: '',
+        quantityRejected: ''
       })
       setParameterRows([])
       setUpdate(prev => !prev)
@@ -363,6 +392,8 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
+                      multiline
+                      minRows={3}
                       label='Comments'
                       name='comments'
                       value={formData.comments}
@@ -373,6 +404,37 @@ export default function QualityCheckForm ({ setUpdate, batches, products }) {
                       InputProps={{ style: { borderRadius: 8 } }}
                     />
                   </Grid>
+                  {/* Show rejection reason and quantity rejected if status is Rejected */}
+                  {formData.qualityStatus === 'Rejected' && (
+                    <>
+                      <Grid item xs={8}>
+                        <TextField
+                          fullWidth
+                          label='Rejection Reason'
+                          name='rejectionReason'
+                          value={formData.rejectionReason}
+                          onChange={handleChange}
+                          error={!!errors.rejectionReason}
+                          helperText={errors.rejectionReason}
+                          variant='outlined'
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <TextField
+                          fullWidth
+                          label='Quantity Rejected'
+                          name='quantityRejected'
+                          value={formData.quantityRejected}
+                          onChange={handleChange}
+                          error={!!errors.quantityRejected}
+                          helperText={errors.quantityRejected}
+                          variant='outlined'
+                          InputProps={{ style: { borderRadius: 8 } }}
+                        />
+                      </Grid>
+                    </>
+                  )}
                   {/* Table/grid for QC parameters */}
                   <Grid item xs={12}>
                     <Typography variant='h6' sx={{ mt: 2 }}>
