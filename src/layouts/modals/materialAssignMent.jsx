@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+import { useEffect } from 'react'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -24,7 +25,7 @@ const style = {
   p: 4
 }
 
-export default function MaterialAssignmentForm ({
+export default function MaterialAssignmentForm({
   setUpdate,
   materialNames,
   finishedGoods,
@@ -35,15 +36,31 @@ export default function MaterialAssignmentForm ({
   const navigate = useNavigate()
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
+    pendingItemId: '',
     assignmentNumber: '',
     indentNumber: '',
     finishedGoodsName: '',
     date: '',
     processOrderNumber: '',
-    materials: [{ materialsList: '', assignedQuantity: '', materialCode: '' }],
+    materials: [{ materialsList: '', assignedQuantity: '', unit: '', materialCode: '' }],
     assignedTo: ''
   })
   const [errors, setErrors] = useState({})
+  const [pendings, setPendings] = useState([])
+  const [selectedItem, setSelectedItem] = useState({})
+
+  useEffect(() => {
+    if (pendings.length <= 0) {
+      getPendings()
+    }
+  }, [open])
+
+  const getPendings = async () => {
+    const result = await axiosInstance.get('/requestCreationForMaterials?getPendings=true')
+    if (result?.data) {
+      setPendings(result.data.data || [])
+    }
+  }
 
   const validateForm = () => {
     const newErrors = {}
@@ -60,7 +77,7 @@ export default function MaterialAssignmentForm ({
     if (!formData.date) newErrors.date = 'Date is required'
     if (
       formData.materials.some(
-        mat => !mat.materialsList || !mat.assignedQuantity || !mat.materialCode
+        mat => !mat.materialsList || !mat.assignedQuantity || !mat.materialCode || !mat.unit
       )
     ) {
       newErrors.materials = 'All material fields must be filled'
@@ -94,13 +111,14 @@ export default function MaterialAssignmentForm ({
         toast.success(result.data.message)
         handleClose()
         setFormData({
+          pendingItemId: '',
           assignmentNumber: '',
           indentNumber: '',
           finishedGoodsName: '',
           date: '',
           processOrderNumber: '',
           materials: [
-            { materialsList: '', assignedQuantity: '', materialCode: '' }
+            { materialsList: '', assignedQuantity: '', unit: '', materialCode: '' }
           ],
           assignedTo: ''
         })
@@ -133,7 +151,7 @@ export default function MaterialAssignmentForm ({
     //     selectedMaterial?.materialCode || ''
     // }
 
-    
+
     if (name === 'materialsList') {
       const selectedMaterial = materialNames.find(
         material => material.materialName === value
@@ -150,8 +168,19 @@ export default function MaterialAssignmentForm ({
       ...prevFormData,
       materials: [
         ...prevFormData.materials,
-        { materialsList: '', assignedQuantity: '', materialCode: '' }
+        { materialsList: '', assignedQuantity: '', unit: '', materialCode: '' }
       ]
+    }))
+  }
+
+  const handlePendingItemSelection = (e) => {
+    const value = e.target.value
+    setSelectedItem(value)
+    setFormData((prev) => ({
+      ...prev,
+      pendingItemId: value._id,
+      finishedGoodsName: value.finishedGoodsName,
+      materials: value.materials.map((item) => ({ materialsList: item.materialsList, assignedQuantity: item.quantity, unit: item.unit, materialCode: item.materialCode })),
     }))
   }
 
@@ -213,6 +242,31 @@ export default function MaterialAssignmentForm ({
                 paddingRight: 2
               }}
             >
+              <Grid item xs={6} sx={{ mt: 2.1 }}>
+                <TextField
+                  fullWidth
+                  select
+                  label='Pending Item'
+                  name='pending'
+                  value={selectedItem}
+                  onChange={handlePendingItemSelection}
+                  // error={!!errors.assignmentNumber}
+                  helperText={errors.assignmentNumber}
+                  variant='outlined'
+                  InputProps={{
+                    style: { borderRadius: 8 },
+                  }}
+                >
+                  {(pendings && pendings.length > 0) && pendings.map((pending, index) => (
+                    <MenuItem
+                      key={`product-${index}`}
+                      value={pending}
+                    >
+                      {pending.finishedGoodsName}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
               <Grid container spacing={2} sx={{ mt: 0.1 }}>
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
@@ -274,10 +328,10 @@ export default function MaterialAssignmentForm ({
                         </MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={2}>
                       <TextField
                         fullWidth
-                        label='Assigned Quantity In KG'
+                        label='Assigned Quantity'
                         name='assignedQuantity'
                         error={!!errors.assignedQuantity}
                         value={material.assignedQuantity}
@@ -286,6 +340,26 @@ export default function MaterialAssignmentForm ({
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
                       />
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        value={material.unit}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.unit}
+                        helperText={errors.unit}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                          <MenuItem key={unit} value={unit}>
+                            {unit}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     </Grid>
                     <Grid item xs={4}>
                       <TextField
@@ -299,7 +373,7 @@ export default function MaterialAssignmentForm ({
                         variant='outlined'
                         InputProps={{
                           style: { borderRadius: 8 },
-                        
+
                         }}
                       />
                     </Grid>
@@ -445,7 +519,7 @@ export default function MaterialAssignmentForm ({
                           '/production-workflow/production-order-creation'
                         )
                       }
-                      sx={{ fontStyle: 'italic' }} 
+                      sx={{ fontStyle: 'italic' }}
                     >
                       Add New Process Order Number +
                     </MenuItem>
