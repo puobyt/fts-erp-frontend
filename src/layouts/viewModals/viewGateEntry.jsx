@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { useState } from 'react'
+import * as React from 'react';
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -10,10 +10,10 @@ import {
   Grid,
   Paper,
   Button,
-  Link
-} from '@mui/material'
-import { Iconify } from 'src/components/iconify'
-import { Toaster } from 'react-hot-toast'
+  Link,
+} from '@mui/material';
+import { Iconify } from 'src/components/iconify';
+import { Toaster } from 'react-hot-toast';
 
 const style = {
   position: 'absolute',
@@ -27,68 +27,68 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
-  borderRadius: 2
-}
+  borderRadius: 2,
+};
 
 export default function ViewGateEntry({ setUpdate, gateEntryData }) {
-  const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
-  console.log('gateentrydata',gateEntryData)
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  console.log('gateentrydata', gateEntryData);
 
-  const isQcReturn = gateEntryData.gateType === 'qc_return_entry'
-  const isExit = gateEntryData.gateType === 'return_exit'
-  const isEntry = gateEntryData.gateType === 'entry'
+  const isQcReturn = gateEntryData.gateType === 'qc_return_entry';
+  const isExit = gateEntryData.gateType === 'return_exit';
+  const isEntry = gateEntryData.gateType === 'entry';
 
-  const fileUrl = (path) => `${import.meta.env.VITE_BACKEND_URL}/${path.replace(/\\/g, '/')}`
+  const fileUrl = (path) => `${import.meta.env.VITE_BACKEND_URL}/${path.replace(/\\/g, '/')}`;
 
   return (
     <>
-      <Toaster position='top-center' reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
       <MenuItem onClick={handleOpen}>
-        <Iconify icon='solar:eye-bold' />
+        <Iconify icon="solar:eye-bold" />
         View
       </MenuItem>
 
-      <Modal  
+      <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby='modal-title'
-        aria-describedby='modal-description'
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
       >
-        <Container maxWidth='xl' sx={{ mt: 8 }}>
+        <Container maxWidth="xl" sx={{ mt: 8 }}>
           <Paper elevation={4} sx={style}>
             <Box sx={{ textAlign: 'center', mb: 3 }}>
-              <Typography variant='h5' fontWeight='bold' color='primary' gutterBottom>
+              <Typography variant="h5" fontWeight="bold" color="primary" gutterBottom>
                 View Gate Entry Details
               </Typography>
-              <Typography variant='body2' color='textSecondary'>
+              <Typography variant="body2" color="textSecondary">
                 Gate Type: {gateEntryData.gateType?.replace(/_/g, ' ')}
               </Typography>
             </Box>
 
             <Grid container spacing={2}>
               {/* Entry / Exit Time */}
-             {(gateEntryData.entryTime || gateEntryData.exitTime) && (
-  <Grid item xs={6}>
-    <TextField
-      fullWidth
-      label={(isQcReturn || isExit) ? 'Exit Time' : 'Entry Time'}
-      value={(isQcReturn || isExit) ? gateEntryData.exitTime : gateEntryData.entryTime}
-      variant='filled'
-      InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
-    />
-  </Grid>
-)}
+              {(gateEntryData.entryTime || gateEntryData.exitTime) && (
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label={isQcReturn || isExit ? 'Exit Time' : 'Entry Time'}
+                    value={isQcReturn || isExit ? gateEntryData.exitTime : gateEntryData.entryTime}
+                    variant="filled"
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                  />
+                </Grid>
+              )}
 
               {/* Vehicle Number */}
               {gateEntryData.vehicleNumber && (
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Vehicle Number'
+                    label="Vehicle Number"
                     value={gateEntryData.vehicleNumber}
-                    variant='filled'
+                    variant="filled"
                     InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
@@ -99,9 +99,9 @@ export default function ViewGateEntry({ setUpdate, gateEntryData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Doc Number'
+                    label="Doc Number"
                     value={gateEntryData.docNumber}
-                    variant='filled'
+                    variant="filled"
                     InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
@@ -112,9 +112,9 @@ export default function ViewGateEntry({ setUpdate, gateEntryData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Vendor Name'
+                    label="Vendor Name"
                     value={gateEntryData.vendorName}
-                    variant='filled'
+                    variant="filled"
                     InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
@@ -125,11 +125,11 @@ export default function ViewGateEntry({ setUpdate, gateEntryData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Date'
-                    type='date'
+                    label="Date"
+                    type="date"
                     value={new Date(gateEntryData.date).toISOString().split('T')[0]}
                     InputLabelProps={{ shrink: true }}
-                    variant='filled'
+                    variant="filled"
                     InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
@@ -137,29 +137,28 @@ export default function ViewGateEntry({ setUpdate, gateEntryData }) {
 
               {/* QC-specific fields */}
               {(isQcReturn || isExit) && (
-  <>
-    <Grid item xs={6}>
-      <TextField
-        fullWidth
-        label='Return Reason'
-        value={gateEntryData.returnReason}
-        variant='filled'
-        InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
-      />
-    </Grid>
+                <>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      label="Return Reason"
+                      value={gateEntryData.returnReason}
+                      variant="filled"
+                      InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                    />
+                  </Grid>
 
-    <Grid item xs={6}>
-      <TextField
-        fullWidth
-        label='Returned By'
-        value={gateEntryData.returnedBy}
-        variant='filled'
-        InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
-      />
-    </Grid>
-  </>
-)}
-
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      label="Returned By"
+                      value={gateEntryData.returnedBy}
+                      variant="filled"
+                      InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                    />
+                  </Grid>
+                </>
+              )}
 
               {/* Materials */}
               {gateEntryData.materials?.length > 0 &&
@@ -168,18 +167,18 @@ export default function ViewGateEntry({ setUpdate, gateEntryData }) {
                     <Grid item xs={6}>
                       <TextField
                         fullWidth
-                        label='Material Name'
+                        label="Material Name"
                         value={mat.materialName}
-                        variant='filled'
+                        variant="filled"
                         InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                       />
                     </Grid>
                     <Grid item xs={6}>
                       <TextField
                         fullWidth
-                        label='Quantity'
+                        label="Quantity"
                         value={`${mat.returnedQuantity || mat.quantity || '0'} ${mat.unit || ''}`}
-                        variant='filled'
+                        variant="filled"
                         InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                       />
                     </Grid>
@@ -198,21 +197,20 @@ export default function ViewGateEntry({ setUpdate, gateEntryData }) {
                         border: '1px solid #ccc',
                         p: 1.5,
                         borderRadius: 2,
-                        backgroundColor: '#fff'
+                        backgroundColor: '#fff',
                       }}
                     >
-                      <Typography variant='body2'>{doc.originalName}</Typography>
-                     <Button
-  variant="outlined"
-  size="small"
-  component={Link}
-  href={fileUrl(doc.path)}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  View
-</Button>
-
+                      <Typography variant="body2">{doc.originalName}</Typography>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        component={Link}
+                        href={fileUrl(doc.path)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View
+                      </Button>
                     </Box>
                   </Grid>
                 ))}
@@ -221,5 +219,5 @@ export default function ViewGateEntry({ setUpdate, gateEntryData }) {
         </Container>
       </Modal>
     </>
-  )
+  );
 }
