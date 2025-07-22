@@ -143,21 +143,20 @@ export default function MaterialAssignmentForm({
     const updatedMaterials = [...formData.materials]
     updatedMaterials[index][name] = value
 
-    // if (name === 'materialsList') {
-    //   const selectedMaterial = materialNames.find(
-    //     material => material.materialsList === value
-    //   )
-    //   updatedMaterials[index].materialCode =
-    //     selectedMaterial?.materialCode || ''
-    // }
-
-
+    let selectedMaterial
     if (name === 'materialsList') {
-      const selectedMaterial = materialNames.find(
+      selectedMaterial = materialNames.find(
         material => material.materialName === value
       )
       updatedMaterials[index].materialCode =
         selectedMaterial?.materialCode || ''
+    }
+
+    if (!selectedMaterial) {
+      selectedMaterial = finishedGoods.find(
+        material => material.materialName === value
+      );
+      updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
     }
 
     setFormData({ ...formData, materials: updatedMaterials })
@@ -313,8 +312,8 @@ export default function MaterialAssignmentForm({
                           Finished Goods
                         </MenuItem>
                         {finishedGoods.map((item, index) => (
-                          <MenuItem key={`finished-${index}`} value={item}>
-                            {item}
+                          <MenuItem key={`finished-${index}`} value={item.materialName}>
+                            {item.materialName}
                           </MenuItem>
                         ))}
 
@@ -448,8 +447,8 @@ export default function MaterialAssignmentForm({
                         InputProps={{ style: { borderRadius: 8 } }}
                       >
                         {finishedGoods.map((item, index) => (
-                          <MenuItem key={`finished-${index}`} value={item}>
-                            {item}
+                          <MenuItem key={`finished-${index}`} value={item.materialName}>
+                            {item.materialName}
                           </MenuItem>
                         ))}
 
