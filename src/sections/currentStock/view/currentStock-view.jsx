@@ -91,7 +91,7 @@ useEffect(()=>{
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-      Current Stock Management1
+      Current Stock Management
         </Typography>
         {/* <Button
           variant="contained"

@@ -16,6 +16,8 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import EditProcessOrderForm from '../../layouts/editModals/editProcessOrder'
 import ViewProcessOrderForm from '../../layouts/viewModals/viewProcessOrder'
+import * as XLSX from 'xlsx'
+
 // ----------------------------------------------------------------------
 
 export function ProcessOrderTableRow ({
@@ -39,6 +41,7 @@ export function ProcessOrderTableRow ({
     orderQuantity: row.orderQuantity,
     materialInput: row.materialInput
   }
+
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
   }, [])
@@ -46,6 +49,77 @@ export function ProcessOrderTableRow ({
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null)
   }, [])
+
+  // Download function for individual row
+  const handleDownload = useCallback(() => {
+    try {
+      // Create a new workbook
+      const wb = XLSX.utils.book_new();
+      
+      // Prepare basic process order data
+      const basicData = {
+        'Process Order Number': row.processOrderNumber || '',
+        'Plant': row.plant || '',
+        'Equipment': row.equipment || '',
+        'Start Date': row.startDate || '',
+        'Finish Date': row.finishDate || '',
+        'Product Name': row.productName || '',
+        'Product Code': row.productCode || '',
+        'Batch': row.batch || '',
+        'Order Quantity': row.orderQuantity || ''
+      };
+
+      // Create basic info worksheet
+      const basicWs = XLSX.utils.json_to_sheet([basicData]);
+      XLSX.utils.book_append_sheet(wb, basicWs, 'Process Order Info');
+
+      // Prepare material input data
+      if (row.materialInput && row.materialInput.length > 0) {
+        const materialInputData = row.materialInput.map((material, index) => ({
+          'S.No': index + 1,
+          'Material Code': material.materialCode || '',
+          'Quantity': material.quantity || '',
+          'Batch': material.batch || '',
+          'Storage Location': material.storageLocation || ''
+        }));
+
+        const materialInputWs = XLSX.utils.json_to_sheet(materialInputData);
+        XLSX.utils.book_append_sheet(wb, materialInputWs, 'Material Input');
+      }
+
+      // Prepare material output data
+      if (row.materialOutput && row.materialOutput.length > 0) {
+        const materialOutputData = row.materialOutput.map((material, index) => ({
+          'S.No': index + 1,
+          'Material Code': material.materialCode || '',
+          'Quantity': material.quantity || '',
+          'Batch': material.batch || '',
+          'Storage Location': material.storageLocation || '',
+          'Yield': material.Yield || ''
+        }));
+
+        const materialOutputWs = XLSX.utils.json_to_sheet(materialOutputData);
+        XLSX.utils.book_append_sheet(wb, materialOutputWs, 'Material Output');
+      }
+
+      // Generate filename with process order number
+      const filename = `ProcessOrder_${row.processOrderNumber || Date.now()}.xlsx`;
+      
+      // Download the file
+      XLSX.writeFile(wb, filename);
+      
+      // Show success message
+      toast.success('Process Order downloaded successfully!');
+      
+      // Close the popover
+      handleClosePopover();
+      
+    } catch (error) {
+      console.error('Error downloading process order:', error);
+      toast.error('Error occurred while downloading the file. Please try again.');
+    }
+  }, [row, handleClosePopover]);
+
   const handleDelete = async () => {
     try {
       const processOrderId = row._id
@@ -88,28 +162,17 @@ export function ProcessOrderTableRow ({
       confirmDelete()
     }, 0)
   }
+
   return (
     <>
       <TableRow>
-        {/* <TableCell padding="checkbox">
-          <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
-        </TableCell> */}
-        {/* <TableCell component="th" scope="row">
-          <Box gap={2} display="flex" alignItems="center">
-            <Avatar alt={row.nameOfTheFirm}  />
-          
-          </Box>
-        </TableCell> */}
-
         <TableCell> {row.processOrderNumber}</TableCell>
         <TableCell>{row.plant}</TableCell>
         <TableCell> {row.equipment}</TableCell>
         <TableCell sx={{ minWidth: 120 }}>{row.startDate}</TableCell>
         <TableCell sx={{ minWidth: 120 }}>{row.finishDate}</TableCell>
         <TableCell sx={{ minWidth: 150 }}>{row.productName}</TableCell>
-
         <TableCell> {row.productCode}</TableCell>
-
         <TableCell>{row.batch}</TableCell>
         <TableCell>{row.orderQuantity}</TableCell>
 
@@ -124,11 +187,13 @@ export function ProcessOrderTableRow ({
             <div key={index}>{`${material.quantity}`}</div>
           ))}
         </TableCell>
+        
         <TableCell>
           {row.materialInput.map((material, index) => (
             <div key={index}>{material.batch}</div>
           ))}
         </TableCell>
+        
         <TableCell>
           {row.materialInput.map((material, index) => (
             <div key={index}>{material.storageLocation}</div>
@@ -146,31 +211,24 @@ export function ProcessOrderTableRow ({
             <div key={index}>{`${material.quantity} `}</div>
           ))}
         </TableCell>
+        
         <TableCell>
           {row.materialOutput?.map((material, index) => (
             <div key={index}>{material.batch}</div>
           ))}
         </TableCell>
+        
         <TableCell>
           {row.materialOutput?.map((material, index) => (
             <div key={index}>{material.storageLocation}</div>
           ))}
         </TableCell>
+        
         <TableCell>
           {row.materialOutput?.map((material, index) => (
             <div key={index}>{material.Yield}</div>
           ))}
         </TableCell>
-        {/* <TableCell
-          style={{
-            maxWidth: '300px', // Set a maximum width for the cell
-            overflow: 'hidden', // Hide content that overflows the width
-            textOverflow: 'ellipsis' // Add ellipsis for overflowed text
-            // Prevent text from wrapping to the next line
-          }}
-        >
-          {row.description}
-        </TableCell> */}
 
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
@@ -191,7 +249,7 @@ export function ProcessOrderTableRow ({
           sx={{
             p: 0.5,
             gap: 0.5,
-            width: 140,
+            width: 160,
             display: 'flex',
             flexDirection: 'column',
             [`& .${menuItemClasses.root}`]: {
@@ -202,6 +260,11 @@ export function ProcessOrderTableRow ({
             }
           }}
         >
+          <MenuItem onClick={handleDownload}>
+            <Iconify icon='eva:download-fill' />
+            Download
+          </MenuItem>
+
           <EditProcessOrderForm
             setUpdate={setUpdate}
             processOrderData={processOrderData}
@@ -210,6 +273,7 @@ export function ProcessOrderTableRow ({
           <ViewProcessOrderForm
             processOrderData={processOrderData}
           />
+          
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}
             sx={{ color: 'error.main' }}
