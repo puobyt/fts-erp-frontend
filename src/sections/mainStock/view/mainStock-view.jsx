@@ -24,6 +24,7 @@ import LinearProgress, {
 } from '@mui/material/LinearProgress'
 import { varAlpha } from 'src/theme/styles'
 import ColorOfExpiry from '../../../utils/ColorOfExpiry';
+import { Button } from '@mui/material';
 
 
 
@@ -32,29 +33,29 @@ import ColorOfExpiry from '../../../utils/ColorOfExpiry';
 
 export function MainStockView() {
   const table = useTable();
-  const [update,setUpdate] = useState(false);
+  const [update, setUpdate] = useState(false);
   const [loading, setLoading] = useState(false)
-  const [mainStocks,setMainStocks] = useState([]);
-const fetchMainStock = async ()=>{
-try{
-  setLoading(true)
-const result = await axiosInstance.get('/mainStock');
-if(result.data.data){
+  const [mainStocks, setMainStocks] = useState([]);
+  const fetchMainStock = async () => {
+    try {
+      setLoading(true)
+      const result = await axiosInstance.get('/mainStock');
+      if (result.data.data) {
 
-  setMainStocks(result.data.data);
-  setLoading(false)
-}
-}catch(err){
-  console.error('Error occured in fetching vendors inc client side',err.message)
-}
-}
+        setMainStocks(result.data.data);
+        setLoading(false)
+      }
+    } catch (err) {
+      console.error('Error occured in fetching vendors inc client side', err.message)
+    }
+  }
   const [filterName, setFilterName] = useState('');
-useEffect(()=>{
-  fetchMainStock();
-},[update]);
+  useEffect(() => {
+    fetchMainStock();
+  }, [update]);
 
 
-  const dataFiltered= applyFilter({
+  const dataFiltered = applyFilter({
     inputData: mainStocks,
     comparator: getComparator(table.order, table.orderBy),
     filterName,
@@ -63,7 +64,7 @@ useEffect(()=>{
   const notFound = !dataFiltered.length && !!filterName;
   const renderFallback = (
     <Box
-     display='flex'
+      display='flex'
       alignItems='center'
       justifyContent='center'
       flex='1 1 auto'
@@ -82,8 +83,17 @@ useEffect(()=>{
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-      Main Stock Management
+          Main Stock Management
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => table.onSort('expiryDate')}  // Trigger sorting by expiry date
+          sx={{ mr: 2 }}
+        >
+          Sort by Expiry Date
+        </Button>
+
         {/* <Button
           variant="contained"
           color="inherit"
@@ -91,16 +101,16 @@ useEffect(()=>{
         >
           New user
         </Button> */}
-     
-      <MainStockForm setUpdate={setUpdate}/>
-    
+
+        <MainStockForm setUpdate={setUpdate} />
+
       </Box>
-     
- <ColorOfExpiry/>
+
+      <ColorOfExpiry />
       <Card>
-      {loading && renderFallback}
+        {loading && renderFallback}
         <MainStockTableToolbar
-           sort={table.onSort}
+          sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {
@@ -109,60 +119,55 @@ useEffect(()=>{
           }}
         />
 
-    
-          <TableContainer sx={{ overflow: 'auto' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <MainStockTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={mainStocks.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                // onSelectAllRows={(checked) =>
-                //   table.onSelectAllRows(
-                //     checked,
-                //     _users.map((user) => user.id)
-                //   )
-                // }
-                headLabel={[
-                  { id: 'materialName', label: 'Material Name' },
-                  { id: 'materialCode', label: 'Material Code' },
-                  { id: 'grn', label: 'GRN' },
-                  { id: 'quantity', label: 'Quantity' },
-                  { id: 'price', label: 'Price' },
-                  { id: 'storageLocation', label: 'Storage Location' },
-                  { id: 'vendorName', label: 'vendorName' },
-                  { id: 'dateRecieved', label: 'Date Recieved' },
-                  { id: 'expiryDate', label: 'Expiry' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row,index) => (
-                    <MainStockTableRow
-                  
+
+        <TableContainer sx={{ overflow: 'auto' }}>
+          <Table sx={{ minWidth: 800 }}>
+          <MainStockTableHead
+  order={table.order}
+  orderBy={table.orderBy}
+  rowCount={mainStocks.length}
+  numSelected={table.selected.length}
+  onSort={table.onSort}
+  headLabel={[
+    { id: 'materialName', label: 'Material Name' },
+    { id: 'materialCode', label: 'Material Code' },
+    { id: 'grn', label: 'GRN' },
+    { id: 'quantity', label: 'Quantity' },
+    { id: 'price', label: 'Price' },
+    { id: 'storageLocation', label: 'Storage Location' },
+    { id: 'vendorName', label: 'Vendor Name' },
+    { id: 'dateRecieved', label: 'Date Received' },
+    { id: 'expiryDate', label: 'Expiry Date' },  // Ensure expiryDate is included in headLabel
+  ]}
+/>
+
+            <TableBody>
+              {dataFiltered
+                .slice(
+                  table.page * table.rowsPerPage,
+                  table.page * table.rowsPerPage + table.rowsPerPage
+                )
+                .map((row, index) => (
+                  <MainStockTableRow
+
                     setUpdate={setUpdate}
-                      key={index}
-                      row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
-                    />
-                  ))}
+                    key={index}
+                    row={row}
+                    selected={table.selected.includes(row.id)}
+                    onSelectRow={() => table.onSelectRow(row.id)}
+                  />
+                ))}
 
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, mainStocks.length)}
-                />
+              <TableEmptyRows
+                height={68}
+                emptyRows={emptyRows(table.page, table.rowsPerPage, mainStocks.length)}
+              />
 
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-  
+              {notFound && <TableNoData searchQuery={filterName} />}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
 
         <TablePagination
           component="div"
@@ -184,7 +189,7 @@ export function useTable() {
   const [page, setPage] = useState(0);
   const [orderBy, setOrderBy] = useState('name');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState([]);  // Ensure this is an array
+  const [selected, setSelected] = useState([]);
   const [order, setOrder] = useState('asc');
 
   const onSort = useCallback(
@@ -233,6 +238,13 @@ export function useTable() {
     [onResetPage]
   );
 
+  // Add sorting logic based on `expiryDate`
+  const getComparator = (order, orderBy) => {
+    return order === 'desc'
+      ? (a, b) => (new Date(b[orderBy]) - new Date(a[orderBy]))
+      : (a, b) => (new Date(a[orderBy]) - new Date(b[orderBy]));
+  };
+
   return {
     page,
     order,
@@ -245,5 +257,7 @@ export function useTable() {
     onChangePage,
     onSelectAllRows,
     onChangeRowsPerPage,
+    getComparator, // return the comparator function
   };
 }
+

@@ -11,7 +11,8 @@ import toast, { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../../global.css'
-import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+import { useEffect } from 'react'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -24,7 +25,7 @@ const style = {
   p: 4
 }
 
-export default function ReworkForm ({ setUpdate, batches }) {
+export default function ReworkForm({ setUpdate, batches }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -42,7 +43,24 @@ export default function ReworkForm ({ setUpdate, batches }) {
     comments: ''
   })
   const [errors, setErrors] = useState({})
-const navigate = useNavigate();
+  const [quarentineItems, setQuarentineItems] = useState([])
+  const [selectedItem, setSelectedItem] = useState({})
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (quarentineItems.length <= 0) {
+      getQuarentineItems()
+    }
+  }, [open])
+
+  const getQuarentineItems = async () => {
+    const result = await axiosInstance.get('/get-quarantine-items')
+    if (result?.data) {
+      setQuarentineItems(result.data.data || [])
+    }
+  }
   const validateForm = () => {
     const newErrors = {}
     if (!formData.batchNumber)
@@ -79,7 +97,7 @@ const navigate = useNavigate();
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  
+
   const handleMaterialChange = event => {
     const selectedMaterial = event.target.value
     const isSelectedMaterial = batches.find(
@@ -143,6 +161,19 @@ const navigate = useNavigate();
       )
     }
   }
+
+  const handleQuarentineItemSelection = (e) => {
+    const value = e.target.value
+    setSelectedItem(value)
+    setFormData((prev) => ({
+      ...prev,
+      batchNumber: value.batchNumber,
+      materialName: value?.productName ? value?.productName : value?.materialName,
+      inspectorName: value?.inspectorName || '',
+      issueDescription: value?.comments || '',
+      quantityForRework: value?.quantity || ''
+    }))
+  }
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
@@ -188,62 +219,118 @@ const navigate = useNavigate();
                 Rework Management
               </Typography>
             </Box>
-            <Box component='form' onSubmit={handleSubmit}>
+            <Box component='form' onSubmit={handleSubmit} sx={{
+              maxHeight: '65vh', // Restrict height to 70% of viewport height
+              overflowY: 'auto', // Enable vertical scrolling
+              paddingRight: 2 // Add padding to avoid scrollbar overlap with content
+            }}>
+              <Grid item xs={6} sx={{ mt: 2.1 }}>
+                <TextField
+                  fullWidth
+                  select
+                  label='Quarantine Items'
+                  name='quarantine'
+                  value={selectedItem}
+                  onChange={handleQuarentineItemSelection}
+                  // error={!!errors.assignmentNumber}
+                  helperText={errors.assignmentNumber}
+                  variant='outlined'
+                  InputProps={{
+                    style: { borderRadius: 8 },
+                  }}
+                >
+                  {(quarentineItems && quarentineItems.length > 0) && quarentineItems.map((item, index) => (
+                    <MenuItem
+                      key={`product-${index}`}
+                      value={item}
+                    >
+                      {item?.productName || item?.materialName}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    select
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={formData.batchNumber}
-                    onChange={handleBatchChange}
-                    error={!!errors.batchNumber}
-                    helperText={errors.batchNumber}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    {batches.map((batch, index) => (
-                      <MenuItem key={index} value={batch.batchNumber}>
-                        {batch.batchNumber}
-                      </MenuItem>
-                    ))}
-
-                    {/* This item only triggers navigation, not a form selection */}
-                    <MenuItem
-                      onClick={() => navigate('/vendor-stock-management/current-stock')}
-                      sx={{ fontStyle: 'italic' }} // Optional styling
+                  {selectedItem ? (
+                    <TextField
+                      fullWidth
+                      label='Batch Number'
+                      name='batchNumber'
+                      value={formData.batchNumber}
+                      InputProps={{
+                        readOnly: true,
+                        style: { borderRadius: 8 },
+                      }}
+                      variant='outlined'
+                      helperText='Filled from Quarantine Item'
+                    />
+                  ) : (
+                    <TextField
+                      fullWidth
+                      select
+                      label='Batch Number'
+                      name='batchNumber'
+                      value={formData.batchNumber}
+                      onChange={handleBatchChange}
+                      error={!!errors.batchNumber}
+                      helperText={errors.batchNumber}
+                      variant='outlined'
+                      InputProps={{ style: { borderRadius: 8 } }}
                     >
-                      Add New Batch +
-                    </MenuItem>
-                  </TextField>
+                      {batches.map((batch, index) => (
+                        <MenuItem key={index} value={batch.batchNumber}>
+                          {batch.batchNumber}
+                        </MenuItem>
+                      ))}
+                      <MenuItem
+                        onClick={() => navigate('/vendor-stock-management/current-stock')}
+                        sx={{ fontStyle: 'italic' }}
+                      >
+                        Add New Batch +
+                      </MenuItem>
+                    </TextField>
+                  )}
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    select
-                    label='Material Name'
-                    name='materialName'
-                    value={formData.materialName}
-                    onChange={handleMaterialChange}
-                    error={!!errors.materialName}
-                    helperText={errors.materialName}
-                    variant='outlined'
-                    InputProps={{ style: { borderRadius: 8 } }}
-                  >
-                    {batches.map((batch, index) => (
-                      <MenuItem key={index} value={batch.materialName}>
-                        {batch.materialName}
-                      </MenuItem>
-                    ))}
-
-                    <MenuItem
-                      onClick={() => navigate('/vendor-stock-management/current-stock')}
-                      sx={{ fontStyle: 'italic' }}
+                  {selectedItem ? (
+                    <TextField
+                      fullWidth
+                      label='Material Name'
+                      name='materialName'
+                      value={formData.materialName}
+                      InputProps={{
+                        readOnly: true,
+                        style: { borderRadius: 8 },
+                      }}
+                      variant='outlined'
+                      helperText='Filled from Quarantine Item'
+                    />
+                  ) : (
+                    <TextField
+                      fullWidth
+                      select
+                      label='Material Name'
+                      name='materialName'
+                      value={formData.materialName}
+                      onChange={handleMaterialChange}
+                      error={!!errors.materialName}
+                      helperText={errors.materialName}
+                      variant='outlined'
+                      InputProps={{ style: { borderRadius: 8 } }}
                     >
-                      Add New Material In Current Stock +
-                    </MenuItem>
-                  </TextField>
+                      {batches.map((batch, index) => (
+                        <MenuItem key={index} value={batch.materialName}>
+                          {batch.materialName}
+                        </MenuItem>
+                      ))}
+                      <MenuItem
+                        onClick={() => navigate('/vendor-stock-management/current-stock')}
+                        sx={{ fontStyle: 'italic' }}
+                      >
+                        Add New Material In Current Stock +
+                      </MenuItem>
+                    </TextField>
+                  )}
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -338,7 +425,7 @@ const navigate = useNavigate();
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Quantity For Rework In KG'
+                    label='Quantity For Rework'
                     name='quantityForRework'
                     value={formData.quantityForRework}
                     onChange={handleChange}
@@ -351,6 +438,7 @@ const navigate = useNavigate();
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    select
                     label='Rework Status'
                     name='reworkStatus'
                     value={formData.reworkStatus}
@@ -359,7 +447,17 @@ const navigate = useNavigate();
                     helperText={errors.reworkStatus}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
-                  />
+                  >
+                    <MenuItem value='Accepted' sx={{ color: 'green' }}>
+                      Accepted
+                    </MenuItem>
+                    <MenuItem sx={{ color: 'purple' }} value='Quarantine'>
+                      Quarantine
+                    </MenuItem>
+                    <MenuItem sx={{ color: 'red' }} value='Rejected'>
+                      Rejected
+                    </MenuItem>
+                  </TextField>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
