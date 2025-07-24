@@ -336,8 +336,9 @@ export default function MainStockForm({
                     InputProps={{ style: { borderRadius: 8 } }}
                     select>
                     {vendors.map((vendor) => (
-                      <MenuItem key={vendor.id} value={vendor.name}>
-                        {vendor.name}
+                      <MenuItem key={vendor.id} value={vendor.nameOfTheFirm}>
+                            {vendor.nameOfTheFirm}
+
                       </MenuItem>
                     ))}
                     <MenuItem value='addventor' onClick={handleAddVendor}>Add vendor</MenuItem>
