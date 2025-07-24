@@ -23,47 +23,42 @@ import { CurrentStockTableToolbar } from '../currentStock-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import CurrentStockForm from '../../../layouts/modals/addCurrentStock';
 import axiosInstance from 'src/configs/axiosInstance';
-import LinearProgress, {
-  linearProgressClasses
-} from '@mui/material/LinearProgress'
-import { varAlpha } from 'src/theme/styles'
+import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import { varAlpha } from 'src/theme/styles';
 import ColorOfExpiry from '../../../utils/ColorOfExpiry';
-
-
-
 
 // ----------------------------------------------------------------------
 
 export function CurrentStockView() {
   const table = useTable();
-  const [update,setUpdate] = useState(false);
-  const [loading, setLoading] = useState(false)
-  const [currentStocks,setCurrentStocks] = useState([]);
-  const [purchaseOrderData,setPurchaseOrderData] = useState([]);
-  const [materials,setMaterials] = useState([]);
-  const [vendors,setVendors] = useState([]);
-const fetchCurrentStock = async ()=>{
-try{
-  setLoading(true)
-const result = await axiosInstance.get('/currentStock');
-if(result.data.data){
-  setCurrentStocks(result.data.data);
-  setPurchaseOrderData(result.data.purchaseOrderCreationData);
-  setMaterials(result.data.materials);
-  setVendors(result.data.vendors);
-    setLoading(false)
-}
-}catch(err){
-  console.error('Error occured in fetching vendors inc client side',err.message)
-}
-}
+  const [update, setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [currentStocks, setCurrentStocks] = useState([]);
+  const [purchaseOrderData, setPurchaseOrderData] = useState([]);
+  const [materials, setMaterials] = useState([]);
+  const [vendors, setVendors] = useState([]);
+  const fetchCurrentStock = async () => {
+    try {
+      setLoading(true);
+      const result = await axiosInstance.get('/currentStock');
+      console.log('currentstock', result);
+      if (result.data.data) {
+        setCurrentStocks(result.data.data);
+        setPurchaseOrderData(result.data.purchaseOrderCreationData);
+        setMaterials(result.data.materials);
+        setVendors(result.data.vendors);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error('Error occured in fetching vendors inc client side', err.message);
+    }
+  };
   const [filterName, setFilterName] = useState('');
-useEffect(()=>{
-  fetchCurrentStock();
-},[update]);
+  useEffect(() => {
+    fetchCurrentStock();
+  }, [update]);
 
-
-  const dataFiltered= applyFilter({
+  const dataFiltered = applyFilter({
     inputData: currentStocks,
     comparator: getComparator(table.order, table.orderBy),
     filterName,
@@ -71,27 +66,21 @@ useEffect(()=>{
 
   const notFound = !dataFiltered.length && !!filterName;
   const renderFallback = (
-    <Box
-      display='flex'
-      alignItems='center'
-      justifyContent='center'
-      flex='1 1 auto'
-    >
+    <Box display="flex" alignItems="center" justifyContent="center" flex="1 1 auto">
       <LinearProgress
         sx={{
           width: 1150,
-          bgcolor: theme =>
-            varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
-          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' }
+          bgcolor: (theme) => varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' },
         }}
       />
     </Box>
-  )
+  );
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-      Current Stock Management
+          Current Stock Management
         </Typography>
         {/* <Button
           variant="contained"
@@ -100,16 +89,20 @@ useEffect(()=>{
         >
           New user
         </Button> */}
-       
-        <CurrentStockForm setUpdate={setUpdate} purchaseOrderData={purchaseOrderData} materials={materials} vendors={vendors}/>
-    
+
+        <CurrentStockForm
+          setUpdate={setUpdate}
+          purchaseOrderData={purchaseOrderData}
+          materials={materials}
+          vendors={vendors}
+        />
       </Box>
 
       <Card>
-         <ColorOfExpiry/>
-      {loading && renderFallback}
+        <ColorOfExpiry />
+        {loading && renderFallback}
         <CurrentStockTableToolbar
-           sort={table.onSort}
+          sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {
@@ -118,73 +111,69 @@ useEffect(()=>{
           }}
         />
 
- 
-          <TableContainer sx={{ overflow: 'auto' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <CurrentStockTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={currentStocks.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                // onSelectAllRows={(checked) =>
-                //   table.onSelectAllRows(
-                //     checked,
-                //     _users.map((user) => user.id)
-                //   )
-                // }
-                headLabel={[
-                  { id: 'materiaLName', label: 'Material Name' },
-                  { id: 'materialCode', label: 'Material Code' },
-                  { id: 'grn', label: 'GRN' },
-                  { id: 'quantity', label: 'Quantity' },
-                  { id: 'price', label: 'Price' },
-                  { id: 'storageLocation', label: 'Storage Location'},
-                  { id: 'vendorName', label: 'Vendor Name' },
-                  { id: 'dateRecieved', label: 'Date Recieved' },
-                  { id: 'expiryDate', label: 'Expiry' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row,index) => (
-                    <CurrentStockTableRow
+        <TableContainer sx={{ overflow: 'auto' }}>
+          <Table sx={{ minWidth: 800 }}>
+            <CurrentStockTableHead
+              order={table.order}
+              orderBy={table.orderBy}
+              rowCount={currentStocks.length}
+              numSelected={table.selected.length}
+              onSort={table.onSort}
+              // onSelectAllRows={(checked) =>
+              //   table.onSelectAllRows(
+              //     checked,
+              //     _users.map((user) => user.id)
+              //   )
+              // }
+              headLabel={[
+                { id: 'materiaLName', label: 'Material Name' },
+                { id: 'materialCode', label: 'Material Code' },
+                { id: 'grn', label: 'GRN' },
+                { id: 'quantity', label: 'Quantity' },
+                { id: 'price', label: 'Price' },
+                { id: 'storageLocation', label: 'Storage Location' },
+                { id: 'vendorName', label: 'Vendor Name' },
+                { id: 'dateRecieved', label: 'Date Recieved' },
+                { id: 'expiryDate', label: 'Expiry' },
+              ]}
+            />
+            <TableBody>
+              {dataFiltered
+                .slice(
+                  table.page * table.rowsPerPage,
+                  table.page * table.rowsPerPage + table.rowsPerPage
+                )
+                .map((row, index) => (
+                  <CurrentStockTableRow
                     vendors={vendors}
                     purchaseOrderData={purchaseOrderData}
                     materials={materials}
                     setUpdate={setUpdate}
-                      key={index}
-                      row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
-                    />
-                  ))}
+                    key={index}
+                    row={row}
+                    selected={table.selected.includes(row.id)}
+                    onSelectRow={() => table.onSelectRow(row.id)}
+                  />
+                ))}
 
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, currentStocks.length)}
-                />
+              <TableEmptyRows
+                height={68}
+                emptyRows={emptyRows(table.page, table.rowsPerPage, currentStocks.length)}
+              />
 
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
-            </Table>
-            <TablePagination
-          component="div"
-          page={table.page}
-          count={currentStocks.length}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
-        />
-          </TableContainer>
-    
-
-  
+              {notFound && <TableNoData searchQuery={filterName} />}
+            </TableBody>
+          </Table>
+          <TablePagination
+            component="div"
+            page={table.page}
+            count={currentStocks.length}
+            rowsPerPage={table.rowsPerPage}
+            onPageChange={table.onChangePage}
+            rowsPerPageOptions={[5, 10, 25]}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
+        </TableContainer>
       </Card>
     </DashboardContent>
   );
@@ -196,7 +185,7 @@ export function useTable() {
   const [page, setPage] = useState(0);
   const [orderBy, setOrderBy] = useState('name');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState([]);  // Ensure this is an array
+  const [selected, setSelected] = useState([]); // Ensure this is an array
   const [order, setOrder] = useState('asc');
 
   const onSort = useCallback(
@@ -216,18 +205,15 @@ export function useTable() {
     }
   }, []);
 
-  const onSelectRow = useCallback(
-    (inputValue) => {
-      setSelected((prevSelected) => {
-        if (prevSelected.includes(inputValue)) {
-          return prevSelected.filter((value) => value !== inputValue);
-        } else {
-          return [...prevSelected, inputValue];
-        }
-      });
-    },
-    []
-  );
+  const onSelectRow = useCallback((inputValue) => {
+    setSelected((prevSelected) => {
+      if (prevSelected.includes(inputValue)) {
+        return prevSelected.filter((value) => value !== inputValue);
+      } else {
+        return [...prevSelected, inputValue];
+      }
+    });
+  }, []);
 
   const onResetPage = useCallback(() => {
     setPage(0);

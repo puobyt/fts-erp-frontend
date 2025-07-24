@@ -45,8 +45,8 @@ export function getComparator(
 // ----------------------------------------------------------------------
 
 
-export function applyFilter({ inputData, comparator, filterName }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index] );
+export function applyFilter({ inputData, comparator, filterName, filterBatchNumber }) {
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -56,12 +56,21 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+  // Filter by filterName (search)
   if (filterName) {
     inputData = inputData.filter(
-      (qualityInspection) => qualityInspection.productName.toLowerCase().includes(filterName.toLowerCase()) || 
-      qualityInspection.inspectionResults.toLowerCase().includes(filterName.toLowerCase()) || 
-      qualityInspection.inspectionNumber.toLowerCase().includes(filterName.toLowerCase())
-      
+      (user) =>
+        user.createdAt?.toLowerCase().includes(filterName.toLowerCase()) ||
+        user.materialName?.toLowerCase().includes(filterName.toLowerCase()) ||
+        user.materialCode?.toLowerCase().includes(filterName.toLowerCase())
+    );
+  }
+
+  // Filter by batch number
+  if (filterBatchNumber) {
+    inputData = inputData.filter(
+      (user) =>
+        user.batchNumber?.toLowerCase().includes(filterBatchNumber.toLowerCase())
     );
   }
 
