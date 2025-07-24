@@ -41,7 +41,7 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
-    batchNumber: '',
+    grn: '',
     materialName: '',
     materialCode: '',
     inspectionDate: '',
@@ -78,7 +78,7 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
 
   const validateForm = () => {
     const newErrors = {}
-    if (!formData.batchNumber) newErrors.batchNumber = 'Batch Number is required'
+    if (!formData.grn) newErrors.grn = 'GRN is required'
     if (!formData.materialName) newErrors.materialName = 'Material Name is required'
     if (!formData.materialCode) newErrors.materialCode = 'Material Code is required'
     if (!formData.inspectionDate) newErrors.inspectionDate = 'Inspection Date is required'
@@ -136,7 +136,7 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
       setFormData({
         ...formData,
         materialName: selectedMaterial,
-        batchNumber: isSelectedMaterial.batchNumber,
+        grn: isSelectedMaterial.grn,
         materialCode: isSelectedMaterial.materialCode
       })
     }
@@ -151,7 +151,7 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
       setFormData({
         ...formData,
         materialCode: selectedMaterialCode,
-        batchNumber: isSelectedMaterialCode.batchNumber,
+        grn: isSelectedMaterialCode.grn,
         materialName: isSelectedMaterialCode.materialName
       })
     }
@@ -160,13 +160,13 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
   const handleBatchChange = event => {
     const selectedBatch = event.target.value
     const isSelectedBatch = batches.find(
-      batch => selectedBatch === batch.batchNumber
+      batch => selectedBatch === batch.grn
     )
     if (isSelectedBatch) {
       setFormData({
         ...formData,
         materialName: isSelectedBatch.materialName,
-        batchNumber: selectedBatch,
+        grn: selectedBatch,
         materialCode: isSelectedBatch.materialCode
       })
     }
@@ -209,7 +209,7 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
       toast.success('Quality Check and Parameters saved successfully!')
       handleClose()
       setFormData({
-        batchNumber: '',
+        grn: '',
         materialName: '',
         materialCode: '',
         inspectionDate: '',
@@ -313,18 +313,18 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
                     <TextField
                       fullWidth
                       select
-                      label='Batch Number'
-                      name='batchNumber'
-                      value={formData.batchNumber}
+                      label='GRN'
+                      name='grn'
+                      value={formData.grn}
                       onChange={handleBatchChange}
-                      error={!!errors.batchNumber}
-                      helperText={errors.batchNumber}
+                      error={!!errors.grn}
+                      helperText={errors.grn}
                       variant='outlined'
                       InputProps={{ style: { borderRadius: 8 } }}
                     >
                       {batches.map((batch, index) => (
-                        <MenuItem key={index} value={batch.batchNumber}>
-                          {batch.batchNumber}
+                        <MenuItem key={index} value={batch.grn}>
+                          {batch.grn}
                         </MenuItem>
                       ))}
                       <MenuItem

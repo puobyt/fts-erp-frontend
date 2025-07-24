@@ -120,12 +120,20 @@ export default function RequestCreationForMaterialsForm ({
     const updatedMaterials = [...formData.materials]
     updatedMaterials[index][name] = value
 
+    let selectedMaterial
     if (name === 'materialsList') {
-      const selectedMaterial = materialNames.find(
+       selectedMaterial = materialNames.find(
         material => material.materialName === value
       )
       updatedMaterials[index].materialCode =
         selectedMaterial?.materialCode || ''
+    }
+
+    if(!selectedMaterial){
+      selectedMaterial = finishedGoods.find(
+        material => material.materialName === value
+    );
+    updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
     }
 
     setFormData({ ...formData, materials: updatedMaterials })
@@ -246,8 +254,8 @@ export default function RequestCreationForMaterialsForm ({
                           Finished Goods
                         </MenuItem>
                         {finishedGoods.map((item, index) => (
-                          <MenuItem key={`finished-${index}`} value={item}>
-                            {item}
+                          <MenuItem key={`finished-${index}`} value={item.materialName}>
+                            {item.materialName}
                           </MenuItem>
                         ))}
 

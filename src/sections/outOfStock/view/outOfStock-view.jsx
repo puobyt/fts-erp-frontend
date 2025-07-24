@@ -26,45 +26,71 @@ import LinearProgress, {
   linearProgressClasses
 } from '@mui/material/LinearProgress'
 import { varAlpha } from 'src/theme/styles'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 
 
-  
+
 
 // ----------------------------------------------------------------------
 
 export function OutOfStockView() {
   const table = useTable();
-  const [update,setUpdate] = useState(false);
+  const [update, setUpdate] = useState(false);
   const [loading, setLoading] = useState(false)
-  const [outOfStocks,setOutOfStocks] = useState([]);
-const fetchOutOfStocks = async ()=>{
-try{
-  setLoading(true)
-const result = await axiosInstance.get('/outOfStock');
-if(result.data.data){
-  setOutOfStocks(result.data.data);
-  setLoading(false)
-}
-}catch(err){
-  console.error('Error occured in fetching vendors inc client side',err.message)
-}
-}
+  const [outOfStocks, setOutOfStocks] = useState([]);
+  const [selectedTab, setSelectedTab] = useState(0)
+  const [finishedGoods, setFinishedGoods] = useState([])
+
+  const fetchOutOfStocks = async () => {
+    try {
+      setLoading(true)
+      const result = await axiosInstance.get('/outOfStock');
+      if (result.data.data) {
+        const data = result.data.data;
+
+        // Filter items with GRN (non-finished goods)
+        const outOfStocks = data.filter(item => item.grn !== null && item.grn !== undefined);
+
+        // Filter items without GRN (finished goods)
+        const finishedGoods = data.filter(item => !item.grn);
+
+        // Update state
+        setOutOfStocks(outOfStocks);
+        setFinishedGoods(finishedGoods);
+
+        setLoading(false)
+      }
+    } catch (err) {
+      console.error('Error occured in fetching vendors inc client side', err.message)
+    }
+  }
   const [filterName, setFilterName] = useState('');
-useEffect(()=>{
-  fetchOutOfStocks();
-},[update]);
+  useEffect(() => {
+    fetchOutOfStocks();
+  }, [update]);
+
+  const getCurrentEntries = () => {
+    if (selectedTab === 0) return outOfStocks
+    if (selectedTab === 1) return finishedGoods
+  }
 
 
-  const dataFiltered= applyFilter({
-    inputData: outOfStocks,
+  const dataFiltered = applyFilter({
+    inputData: getCurrentEntries(),
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
 
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue)
+    table.onResetPage()
+  }
+
   const notFound = !dataFiltered.length && !!filterName;
   const renderFallback = (
     <Box
-     display='flex'
+      display='flex'
       alignItems='center'
       justifyContent='center'
       flex='1 1 auto'
@@ -83,7 +109,7 @@ useEffect(()=>{
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-      Out Of Stock Management
+          Out Of Stock Management
         </Typography>
         {/* <Button
           variant="contained"
@@ -93,14 +119,18 @@ useEffect(()=>{
           New user
         </Button> */}
 
-      {/* <MainStockForm setUpdate={setUpdate}/> */}
-    
+        {/* <MainStockForm setUpdate={setUpdate}/> */}
+
       </Box>
+      <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
+        <Tab label='Main Stock' />
+        <Tab label='Finished Goods' />
+      </Tabs>
 
       <Card>
-      {loading && renderFallback}
+        {loading && renderFallback}
         <OutOfStockTableToolbar
-           sort={table.onSort}
+          sort={table.onSort}
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event) => {
@@ -109,60 +139,67 @@ useEffect(()=>{
           }}
         />
 
- 
-          <TableContainer sx={{ overflow: 'auto' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <OutOfStockTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={outOfStocks.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                // onSelectAllRows={(checked) =>
-                //   table.onSelectAllRows(
-                //     checked,
-                //     _users.map((user) => user.id)
-                //   )
-                // }
-                headLabel={[
-                  { id: 'materialName', label: 'Material Name' },
-                  { id: 'materialCode', label: 'Material Code' },
-                  { id: 'grn', label: 'GRN' },
-                  { id: 'quantity', label: 'Quantity In Kg' },
-                  { id: 'price', label: 'Price' },
-                  { id: 'storageLocation', label: 'Storage Location' },
-                  { id: 'vendorName', label: 'vendorName' },
-                  { id: 'dateRecieved', label: 'Date Recieved' },
-                  { id: 'expiryDate', label: 'Expiry' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row,index) => (
-                    <OutOfStockTableRow
+
+        <TableContainer sx={{ overflow: 'auto' }}>
+          <Table sx={{ minWidth: 800 }}>
+            <OutOfStockTableHead
+              order={table.order}
+              orderBy={table.orderBy}
+              rowCount={outOfStocks.length}
+              numSelected={table.selected.length}
+              onSort={table.onSort}
+              // onSelectAllRows={(checked) =>
+              //   table.onSelectAllRows(
+              //     checked,
+              //     _users.map((user) => user.id)
+              //   )
+              // }
+              headLabel={selectedTab===0 ? [
+                { id: 'materialName', label: 'Material Name' },
+                { id: 'grn', label: 'GRN' },
+                { id: 'quantity', label: 'Quantity' },
+                { id: 'price', label: 'Price' },
+                { id: 'storageLocation', label: 'Storage Location' },
+                { id: 'vendorName', label: 'vendorName' },
+                { id: 'dateRecieved', label: 'Date Recieved' },
+                { id: 'expiryDate', label: 'Expiry' },
+              ] :[
+                { id: 'materialName', label: 'Material Name' },
+                { id: 'materialCode', label: 'Material Code' },
+                { id: 'quantity', label: 'Quantity' },
+                { id: 'storageLocation', label: 'Storage Location' },
+                { id: 'vendorName', label: 'vendorName' },
+                { id: 'productionDate', label: 'Production Date' },
+              ] }
+            />
+            <TableBody>
+              {dataFiltered
+                .slice(
+                  table.page * table.rowsPerPage,
+                  table.page * table.rowsPerPage + table.rowsPerPage
+                )
+                .map((row, index) => (
+                  <OutOfStockTableRow
                     outOfStocks={outOfStocks}
                     setUpdate={setUpdate}
-                      key={index}
-                      row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
-                    />
-                  ))}
+                    key={index}
+                    row={row}
+                    selected={table.selected.includes(row.id)}
+                    onSelectRow={() => table.onSelectRow(row.id)}
+                    selectedTab={selectedTab}
+                  />
+                ))}
 
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, outOfStocks.length)}
-                />
+              <TableEmptyRows
+                height={68}
+                emptyRows={emptyRows(table.page, table.rowsPerPage, outOfStocks.length)}
+              />
 
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-     
+              {notFound && <TableNoData searchQuery={filterName} />}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
 
         <TablePagination
           component="div"

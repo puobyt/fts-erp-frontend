@@ -41,6 +41,7 @@ export default function MainStockForm({
   const handleClose = () => setOpen(false)
   const [grnType, setGrnType] = useState('')
   const [formData, setFormData] = useState({
+    authPassword: '',
     materialName: '',
     materialCode: '',
     grn: '',
@@ -67,6 +68,8 @@ export default function MainStockForm({
   }, [])
   const validateForm = () => {
     const newErrors = {}
+    if (!formData.authPassword)
+      newErrors.authPassword = 'Authorization Password is required'
     if (!formData.materialName)
       newErrors.materialName = 'Material Name is required'
     if (!formData.quantity) {
@@ -120,6 +123,7 @@ export default function MainStockForm({
         toast.success(result.data.message)
         handleClose()
         setFormData({
+          authPassword : '',
           materialName: '',
           materialCode: '',
           grn: '',
@@ -134,7 +138,7 @@ export default function MainStockForm({
         setUpdate(prev => !prev)
       }
     } catch (err) {
-      toast.success(err.response.data.message)
+      toast.error(err.response.data.message)
       console.error(
         'Error occured in adding Current stock in client side',
         err.message
@@ -192,7 +196,21 @@ export default function MainStockForm({
               paddingRight: 2 // Add padding to avoid scrollbar overlap with content
             }}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Authorization Password'
+                    name='authPassword'
+                    type='password'
+                    value={formData.authPassword}
+                    onChange={handleChange}
+                    error={!!errors.authPassword}
+                    helperText={errors.authPassword}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
                   <FormControl error={!!errors.grnType}>
                     <FormLabel>Batch Number Type</FormLabel>
                     <RadioGroup
