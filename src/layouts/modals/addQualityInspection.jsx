@@ -25,7 +25,7 @@ const style = {
   p: 4
 }
 
-export default function QualityInspectionForm ({ setUpdate, productNames }) {
+export default function QualityInspectionForm({ setUpdate, productNames }) {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate();
@@ -49,9 +49,9 @@ export default function QualityInspectionForm ({ setUpdate, productNames }) {
       newErrors.inspectionResults = 'Inspection Results is required'
     if (!formData.date)
       newErrors.date = 'Date is required'
-       if (!formData.batchNumber)
+    if (!formData.batchNumber)
       newErrors.batchNumber = 'Batch Number is required'
-      if (!formData.quantity)
+    if (!formData.quantity)
       newErrors.quantity = 'Quantity is required'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
@@ -59,7 +59,13 @@ export default function QualityInspectionForm ({ setUpdate, productNames }) {
 
   const handleChange = e => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+
+    const selectedItem = productNames.find((item) => item.productName === value)
+    if (selectedItem) {
+      setFormData(prev => ({ ...prev, [name]: value, batchNumber: selectedItem.batchNumber }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
   }
 
   const handleSubmit = async e => {
@@ -151,9 +157,9 @@ export default function QualityInspectionForm ({ setUpdate, productNames }) {
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
-                    {productNames.map((productName, index) => (
-                      <MenuItem key={index} value={productName}>
-                        {productName}
+                    {productNames.map((item, index) => (
+                      <MenuItem key={index} value={item.productName}>
+                        {item.productName}
                       </MenuItem>
                     ))}
 
@@ -213,7 +219,7 @@ export default function QualityInspectionForm ({ setUpdate, productNames }) {
                     fullWidth
                     label='Date'
                     name='date'
-                        type='date'
+                    type='date'
                     value={formData.date}
                     onChange={handleChange}
                     error={!!errors.date}
@@ -221,12 +227,12 @@ export default function QualityInspectionForm ({ setUpdate, productNames }) {
                     variant='outlined'
                     InputProps={{
                       style: { borderRadius: 8 },
-                   
+
                     }}
                     InputLabelProps={{
                       shrink: true
                     }}
-              
+
                   />
                 </Grid>
 
@@ -242,9 +248,9 @@ export default function QualityInspectionForm ({ setUpdate, productNames }) {
                     variant='outlined'
                     InputProps={{
                       style: { borderRadius: 8 },
-                
+
                     }}
-              
+
                   />
                 </Grid>
 
@@ -260,9 +266,9 @@ export default function QualityInspectionForm ({ setUpdate, productNames }) {
                     variant='outlined'
                     InputProps={{
                       style: { borderRadius: 8 },
-                
+
                     }}
-              
+
                   />
                 </Grid>
 

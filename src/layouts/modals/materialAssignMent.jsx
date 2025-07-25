@@ -436,7 +436,6 @@ export default function MaterialAssignmentForm({
                     <Grid item xs={6}>
                       <TextField
                         fullWidth
-                        select
                         label='Finished Goods Name'
                         name='finishedGoodsName'
                         value={formData.finishedGoodsName}
@@ -446,20 +445,7 @@ export default function MaterialAssignmentForm({
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
                       >
-                        {finishedGoods.map((item, index) => (
-                          <MenuItem key={`finished-${index}`} value={item.materialName}>
-                            {item.materialName}
-                          </MenuItem>
-                        ))}
 
-                        <MenuItem
-                          onClick={() =>
-                            navigate('/finished-goods-invoicing/finished-goods')
-                          }
-                          sx={{ fontStyle: 'italic' }}
-                        >
-                          Add New Finished Goods +
-                        </MenuItem>
                       </TextField>
                     </Grid>
                   </React.Fragment>

@@ -74,9 +74,9 @@ export default function InvoiceCreationForm ({ setUpdate,itemNames }) {
   const handleSubmit = async e => {
     e.preventDefault()
 
-    if (!validateForm()) {
-      return
-    }
+    // if (!validateForm()) {
+    //   return
+    // }
     try {
       const result = await axiosInstance
         .post('/newInvoiceCreation', formData)
@@ -149,7 +149,7 @@ export default function InvoiceCreationForm ({ setUpdate,itemNames }) {
                 color='primary'
                 gutterBottom
               >
-                Add New Inovice Creation
+                Add New Invoice Creation
               </Typography>
               <Typography variant='body2' color='textSecondary'>
                 Invoice Creation Management

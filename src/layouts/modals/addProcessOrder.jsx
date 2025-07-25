@@ -25,7 +25,7 @@ const style = {
   p: 4
 }
 
-export default function ProcessOrderForm ({ setUpdate }) {
+export default function ProcessOrderForm({ setUpdate }) {
   const [open, setOpen] = useState(false)
   const [dropDownItems, setDropDownItems] = useState([])
 
@@ -34,12 +34,14 @@ export default function ProcessOrderForm ({ setUpdate }) {
     setOpen(true)
     if (dropDownItems.length <= 0) {
       const items = await axiosInstance.get('/mainStock')
-
-      if (items?.data?.data && items?.data?.data.length >0) {
-        const updatedItems = items?.data?.data.map((item)=>({label:item.materialName, value:item.materialCode}))
+      if (items?.data?.data && items?.data?.data.length > 0) {
+        const updatedItems = items?.data?.data.map((item) => ({
+          label: item.materialName,
+          materialCode: item.materialCode,
+          batchNumber: item.batchNumber
+        }))
         setDropDownItems(updatedItems)
       }
-
     }
   }
   const navigate = useNavigate()
@@ -55,7 +57,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
     batchNumber: '',
     orderQuantity: '',
     materialInput: [
-      { materialCode: '', quantity: '', batch: '', storageLocation: ''}
+      { materialCode: '', quantity: '', batch: '', storageLocation: '' }
     ]
   })
   const [errors, setErrors] = useState({})
@@ -90,19 +92,15 @@ export default function ProcessOrderForm ({ setUpdate }) {
 
   const handleMaterialChange = (e, index) => {
     const { name, value } = e.target
-
+    const selectedItem = dropDownItems.find(item => item.materialCode === value)
+    
     const updatedMaterials = [...formData.materialInput]
     updatedMaterials[index][name] = value
-
-    // if (name === 'materialCode') {
-    //   const selectedMaterial = materialNames.find(
-    //     material => material.materialName === value
-    //   )
-    //   updatedMaterials[index].materialCode =
-    //     selectedMaterial?.materialCode || ''
-    // }
-
-    setFormData({ ...formData, materialInput: updatedMaterials })
+    if(selectedItem){
+      updatedMaterials[index]['batch'] = selectedItem?.batchNumber || ''
+    }
+    
+    setFormData({...formData, materialInput: updatedMaterials})
   }
 
   const addMaterial = () => {
@@ -339,7 +337,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
                   <Typography
                     variant='subtitle2'
                     fontWeight='bold'
-                     // Adds margin-bottom for spacing
+                  // Adds margin-bottom for spacing
                   >
                     Material Input
                   </Typography>
@@ -353,7 +351,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
                         fullWidth
                         label="Material Code"
                         name="materialCode"
-                        value={material.materialCode}
+                        value={material.materialCode || ''}
                         onChange={e => handleMaterialChange(e, index)}
                         error={!!errors.materialInput}
                         helperText={errors.materialInput}
@@ -361,7 +359,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
                         InputProps={{ style: { borderRadius: 8 } }}
                       >
                         {dropDownItems.map((item, idx) => (
-                          <MenuItem key={idx} value={item.value}>
+                          <MenuItem key={idx} value={item.materialCode}>
                             {item.label}
                           </MenuItem>
                         ))}
@@ -394,7 +392,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
                         variant='outlined'
                         InputProps={{
                           style: { borderRadius: 8 },
-                     
+
                         }}
                       />
                     </Grid>
@@ -410,7 +408,7 @@ export default function ProcessOrderForm ({ setUpdate }) {
                         variant='outlined'
                         InputProps={{
                           style: { borderRadius: 8 },
-                        
+
                         }}
                       />
                     </Grid>

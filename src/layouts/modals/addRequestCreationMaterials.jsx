@@ -133,7 +133,9 @@ export default function RequestCreationForMaterialsForm ({
       selectedMaterial = finishedGoods.find(
         material => material.materialName === value
     );
-    updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
+    if(selectedMaterial){
+      updatedMaterials[index].materialCode = selectedMaterial?.materialCode || '';
+    }
     }
 
     setFormData({ ...formData, materials: updatedMaterials })
