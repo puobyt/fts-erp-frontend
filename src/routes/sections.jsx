@@ -11,7 +11,7 @@ import LinearProgress, {
 import { varAlpha } from 'src/theme/styles'
 import { AuthLayout } from 'src/layouts/auth'
 import { DashboardLayout } from 'src/layouts/dashboard'
-import QCParameterTable from '../sections/qcParameters/view/qcParameterTable'
+import QCParameterTable from '../sections/qcParameters/view/QcParameterTable'
 
 // ----------------------------------------------------------------------
 
