@@ -38,7 +38,8 @@ export default function ProcessOrderForm({ setUpdate }) {
         const updatedItems = items?.data?.data.map((item) => ({
           label: item.materialName,
           materialCode: item.materialCode,
-          batchNumber: item.batchNumber
+          batchNumber: item.batchNumber,
+          storageLocation: item.storageLocation
         }))
         setDropDownItems(updatedItems)
       }
@@ -93,14 +94,15 @@ export default function ProcessOrderForm({ setUpdate }) {
   const handleMaterialChange = (e, index) => {
     const { name, value } = e.target
     const selectedItem = dropDownItems.find(item => item.materialCode === value)
-    
+
     const updatedMaterials = [...formData.materialInput]
     updatedMaterials[index][name] = value
-    if(selectedItem){
+    if (selectedItem) {
       updatedMaterials[index]['batch'] = selectedItem?.batchNumber || ''
+      updatedMaterials[index]['storageLocation'] = selectedItem?.storageLocation || ''
     }
-    
-    setFormData({...formData, materialInput: updatedMaterials})
+
+    setFormData({ ...formData, materialInput: updatedMaterials })
   }
 
   const addMaterial = () => {
@@ -349,7 +351,7 @@ export default function ProcessOrderForm({ setUpdate }) {
                       <TextField
                         select
                         fullWidth
-                        label="Material Code"
+                        label="Material Name"
                         name="materialCode"
                         value={material.materialCode || ''}
                         onChange={e => handleMaterialChange(e, index)}

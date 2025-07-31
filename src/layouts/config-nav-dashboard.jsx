@@ -37,7 +37,7 @@ export const navData = [
   },
   {
     title: 'Vendor & Stock Management',
-    children:[
+    children: [
       {
         title: 'Vendor Management',
         path: '/vendor-stock-management/vendor-management',
@@ -69,22 +69,22 @@ export const navData = [
         icon: icons(ProductionQuantityLimitsTwoToneIcon),
       },
     ],
-    
+
     icon: icons(Inventory2Icon),
   },
-  
+
   {
     title: 'Quality Control',
-    children:[
+    children: [
       {
         title: 'Inward Quality Check',
         path: '/quality-control/quality-check',
         icon: icons(VerifiedUserTwoToneIcon),
       },
       {
-        title:"Qc Parameters",
-        path:"/quality-control/qcparameters",
-        icon:icons(TuneTwoToneIcon)
+        title: "Qc Parameters",
+        path: "/quality-control/qcparameters",
+        icon: icons(TuneTwoToneIcon)
       },
       {
         title: 'Rework',
@@ -102,7 +102,7 @@ export const navData = [
   },
   {
     title: 'Production Workflow',
-    children:[
+    children: [
       {
         title: 'Process Order',
         path: '/production-workflow/process-order',
@@ -119,6 +119,11 @@ export const navData = [
         icon: icons(SaveAsTwoToneIcon),
       },
       {
+        title: 'Bill Of Material',
+        path: '/production-workflow/bill-of-materials',
+        icon: icons(ReceiptLongTwoToneIcon),
+      },
+      {
         title: 'Material Assignment',
         path: '/production-workflow/material-assignment',
         icon: icons(SummarizeTwoToneIcon),
@@ -129,19 +134,13 @@ export const navData = [
         icon: icons(OutputTwoToneIcon),
       },
 
-      {
-        title: 'Bill Of Material',
-        path: '/production-workflow/bill-of-materials',
-        icon: icons(ReceiptLongTwoToneIcon),
-      },
-
     ],
     icon: icons(CategoryIcon),
   },
 
   {
     title: 'Finished Goods & Invoicing',
-    children:[
+    children: [
       {
         title: 'Finished Goods',
         path: '/finished-goods-invoicing/finished-goods',
@@ -160,7 +159,7 @@ export const navData = [
 
   {
     title: 'Tracebility',
-    children:[
+    children: [
       {
         title: 'Tracebility',
         path: '/tracebility/tracebility',

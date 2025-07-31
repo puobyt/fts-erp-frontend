@@ -136,7 +136,7 @@ export function ProductionOrderCreationTableRow ({
               }}
             >
               <strong>{material.materialsList}</strong>:{' '}
-              {`${material.requiredQuantity} KG`}
+              {`${material.requiredQuantity} ${material?.unit || '-'}`}
             </div>
           ))}
         </TableCell>

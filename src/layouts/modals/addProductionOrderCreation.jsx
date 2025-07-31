@@ -24,7 +24,7 @@ const style = {
   p: 4
 }
 
-export default function ProductionOrderCreationForm ({
+export default function ProductionOrderCreationForm({
   setUpdate,
   materialNames,
   processOrderNumbers
@@ -38,9 +38,9 @@ export default function ProductionOrderCreationForm ({
     plant: '',
     productDescription: '',
     productName: '',
-    productQuantity:'',
+    productQuantity: '',
     batch: '',
-    materials: [{ materialsList: '', requiredQuantity: '', materialCode: '' }],
+    materials: [{ materialsList: '', requiredQuantity: '', unit: '', materialCode: '' }],
     instructions: '',
     startDate: '',
     endDate: ''
@@ -55,14 +55,14 @@ export default function ProductionOrderCreationForm ({
 
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
-        if (!formData.productQuantity)
+    if (!formData.productQuantity)
       newErrors.productQuantity = 'Product Quantity is required'
     if (!formData.productDescription)
       newErrors.productDescription = 'Product Description is required'
 
     if (
       formData.materials.some(
-        mat => !mat.materialsList || !mat.requiredQuantity || !mat.materialCode
+        mat => !mat.materialsList || !mat.requiredQuantity || !mat.materialCode || !mat.unit
       )
     ) {
       newErrors.materials = 'All material fields must be filled'
@@ -90,15 +90,16 @@ export default function ProductionOrderCreationForm ({
 
   const handleProcessOrderChange = event => {
     const selectedNumber = event.target.value
+
     const isSelectedNumber = processOrderNumbers.find(
       processOrder => selectedNumber === processOrder.processOrderNumber
     )
-
     if (isSelectedNumber) {
       setFormData({
         ...formData,
         processOrder: selectedNumber,
-        productName: isSelectedNumber.productName
+        productName: isSelectedNumber.productName,
+        plant: isSelectedNumber.plant
       })
     }
   }
@@ -122,7 +123,7 @@ export default function ProductionOrderCreationForm ({
           plant: '',
           productDescription: '',
           productName: '',
-          productQuantity:'',
+          productQuantity: '',
           batch: '',
           materials: [
             { materialsList: '', requiredQuantity: '', materialCode: '' }
@@ -331,9 +332,9 @@ export default function ProductionOrderCreationForm ({
                     variant='outlined'
                     InputProps={{
                       style: { borderRadius: 8 },
-                     
+
                     }}
-                 
+
                   />
                 </Grid>
                 {/* <Grid item xs={6}>
@@ -407,10 +408,10 @@ export default function ProductionOrderCreationForm ({
                         </MenuItem>
                       </TextField>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={2}>
                       <TextField
                         fullWidth
-                        label='Required Quantity In KG'
+                        label='Required Quantity'
                         name='requiredQuantity'
                         error={!!errors.requiredQuantity}
                         value={material.requiredQuantity}
@@ -419,6 +420,26 @@ export default function ProductionOrderCreationForm ({
                         variant='outlined'
                         InputProps={{ style: { borderRadius: 8 } }}
                       />
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        value={formData.unit}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.unit}
+                        helperText={errors.unit}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                          <MenuItem key={unit} value={unit}>
+                            {unit}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     </Grid>
 
                     <Grid item xs={4}>

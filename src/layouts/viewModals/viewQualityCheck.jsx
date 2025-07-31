@@ -97,9 +97,9 @@ export default function ViewQualityCheck({ qualityCheckData }) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label='Batch Number'
-                    name='batchNumber'
-                    value={qualityCheckData.batchNumber}
+                    label='GRN'
+                    name='grn'
+                    value={qualityCheckData.grn}
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                     InputLabelProps={{

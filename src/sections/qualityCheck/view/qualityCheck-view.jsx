@@ -127,7 +127,7 @@ useEffect(()=>{
                 //   )
                 // }
                 headLabel={[
-                  { id: 'batchNumber', label: 'GRN' },
+                  { id: 'grn', label: 'GRN' },
                   { id: 'materialName', label: 'Material Name' },
                   { id: 'materialCode', label: 'Material Code' },
                   { id: 'inspectionDate', label: 'Inspection Date' },
