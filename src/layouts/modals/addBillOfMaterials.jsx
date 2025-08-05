@@ -207,7 +207,7 @@ export default function BillOfMaterialsForm ({
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    select
+                    // select
                     label='Product Name'
                     name='productName'
                     value={formData.productName}
@@ -217,11 +217,11 @@ export default function BillOfMaterialsForm ({
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
-                    {productNames.map((productName, index) => (
+                    {/* {productNames.map((productName, index) => (
                       <MenuItem key={index} value={productName}>
                         {productName}
                       </MenuItem>
-                    ))}
+                    ))} */}
 
                     {/* This item only triggers navigation, not a form selection */}
                     <MenuItem
