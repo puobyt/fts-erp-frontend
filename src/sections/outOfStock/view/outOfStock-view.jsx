@@ -159,8 +159,8 @@ export function OutOfStockView() {
                 { id: 'grn', label: 'GRN' },
                 { id: 'quantity', label: 'Quantity' },
                 { id: 'price', label: 'Price' },
-                { id: 'storageLocation', label: 'Storage Location' },
                 { id: 'vendorName', label: 'vendorName' },
+                { id: 'storageLocation', label: 'Storage Location' },
                 { id: 'dateRecieved', label: 'Date Recieved' },
                 { id: 'expiryDate', label: 'Expiry' },
               ] :[
@@ -168,7 +168,7 @@ export function OutOfStockView() {
                 { id: 'materialCode', label: 'Material Code' },
                 { id: 'quantity', label: 'Quantity' },
                 { id: 'storageLocation', label: 'Storage Location' },
-                { id: 'vendorName', label: 'vendorName' },
+                // { id: 'vendorName', label: 'vendorName' },
                 { id: 'productionDate', label: 'Production Date' },
               ] }
             />

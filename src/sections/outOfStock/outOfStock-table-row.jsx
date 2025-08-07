@@ -28,7 +28,7 @@ export function OutOfStockTableRow({ outOfStocks, setUpdate, row, selected, onSe
     unit: row.unit,
     price: row.price,
     storageLocation: row.storageLocation,
-    vendorName: row.vendorName,
+    vendorName: row?.vendorName || '---',
     dateRecieved: row.dateRecieved,
     expiryDate: row.expiryDate
   }
@@ -100,7 +100,9 @@ export function OutOfStockTableRow({ outOfStocks, setUpdate, row, selected, onSe
         <TableCell>{`${row.quantity} ${' '} ${row.unit}`}</TableCell>
         {selectedTab === 0 && <TableCell style={{ whiteSpace: 'nowrap' }}>{`₹ ${row.price}`}</TableCell>}
 
-        <TableCell>{row.vendorName}</TableCell>
+        {selectedTab === 0 && <TableCell style={{ whiteSpace: 'nowrap' }}>{row?.vendorName || '--'}</TableCell>}
+
+        {/* <TableCell>{row?.vendorName || '--'}</TableCell> */}
         <TableCell>{row.storageLocation}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
         {selectedTab === 0 && <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>}
