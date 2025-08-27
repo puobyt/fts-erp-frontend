@@ -112,10 +112,7 @@ export function TracebilityShippingRow ({
         <TableCell>{new Date(row.invoiceDate).toLocaleDateString()}</TableCell>
         <TableCell>{row.customerName}</TableCell>
         <TableCell>{row.quantity}</TableCell>
-        <TableCell>{row.storage}</TableCell>
-        <TableCell>{row.fgReceived}</TableCell>
-        <TableCell>{row.balanceQuantity}</TableCell>
-        <TableCell>{row.dateOfInward}</TableCell>
+        <TableCell>{row.quantityLeft}</TableCell>
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon='eva:more-vertical-fill' />

@@ -29,7 +29,7 @@ import { varAlpha } from 'src/theme/styles'
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
-export function TracebilityView () {
+export function TracebilityView() {
   const table = useTable()
   const [update, setUpdate] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -49,16 +49,16 @@ export function TracebilityView () {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearchMaterialsResults = (results) => {
-    if(results.qcDetails)
-    {
+    if (results.qcDetails) {
       setMaterialData(results.materials)
       setQcDetails(results.qcDetails)
+      setProduction(results.productionData)
+      setShipping(results.shippingData)
       setIsTableVisible(true)
       console.log(results)
     }
-    else
-    {
-      setMaterialData(results.materials||results)
+    else {
+      setMaterialData(results.materials || results)
       setIsTableVisible(true)
       setQcDetails([])
     }
@@ -119,11 +119,13 @@ export function TracebilityView () {
     filterName
   })
 
-  const dataFilteredProduction = applyFilter({
-    inputData: production,
-    comparator: getComparator(table.order, table.orderBy),
-    filterName
-  })
+  const dataFilteredProduction = applyFilter(
+    {
+      inputData: production,
+      comparator: getComparator(table.order, table.orderBy),
+      filterName
+    })
+
   const dataFilteredQC = applyFilter({
     inputData: qcDetails,
     comparator: getComparator(table.order, table.orderBy),
@@ -153,13 +155,13 @@ export function TracebilityView () {
     </Box>
   )
 
-    // Extract batch numbers for the dropdown
-    useEffect(() => {
-        if (materialData) {
-            const uniqueBatchNumbers = [...new Set(materialData.map(item => item.batchNumber))];
-            setBatchNumbers(uniqueBatchNumbers);
-        }
-    }, [materialData]);
+  // Extract batch numbers for the dropdown
+  useEffect(() => {
+    if (materialData) {
+      const uniqueBatchNumbers = [...new Set(materialData.map(item => item.batchNumber))];
+      setBatchNumbers(uniqueBatchNumbers);
+    }
+  }, [materialData]);
 
   return (
     <DashboardContent>
@@ -176,7 +178,7 @@ export function TracebilityView () {
         </Button> */}
       </Box>
       <Box mb={2}>
-        <SearchBoxWithDropdown onSearchMaterials={handleSearchMaterialsResults}/>
+        <SearchBoxWithDropdown onSearchMaterials={handleSearchMaterialsResults} />
       </Box>
       <Card
         sx={{
@@ -210,7 +212,7 @@ export function TracebilityView () {
             Raw Materials
           </Typography>
           <Button
-              color="inherit"
+            color="inherit"
             variant='contained'
             onClick={handleToggle}
             sx={{
@@ -221,7 +223,7 @@ export function TracebilityView () {
           </Button>
         </Box>
         <Collapse in={isTableVisible}>
-        {loading && renderFallback}
+          {loading && renderFallback}
 
           {/* Batch Number Dropdown Filter */}
           <Autocomplete
@@ -235,7 +237,7 @@ export function TracebilityView () {
               setBatchNumberFilter(newValue);
               table.onResetPage();
             }}
-              renderInput={(params) => <TextField {...params} label="Filter by GRN" />}
+            renderInput={(params) => <TextField {...params} label="Filter by GRN" />}
           />
           <TracebilityBar
             sort={table.onSort}
@@ -261,7 +263,7 @@ export function TracebilityView () {
                     { id: 'batchNumber', label: 'GRN' },
                     { id: 'quantity', label: 'Quantity In Kg' },
                     { id: 'price', label: 'Price' },
-                    { id: 'storageLocation', label: 'Storage Location'},
+                    { id: 'storageLocation', label: 'Storage Location' },
                     { id: 'vendorName', label: 'Vendor Name' },
                     { id: 'dateRecieved', label: 'Date Recieved' },
                     { id: 'expiryDate', label: 'Expiry' },
@@ -275,8 +277,8 @@ export function TracebilityView () {
                     )
                     .map((row, index) => (
                       <TracebilityRow
-                      setQC={handleQCResults}
-                      setProduction={handleProductionResults}
+                        setQC={handleQCResults}
+                        setProduction={handleProductionResults}
                         setUpdate={setUpdate}
                         key={index}
                         row={row}
@@ -338,7 +340,7 @@ export function TracebilityView () {
             QC Details
           </Typography>
           <Button
-              color="inherit"
+            color="inherit"
             variant='contained'
             onClick={handleToggleQC}
             sx={{
@@ -349,7 +351,7 @@ export function TracebilityView () {
           </Button>
         </Box>
         <Collapse in={isTableVisibleQC}>
-        {loading && renderFallback}
+          {loading && renderFallback}
           <TracebilityBar
             sort={table.onSort}
             numSelected={table.selected.length}
@@ -449,7 +451,7 @@ export function TracebilityView () {
             Production
           </Typography>
           <Button
-              color="inherit"
+            color="inherit"
             variant='contained'
             onClick={handleToggle2}
             sx={{
@@ -460,7 +462,7 @@ export function TracebilityView () {
           </Button>
         </Box>
         <Collapse in={isTableVisible2}>
-        {loading && renderFallback}
+          {loading && renderFallback}
           <TracebilityBar
             sort={table.onSort}
             numSelected={table.selected.length}
@@ -486,9 +488,9 @@ export function TracebilityView () {
                     { id: 'rawMaterialList', label: 'Raw Material List' },
                     {
                       id: 'yieldQuantity ',
-                      label: 'Yield Quantity '
+                      label: 'Quantity '
                     },
-                    { id: 'operator', label: 'Operator' },
+                    { id: 'operator', label: 'Batch Number' },
                   ]}
                 />
                 <TableBody>
@@ -563,7 +565,7 @@ export function TracebilityView () {
             Packing and Shipping
           </Typography>
           <Button
-              color="inherit"
+            color="inherit"
             variant='contained'
             onClick={handleToggle3}
             sx={{
@@ -574,7 +576,7 @@ export function TracebilityView () {
           </Button>
         </Box>
         <Collapse in={isTableVisible3}>
-        {loading && renderFallback}
+          {loading && renderFallback}
           <TracebilityBar
             sort={table.onSort}
             numSelected={table.selected.length}
@@ -598,10 +600,7 @@ export function TracebilityView () {
                     { id: 'invoiceDate', label: 'Invoice Date' },
                     { id: 'customerName', label: 'Customer Name' },
                     { id: 'quantityForDispatch', label: 'Quantity for dispatch' },
-                    { id: 'storage', label: 'Storage' },
-                    { id: 'FgReceived', label: 'FG received'},
                     { id: 'balanceQuantity', label: 'Balance Quantity' },
-                    { id: 'dateOfFgInward', label: 'Date of FG Inward' },
                   ]}
                 />
                 <TableBody>
@@ -646,7 +645,7 @@ export function TracebilityView () {
     </DashboardContent>
   )
 }
-export function useTable () {
+export function useTable() {
   const [page, setPage] = useState(0)
   const [orderBy, setOrderBy] = useState('name')
   const [rowsPerPage, setRowsPerPage] = useState(5)
