@@ -24,7 +24,7 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
           console.log("RESULT",results)
           if(results.qcDetails)
           {
-            onSearchMaterials({materials:results.materials,qcDetails:results.qcDetails})
+            onSearchMaterials({materials:results.materials,qcDetails:results.qcDetails,productionData:results?.productionData,shippingData:results?.shipping})
           }
           else{
             onSearchMaterials({materials:results.materials})

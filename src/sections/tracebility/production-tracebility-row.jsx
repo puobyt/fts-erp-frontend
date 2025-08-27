@@ -122,20 +122,20 @@ export function TracebilityProductionRow ({
               }
             }}
           >
-            {row.processOrder}
+            {row.processOrderNumber}
           </Link>
         </TableCell>
         <TableCell>{row.plant}</TableCell>
         <TableCell>
-          {row.materials.map((material, index) => (
+          {row.materialInput.map((material, index) => (
             <div key={index}>
-              <strong>{material.materialsList}</strong>:{' '}
-              {`${material.requiredQuantity} KG`}
+              <strong>{material.materialCode}</strong>:{' '}
+              {`${material.quantity}`}
             </div>
           ))}
         </TableCell>
-        <TableCell>50</TableCell>
-        <TableCell>Operator</TableCell>
+        <TableCell>{row.orderQuantity}</TableCell>
+        <TableCell>{row.batchNumber}</TableCell>
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon='eva:more-vertical-fill' />
