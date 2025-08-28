@@ -134,8 +134,8 @@ export function TracebilityProductionRow ({
             </div>
           ))}
         </TableCell>
-        <TableCell>{row.orderQuantity}</TableCell>
-        <TableCell>{row.batchNumber}</TableCell>
+        <TableCell>{`${row.orderQuantity} ${row?.unit}`}</TableCell>
+        <TableCell>{`${row.batchNumber}`}</TableCell>
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon='eva:more-vertical-fill' />

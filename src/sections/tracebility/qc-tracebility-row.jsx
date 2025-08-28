@@ -78,7 +78,7 @@ export function TracebilityQCRow ({ setUpdate, row, selected, onSelectRow }) {
           </Box>
         </TableCell> */}
 
-        <TableCell>{row.batchNumber}</TableCell>
+        <TableCell>{row.grn}</TableCell>
         <TableCell>{row.materialName}</TableCell>
         <TableCell>{row.materialCode}</TableCell>
         <TableCell>
