@@ -21,7 +21,6 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
         if (materials && materials.length > 0) {
           toast.success(response.data.message)
           const results = response.data
-          console.log("RESULT", results)
           if (results.qcDetails) {
             onSearchMaterials({ materials: results.materials, qcDetails: results.qcDetails, productionData: results?.productionData, shippingData: results?.shipping })
           }

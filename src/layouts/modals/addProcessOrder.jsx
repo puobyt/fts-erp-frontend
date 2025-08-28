@@ -104,6 +104,7 @@ export default function ProcessOrderForm({ setUpdate }) {
 
     setFormData({ ...formData, materialInput: updatedMaterials })
   }
+  console.log('formData',formData)
 
   const addMaterial = () => {
     setFormData(prevFormData => ({
@@ -124,7 +125,6 @@ export default function ProcessOrderForm({ setUpdate }) {
 
   const handleSubmit = async e => {
     e.preventDefault()
-
     if (!validateForm()) {
       return
     }
@@ -323,7 +323,7 @@ export default function ProcessOrderForm({ setUpdate }) {
                     variant='outlined'
                   />
                 </Grid>
-                <Grid item xs={6} sx={{ mt: 2 }}>
+                <Grid item xs={5} sx={{ mt: 2 }}>
                   <TextField
                     fullWidth
                     label='Order Quantity'
@@ -335,6 +335,27 @@ export default function ProcessOrderForm({ setUpdate }) {
                     variant='outlined'
                   />
                 </Grid>
+                <Grid item xs={1} sx={{ mt: 2 }}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        value={formData.unit}
+                        onChange={handleChange}
+                        error={!!errors.unit}
+                        helperText={errors.unit}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                          <MenuItem key={unit} value={unit}>
+                            {unit}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+
                 <Grid item xs={12} >
                   <Typography
                     variant='subtitle2'
@@ -368,7 +389,7 @@ export default function ProcessOrderForm({ setUpdate }) {
                       </TextField>
 
                     </Grid>
-                    <Grid item xs={3} >
+                    <Grid item xs={2} >
                       <TextField
                         fullWidth
                         label='Quantity'
@@ -381,7 +402,6 @@ export default function ProcessOrderForm({ setUpdate }) {
                         InputProps={{ style: { borderRadius: 8 } }}
                       />
                     </Grid>
-
                     <Grid item xs={3} >
                       <TextField
                         fullWidth

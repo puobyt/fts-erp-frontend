@@ -49,7 +49,6 @@ export function TracebilityView() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearchMaterialsResults = (results) => {
-    console.log('resultsresults',results)
     if (results.qcDetails) {
       setMaterialData(results.materials)
       setQcDetails(results.qcDetails)
@@ -262,7 +261,7 @@ export function TracebilityView() {
                     { id: 'materialCode', label: 'Material Code' },
                     { id: 'materiaLName', label: 'Material Name' },
                     { id: 'batchNumber', label: 'GRN' },
-                    { id: 'quantity', label: 'Quantity In Kg' },
+                    { id: 'quantity', label: 'Quantity' },
                     { id: 'price', label: 'Price' },
                     { id: 'storageLocation', label: 'Storage Location' },
                     { id: 'vendorName', label: 'Vendor Name' },

@@ -137,8 +137,8 @@ export function TracebilityRow ({ setUpdate,setQC,setProduction, row, selected, 
           </Link>
         </TableCell>
         <TableCell> {row.materialName}</TableCell>
-        <TableCell>{row.batchNumber}</TableCell>
-        <TableCell>{`${row.quantity} KG`}</TableCell>
+        <TableCell>{row.grn}</TableCell>
+        <TableCell>{`${row.quantity} ${row.unit}`}</TableCell>
         <TableCell
           style={{ whiteSpace: 'nowrap' }}
         >{`₹ ${row.price}`}</TableCell>
