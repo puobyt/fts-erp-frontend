@@ -19,19 +19,18 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
 
         const materials = response?.data?.materials
         if (materials && materials.length > 0) {
-            toast.success(response.data.message)
+          toast.success(response.data.message)
           const results = response.data
-          console.log("RESULT",results)
-          if(results.qcDetails)
-          {
-            onSearchMaterials({materials:results.materials,qcDetails:results.qcDetails,productionData:results?.productionData,shippingData:results?.shipping})
+          console.log("RESULT", results)
+          if (results.qcDetails) {
+            onSearchMaterials({ materials: results.materials, qcDetails: results.qcDetails, productionData: results?.productionData, shippingData: results?.shipping })
           }
-          else{
-            onSearchMaterials({materials:results.materials})
+          else {
+            onSearchMaterials({ materials: results.materials })
           }
         } else {
           toast.error('No materials found for the given code.')
-        
+
         }
       } catch (err) {
         const errorMessage =
@@ -41,9 +40,9 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
           'Error fetching material details for traceability search:',
           err.message
         )
-       
+
       }
-    } else if(dropdownValue === 'finishedGoods' && searchValue){
+    } else if (dropdownValue === 'finishedGoods' && searchValue) {
 
       try {
         const code = encodeURIComponent(searchValue);
@@ -54,22 +53,24 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
 
         const materials = response?.data?.materials
         if (materials && materials.length > 0) {
-            toast.success(response.data.message)
+          toast.success(response.data.message)
           const results = response.data.materials
-          if(results.qcDetails)
-          {
+          console.log('response.data.qcDetails', response.data.qcDetails)
+          if (response.data.qcDetails) {
             onSearchMaterials({
-              materials:results,
-              qcDetails:results.qcDetails
+              materials: results,
+              qcDetails: response.data.qcDetails,
+              productionData: response.data?.productionData,
+              shippingData: response.data?.shipping
             })
           }
-          else{
-            onSearchMaterials({materials:results})
+          else {
+            onSearchMaterials({ materials: results })
           }
 
         } else {
           toast.error('No materials found for the given code.')
-        
+
         }
       } catch (err) {
         const errorMessage =
@@ -79,9 +80,9 @@ const SearchBoxWithDropdown = ({ onSearchMaterials }) => {
           'Error fetching material details for traceability search:',
           err.message
         )
-       
+
       }
-    }    else {
+    } else {
       toast.error('Please select any one option and enter a value')
     }
   }

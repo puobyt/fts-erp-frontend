@@ -49,11 +49,12 @@ export function TracebilityView() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearchMaterialsResults = (results) => {
+    console.log('resultsresults',results)
     if (results.qcDetails) {
       setMaterialData(results.materials)
       setQcDetails(results.qcDetails)
-      setProduction(results.productionData)
-      setShipping(results.shippingData)
+      setProduction(results?.productionData || [])
+      setShipping(results?.shippingData || [])
       setIsTableVisible(true)
       console.log(results)
     }
@@ -64,7 +65,7 @@ export function TracebilityView() {
     }
   };
   const handleProductionResults = (results) => {
-    setProduction(results);
+    setProduction(results || []);
     setIsTableVisible(false);
     setIsTableVisible2(true)
   };
