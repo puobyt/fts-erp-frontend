@@ -26,6 +26,10 @@ import axiosInstance from 'src/configs/axiosInstance';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { varAlpha } from 'src/theme/styles';
 import ColorOfExpiry from '../../../utils/ColorOfExpiry';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import * as XLSX from 'xlsx'
+import toast, { Toaster } from 'react-hot-toast'
+
 
 // ----------------------------------------------------------------------
 
@@ -76,8 +80,46 @@ export function CurrentStockView() {
       />
     </Box>
   );
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      toast.error('No file selected!');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetsData = {};
+        workbook.SheetNames.forEach((sheetName) => {
+          const sheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(sheet);
+          sheetsData[sheetName] = jsonData;
+        });
+
+        const response = await axiosInstance.post('/import-stock', { sheetsData });
+        if (response.status === 200) {
+          setUpdate(prev => !prev);
+          toast.success('Data imported successfully!');
+        }
+      } catch (err) {
+        console.error('Error uploading data:', err);
+        toast.error('Failed to import data!');
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
   return (
     <DashboardContent>
+      <Toaster />
+
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
           Current Stock Management
@@ -96,6 +138,27 @@ export function CurrentStockView() {
           materials={materials}
           vendors={vendors}
         />
+
+        <div >
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            style={{ display: 'none' }}
+            id="excel-file-input"
+            onChange={handleFileUpload} // Trigger file upload and submission
+          />
+          <label htmlFor="excel-file-input">
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              startIcon={<CloudUploadIcon />}
+              style={{ marginLeft: 10 }}
+            >
+              Import Excel
+            </Button>
+          </label>
+        </div>
       </Box>
 
       <Card>

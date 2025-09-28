@@ -26,10 +26,14 @@ import LinearProgress, {
   linearProgressClasses
 } from '@mui/material/LinearProgress'
 import { varAlpha } from 'src/theme/styles'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import * as XLSX from 'xlsx'
+import toast, { Toaster } from 'react-hot-toast'
+
 
 // ----------------------------------------------------------------------
 
-export function UserView () {
+export function UserView() {
   const table = useTable()
   const [update, setUpdate] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -79,8 +83,45 @@ export function UserView () {
       />
     </Box>
   )
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      toast.error('No file selected!');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetsData = {};
+        workbook.SheetNames.forEach((sheetName) => {
+          const sheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(sheet);
+          sheetsData[sheetName] = jsonData;
+        });
+
+        console.log('Excel Data:', sheetsData); // Debugging
+        const response = await axiosInstance.post('/import-vendors', { sheetsData });
+        if (response.status === 200) {
+          setUpdate(prev => !prev);
+          toast.success('Data imported successfully!');
+        }
+      } catch (err) {
+        console.error('Error uploading data:', err);
+        toast.error('Failed to import data!');
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
   return (
     <DashboardContent>
+      <Toaster />
       <Box display='flex' alignItems='center' mb={5}>
         <Typography variant='h4' flexGrow={1}>
           Vendor Management
@@ -94,6 +135,28 @@ export function UserView () {
         </Button> */}
 
         <VendorManagementForm setUpdate={setUpdate} />
+
+        <div >
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            style={{ display: 'none' }}
+            id="excel-file-input"
+            onChange={handleFileUpload} // Trigger file upload and submission
+          />
+          <label htmlFor="excel-file-input">
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              startIcon={<CloudUploadIcon />}
+              style={{marginLeft:10}}
+            >
+              Import Excel
+            </Button>
+          </label>
+        </div>
+
       </Box>
 
       <Card>
@@ -108,78 +171,78 @@ export function UserView () {
           }}
         />
 
-     
-          <TableContainer sx={{ overflow: 'auto' }}>
-      
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={vendors.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                // onSelectAllRows={(checked) =>
-                //   table.onSelectAllRows(
-                //     checked,
-                //     _users.map((user) => user.id)
-                //   )
-                // }
-                headLabel={[
-                  { id: 'nameOfTheFirm', label: 'Name Of The Firm' },
-                  { id: 'vendorCode', label: 'Vendor Code' },
-                  { id: 'address', label: 'Address' },
-                  { id: 'contactNumber', label: 'Contact Number' },
-                  { id: 'contactPersonName', label: 'Contact Person Name' },
-                  {
-                    id: 'contactPersonDetails',
-                    label: 'Contact Person Details'
-                  },
-                  { id: 'Material', label: 'Material' },
-                  { id: 'BankDetails', label: 'Bank Details' },
-                  { id: 'pan', label: 'Pan' },
-                  { id: 'gst', label: 'GST' }
-                ]}
+
+        <TableContainer sx={{ overflow: 'auto' }}>
+
+          <Table sx={{ minWidth: 800 }}>
+            <UserTableHead
+              order={table.order}
+              orderBy={table.orderBy}
+              rowCount={vendors.length}
+              numSelected={table.selected.length}
+              onSort={table.onSort}
+              // onSelectAllRows={(checked) =>
+              //   table.onSelectAllRows(
+              //     checked,
+              //     _users.map((user) => user.id)
+              //   )
+              // }
+              headLabel={[
+                { id: 'nameOfTheFirm', label: 'Name Of The Firm' },
+                { id: 'vendorCode', label: 'Vendor Code' },
+                { id: 'address', label: 'Address' },
+                { id: 'contactNumber', label: 'Contact Number' },
+                { id: 'contactPersonName', label: 'Contact Person Name' },
+                {
+                  id: 'contactPersonDetails',
+                  label: 'Contact Person Details'
+                },
+                { id: 'Material', label: 'Material' },
+                { id: 'BankDetails', label: 'Bank Details' },
+                { id: 'pan', label: 'Pan' },
+                { id: 'gst', label: 'GST' }
+              ]}
+            />
+            <TableBody>
+              {dataFiltered
+                .slice(
+                  table.page * table.rowsPerPage,
+                  table.page * table.rowsPerPage + table.rowsPerPage
+                )
+                .map((row, index) => (
+                  <UserTableRow
+                    setUpdate={setUpdate}
+                    key={index}
+                    row={row}
+                    selected={table.selected.includes(row.id)}
+                    onSelectRow={() => table.onSelectRow(row.id)}
+                  />
+                ))}
+
+              <TableEmptyRows
+                height={68}
+                emptyRows={emptyRows(
+                  table.page,
+                  table.rowsPerPage,
+                  vendors.length
+                )}
               />
-              <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row, index) => (
-                    <UserTableRow
-                      setUpdate={setUpdate}
-                      key={index}
-                      row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
-                    />
-                  ))}
 
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(
-                    table.page,
-                    table.rowsPerPage,
-                    vendors.length
-                  )}
-                />
+              {notFound && <TableNoData searchQuery={filterName} />}
+            </TableBody>
+          </Table>
+          <TablePagination
+            component='div'
+            page={table.page}
+            count={vendors.length}
+            rowsPerPage={table.rowsPerPage}
+            onPageChange={table.onChangePage}
+            rowsPerPageOptions={[5, 10, 25]}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
 
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
-            </Table>
-            <TablePagination
-          component='div'
-          page={table.page}
-          count={vendors.length}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
-        />
-       
-          </TableContainer>
-      
+        </TableContainer>
+
 
 
       </Card>
@@ -189,7 +252,7 @@ export function UserView () {
 
 // ----------------------------------------------------------------------
 
-export function useTable () {
+export function useTable() {
   const [page, setPage] = useState(0)
   const [orderBy, setOrderBy] = useState('name')
   const [rowsPerPage, setRowsPerPage] = useState(5)
