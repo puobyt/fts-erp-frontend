@@ -150,10 +150,13 @@ export function UserView() {
               color="primary"
               component="span"
               startIcon={<CloudUploadIcon />}
-              style={{marginLeft:10}}
+              style={{ marginLeft: 10, marginRight: 10 }}
             >
               Import Excel
             </Button>
+            <a href={'/files/vendor_dummy.xlsx'} download>
+              <button>Download Excel Format</button>
+            </a>
           </label>
         </div>
 

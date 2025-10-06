@@ -153,11 +153,14 @@ export function CurrentStockView() {
               color="primary"
               component="span"
               startIcon={<CloudUploadIcon />}
-              style={{ marginLeft: 10 }}
+              style={{ marginLeft: 10, marginRight:10 }}
             >
               Import Excel
             </Button>
           </label>
+          <a href={'/files/stocks_dummy.xlsx'} download>
+            <button>Download Excel Format</button>
+          </a>
         </div>
       </Box>
 
