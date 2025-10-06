@@ -26,6 +26,7 @@ import axiosInstance from 'src/configs/axiosInstance';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { varAlpha } from 'src/theme/styles';
 import ColorOfExpiry from '../../../utils/ColorOfExpiry';
+import { hasPermission } from '../../../utils/permissionCheck';
 
 // ----------------------------------------------------------------------
 
@@ -90,12 +91,14 @@ export function CurrentStockView() {
           New user
         </Button> */}
 
-        <CurrentStockForm
-          setUpdate={setUpdate}
-          purchaseOrderData={purchaseOrderData}
-          materials={materials}
-          vendors={vendors}
-        />
+        {hasPermission('Inward Current stock') === 'fullAccess' &&
+          <CurrentStockForm
+            setUpdate={setUpdate}
+            purchaseOrderData={purchaseOrderData}
+            materials={materials}
+            vendors={vendors}
+          />
+        }
       </Box>
 
       <Card>

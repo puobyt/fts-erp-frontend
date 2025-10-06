@@ -27,6 +27,8 @@ export function MaterialAssignmentTableRow({
   selected,
   onSelectRow,
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null);
   const materialAssignmentData = {
     materialAssignmentId: row._id,
@@ -51,7 +53,7 @@ export function MaterialAssignmentTableRow({
     try {
       const materialAssignmentId = row._id;
       const result = await axiosInstance.delete(
-        `/removeMaterialAssignment?materialAssignmentId=${materialAssignmentId}`
+        `/removeMaterialAssignment?materialAssignmentId=${materialAssignmentId}&user=${adminData.email}`
       );
       if (result) {
         toast.success(result.data.message);

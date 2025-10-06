@@ -25,6 +25,7 @@ import LinearProgress, {
 import { varAlpha } from 'src/theme/styles'
 import ColorOfExpiry from '../../../utils/ColorOfExpiry';
 import { Button } from '@mui/material';
+import { hasPermission } from '../../../utils/permissionCheck';
 
 
 
@@ -101,8 +102,10 @@ export function MainStockView() {
         >
           New user
         </Button> */}
+        {hasPermission('Main stock') === 'fullAccess' &&
 
-        <MainStockForm setUpdate={setUpdate} />
+          <MainStockForm setUpdate={setUpdate} />
+        }
 
       </Box>
 
@@ -122,24 +125,24 @@ export function MainStockView() {
 
         <TableContainer sx={{ overflow: 'auto' }}>
           <Table sx={{ minWidth: 800 }}>
-          <MainStockTableHead
-  order={table.order}
-  orderBy={table.orderBy}
-  rowCount={mainStocks.length}
-  numSelected={table.selected.length}
-  onSort={table.onSort}
-  headLabel={[
-    { id: 'materialName', label: 'Material Name' },
-    { id: 'materialCode', label: 'Material Code' },
-    { id: 'grn', label: 'GRN' },
-    { id: 'quantity', label: 'Quantity' },
-    { id: 'price', label: 'Price' },
-    { id: 'storageLocation', label: 'Storage Location' },
-    { id: 'vendorName', label: 'Vendor Name' },
-    { id: 'dateRecieved', label: 'Date Received' },
-    { id: 'expiryDate', label: 'Expiry Date' },  // Ensure expiryDate is included in headLabel
-  ]}
-/>
+            <MainStockTableHead
+              order={table.order}
+              orderBy={table.orderBy}
+              rowCount={mainStocks.length}
+              numSelected={table.selected.length}
+              onSort={table.onSort}
+              headLabel={[
+                { id: 'materialName', label: 'Material Name' },
+                { id: 'materialCode', label: 'Material Code' },
+                { id: 'grn', label: 'GRN' },
+                { id: 'quantity', label: 'Quantity' },
+                { id: 'price', label: 'Price' },
+                { id: 'storageLocation', label: 'Storage Location' },
+                { id: 'vendorName', label: 'Vendor Name' },
+                { id: 'dateRecieved', label: 'Date Received' },
+                { id: 'expiryDate', label: 'Expiry Date' },  // Ensure expiryDate is included in headLabel
+              ]}
+            />
 
             <TableBody>
               {dataFiltered

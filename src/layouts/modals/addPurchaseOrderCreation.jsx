@@ -41,6 +41,9 @@ const style = {
 };
 
 export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
+
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false);
   const [terms, setTerms] = useState(['']);
   const [errors, setErrors] = useState({});
@@ -98,7 +101,7 @@ export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
   const handleDeliveryOptionChange = (event) => {
     const option = event.target.value;
     setSelectedDeliveryOption(option);
-    
+
     if (option !== 'custom') {
       const selectedAddress = DELIVERY_ADDRESSES.find(addr => addr.value === option);
       setDeliveryAddress(selectedAddress.address);
@@ -140,7 +143,7 @@ export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
       { field: 'finalAmount', label: 'Final Amount' }
     ];
 
-    numericFields.forEach(({field, label}) => {
+    numericFields.forEach(({ field, label }) => {
       const value = parseFloat(formData[field]);
       if (formData[field] !== undefined && formData[field] !== '') {
         if (isNaN(value) || value <= 0) {
@@ -209,7 +212,8 @@ export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
       const dataToSubmit = {
         ...formData,
         deliveryAddress: sameAsBilling ? formData.address : deliveryAddress,
-        termsAndConditions: terms
+        termsAndConditions: terms,
+        createdBy: adminData.email
       };
       const result = await axiosInstance.post(
         '/newPurchaseOrderCreation',
@@ -367,7 +371,7 @@ export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
                     </MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={6} sx={{mt:1}}>
+                <Grid item xs={6} sx={{ mt: 1 }}>
                   <TextField
                     fullWidth
                     label='Purchase Order Number'
@@ -377,7 +381,7 @@ export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
                     error={!!errors.purchaseOrderNumber}
                     helperText={errors.purchaseOrderNumber}
                     variant='outlined'
-                    placeholder='Auto-Generate' 
+                    placeholder='Auto-Generate'
                     InputProps={{
                       style: { borderRadius: 8, marginTop: '2px' }
                     }}
@@ -458,7 +462,7 @@ export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
                 <Grid item xs={6}>
                   <FormControlLabel
                     control={
-                      <Checkbox 
+                      <Checkbox
                         checked={sameAsBilling}
                         onChange={(e) => {
                           setSameAsBilling(e.target.checked)
@@ -466,12 +470,12 @@ export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
                             setDeliveryAddress(formData.address)
                           }
                         }}
-                        color='primary' 
+                        color='primary'
                       />
                     }
-                    label='Same as billing address' 
+                    label='Same as billing address'
                   />
-                  
+
                   {!sameAsBilling && (
                     <>
                       <TextField
@@ -492,7 +496,7 @@ export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
                           </MenuItem>
                         ))}
                       </TextField>
-                      
+
                       {selectedDeliveryOption === 'custom' && (
                         <TextField
                           fullWidth
@@ -508,11 +512,11 @@ export default function PurchaseOrderCreationForm({ setUpdate, firms }) {
                           InputProps={{ style: { borderRadius: 8 } }}
                         />
                       )}
-                      
+
                       {selectedDeliveryOption && selectedDeliveryOption !== 'custom' && (
-                        <Box sx={{ 
-                          p: 2, 
-                          mt: 1, 
+                        <Box sx={{
+                          p: 2,
+                          mt: 1,
                           mb: 2,
                           border: '1px solid #ddd',
                           borderRadius: 1,

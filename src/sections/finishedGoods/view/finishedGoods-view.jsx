@@ -26,10 +26,11 @@ import { FinishedGoodsTableToolbar } from '../finishedGoods-table-toolbar'
 import { emptyRows, applyFilter, getComparator } from '../utils'
 import FinishedGoodsForm from '../../../layouts/modals/addFinishedGoods'
 import axiosInstance from 'src/configs/axiosInstance'
+import { hasPermission } from '../../../utils/permissionCheck'
 
 // ----------------------------------------------------------------------
 
-export function FinishedGoodsView () {
+export function FinishedGoodsView() {
   const table = useTable()
   const [update, setUpdate] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -93,7 +94,9 @@ export function FinishedGoodsView () {
           New user
         </Button> */}
 
-        <FinishedGoodsForm setUpdate={setUpdate} />
+        {hasPermission('Finished Goods') === 'fullAccess' &&
+          <FinishedGoodsForm setUpdate={setUpdate} />
+        }
       </Box>
 
       <Card>
@@ -108,69 +111,69 @@ export function FinishedGoodsView () {
           }}
         />
 
-    
-          <TableContainer sx={{ overflow: 'auto' }}>
-            {/* {loading && renderFallback} */}
-            <Table sx={{ minWidth: 800 }}>
-              <FinishedGoodsTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={finishedGoods.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                // onSelectAllRows={(checked) =>
-                //   table.onSelectAllRows(
-                //     checked,
-                //     _users.map((user) => user.id)
-                //   )
-                // }
-                headLabel={[
-                  { id: 'finishedGoodsName', label: 'Finished Goods Name' },
-                  { id: 'batchNumber', label: 'Batch Number' },
-                  { id: 'productiondate', label: 'Production Date' },
-                  { id: 'quantityProduced', label: 'Quantity Produced' }
-                ]}
+
+        <TableContainer sx={{ overflow: 'auto' }}>
+          {/* {loading && renderFallback} */}
+          <Table sx={{ minWidth: 800 }}>
+            <FinishedGoodsTableHead
+              order={table.order}
+              orderBy={table.orderBy}
+              rowCount={finishedGoods.length}
+              numSelected={table.selected.length}
+              onSort={table.onSort}
+              // onSelectAllRows={(checked) =>
+              //   table.onSelectAllRows(
+              //     checked,
+              //     _users.map((user) => user.id)
+              //   )
+              // }
+              headLabel={[
+                { id: 'finishedGoodsName', label: 'Finished Goods Name' },
+                { id: 'batchNumber', label: 'Batch Number' },
+                { id: 'productiondate', label: 'Production Date' },
+                { id: 'quantityProduced', label: 'Quantity Produced' }
+              ]}
+            />
+
+            <TableBody>
+              {dataFiltered
+                .slice(
+                  table.page * table.rowsPerPage,
+                  table.page * table.rowsPerPage + table.rowsPerPage
+                )
+                .map((row, index) => (
+                  <FinishedGoodsTableRow
+                    setUpdate={setUpdate}
+                    key={index}
+                    row={row}
+                    selected={table.selected.includes(row.id)}
+                    onSelectRow={() => table.onSelectRow(row.id)}
+                  />
+                ))}
+
+              <TableEmptyRows
+                height={68}
+                emptyRows={emptyRows(
+                  table.page,
+                  table.rowsPerPage,
+                  finishedGoods.length
+                )}
               />
 
-              <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row, index) => (
-                    <FinishedGoodsTableRow
-                      setUpdate={setUpdate}
-                      key={index}
-                      row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
-                    />
-                  ))}
+              {notFound && <TableNoData searchQuery={filterName} />}
+            </TableBody>
+          </Table>
+          <TablePagination
+            component='div'
+            page={table.page}
+            count={finishedGoods.length}
+            rowsPerPage={table.rowsPerPage}
+            onPageChange={table.onChangePage}
+            rowsPerPageOptions={[5, 10, 25]}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
+        </TableContainer>
 
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(
-                    table.page,
-                    table.rowsPerPage,
-                    finishedGoods.length
-                  )}
-                />
-
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
-            </Table>
-            <TablePagination
-              component='div'
-              page={table.page}
-              count={finishedGoods.length}
-              rowsPerPage={table.rowsPerPage}
-              onPageChange={table.onChangePage}
-              rowsPerPageOptions={[5, 10, 25]}
-              onRowsPerPageChange={table.onChangeRowsPerPage}
-            />
-          </TableContainer>
-      
       </Card>
     </DashboardContent>
   )
@@ -178,7 +181,7 @@ export function FinishedGoodsView () {
 
 // ----------------------------------------------------------------------
 
-export function useTable () {
+export function useTable() {
   const [page, setPage] = useState(0)
   const [orderBy, setOrderBy] = useState('name')
   const [rowsPerPage, setRowsPerPage] = useState(5)

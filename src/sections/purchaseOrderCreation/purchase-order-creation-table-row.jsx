@@ -14,17 +14,20 @@ import Swal from 'sweetalert2';
 import axiosInstance from 'src/configs/axiosInstance';
 import toast from 'react-hot-toast';
 import ViewPurchaseOrderCreation from '../../layouts/viewModals/viewPurchaseOrder';
+import { hasPermission } from '../../utils/permissionCheck';
 
 // ----------------------------------------------------------------------
 
 export function PurchaseOrderCreationTableRow({ setUpdate, firms, row, selected, onSelectRow }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null);
   const pdfRef = useRef();
 
   // PDF download handler
   const handleDownload = useCallback(() => {
     const element = pdfRef.current;
-    
+
     if (!element) {
       toast.error('PDF element not found');
       return;
@@ -72,17 +75,17 @@ export function PurchaseOrderCreationTableRow({ setUpdate, firms, row, selected,
     pan: row.pan,
     gst: row.gst,
     termsAndConditions: row.termsAndConditions,
-    deliveryAddress:row.deliveryAddress,
-    materials: Array.isArray(row.materials) 
-      ? row.materials 
+    deliveryAddress: row.deliveryAddress,
+    materials: Array.isArray(row.materials)
+      ? row.materials
       : (row.materialName || row.quantity || row.unit || row.price || row.mfgDate)
         ? [{
-            materialName: row.materialName || '',
-            quantity: row.quantity || '',
-            unit: row.unit || '',
-            price: row.price || '',
-            mfgDate: row.mfgDate || ''
-          }]
+          materialName: row.materialName || '',
+          quantity: row.quantity || '',
+          unit: row.unit || '',
+          price: row.price || '',
+          mfgDate: row.mfgDate || ''
+        }]
         : []
   };
 
@@ -99,16 +102,16 @@ export function PurchaseOrderCreationTableRow({ setUpdate, firms, row, selected,
   const handleDelete = async () => {
     try {
       const purchaseOrderId = row._id;
-      
+
       if (!purchaseOrderId) {
         toast.error('Purchase order ID not found');
         return;
       }
 
       const result = await axiosInstance.delete(
-        `/removePurchaseOrderCreation?purchaseOrderId=${purchaseOrderId}`
+        `/removePurchaseOrderCreation?purchaseOrderId=${purchaseOrderId}&user=${adminData.email}`
       );
-      
+
       if (result) {
         toast.success(result.data.message || 'Purchase order deleted successfully');
         setUpdate((prev) => !prev);
@@ -239,16 +242,22 @@ export function PurchaseOrderCreationTableRow({ setUpdate, firms, row, selected,
             },
           }}
         >
-          <EditPurchaseOrderCreationForm
-            setUpdate={setUpdate}
-            orderData={orderData}
-            firms={firms}
-          />
+          {hasPermission('Purchase Order Creation') === 'fullAccess' &&
+
+            <EditPurchaseOrderCreationForm
+              setUpdate={setUpdate}
+              orderData={orderData}
+              firms={firms}
+            />
+          }
           <ViewPurchaseOrderCreation orderData={orderData} />
-          <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete
-          </MenuItem>
+          {hasPermission('Purchase Order Creation') === 'fullAccess' &&
+
+            <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
+              <Iconify icon="solar:trash-bin-trash-bold" />
+              Delete
+            </MenuItem>
+          }
           <MenuItem sx={{ color: 'primary.main' }} onClick={handleDownload}>
             <Iconify icon="solar:download-bold" />
             Download PDF

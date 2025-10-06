@@ -27,12 +27,13 @@ import { _myAccount } from 'src/_mock'
 //   }[];
 // };
 
-export function AccountPopover ({ data = [], sx, ...other }) {
+export function AccountPopover({ data = [], sx, ...other }) {
   const router = useRouter()
 
   const pathname = usePathname()
 
   const [openPopover, setOpenPopover] = useState(null)
+  const adminData = JSON.parse(localStorage.getItem('admin'))
 
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -96,11 +97,15 @@ export function AccountPopover ({ data = [], sx, ...other }) {
       >
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant='subtitle2' noWrap>
-            {_myAccount?.displayName}
+            {adminData?.userName}
           </Typography>
 
           <Typography variant='body2' sx={{ color: 'text.secondary' }} noWrap>
-            {_myAccount?.email}
+            {adminData?.email}
+          </Typography>
+
+          <Typography variant='body2' sx={{ color: 'text.secondary' }} noWrap>
+            {adminData?.role}
           </Typography>
         </Box>
 

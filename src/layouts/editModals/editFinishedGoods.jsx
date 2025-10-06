@@ -10,7 +10,7 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import '../../global.css'
-import { TextField, Container,MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -23,26 +23,28 @@ const style = {
   p: 4
 }
 
-export default function EditFinishedGoodsForm ({ setUpdate,finishedGoodsData}) {
+export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const formattedDate = finishedGoodsData.productionDate
-  ? new Date(finishedGoodsData.productionDate).toISOString().split('T')[0]
-  : ''
+    ? new Date(finishedGoodsData.productionDate).toISOString().split('T')[0]
+    : ''
   const [formData, setFormData] = useState({
     authPassword: '',
-    finishedGoodsId:finishedGoodsData.finishedGoodsId,
-    finishedGoodsName:finishedGoodsData.finishedGoodsName,
-    batchNumber:finishedGoodsData.batchNumber,
-    productionDate:formattedDate,
-    quantityProduced:finishedGoodsData.quantityProduced
+    finishedGoodsId: finishedGoodsData.finishedGoodsId,
+    finishedGoodsName: finishedGoodsData.finishedGoodsName,
+    batchNumber: finishedGoodsData.batchNumber,
+    productionDate: formattedDate,
+    quantityProduced: finishedGoodsData.quantityProduced
   })
   const [errors, setErrors] = useState({})
 
   const validateForm = () => {
     const newErrors = {}
-        if (!formData.authPassword)
+    if (!formData.authPassword)
       newErrors.authPassword = 'Authorization Password is required'
     if (!formData.finishedGoodsName)
       newErrors.finishedGoodsName = 'Finished Goods Name is required'
@@ -69,26 +71,26 @@ export default function EditFinishedGoodsForm ({ setUpdate,finishedGoodsData}) {
       return
     }
     try {
-      const result = await axiosInstance.put('/editFinishedGoods', formData)
-      .then((result)=>{
-        toast.success(result.data.message)
-        handleClose()
-        setFormData({
+      const result = await axiosInstance.put('/editFinishedGoods', { ...formData, editedBy: adminData.email })
+        .then((result) => {
+          toast.success(result.data.message)
+          handleClose()
+          setFormData({
             authPassword: '',
             finishedGoodsId: '',
             finishedGoodsName: '',
             batchNumber: '',
             productionDate: '',
             quantityProduced: ''
+          })
+          setUpdate(prev => !prev)
+        }).catch((err) => {
+          toast.error(err.response.data.message)
+          console.error(
+            'Error occured in editing finished goods in client side',
+            err.message
+          )
         })
-        setUpdate(prev => !prev)
-      }).catch((err)=>{
-        toast.error(err.response.data.message)
-        console.error(
-          'Error occured in editing finished goods in client side',
-          err.message
-        )
-      })
     } catch (err) {
       console.error(
         'Error occured in editing finished goods in client side',
@@ -139,7 +141,7 @@ export default function EditFinishedGoodsForm ({ setUpdate,finishedGoodsData}) {
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-              <Grid item xs={6}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Authorization Password'

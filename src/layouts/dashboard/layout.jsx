@@ -22,6 +22,8 @@ import { HeaderSection } from '../core/header-section';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
 import { NotificationsPopover } from '../components/notifications-popover';
+import PendingUsersModal from '../../sections/signUp/pending-users-modal';
+import { Button } from 'flowbite-react';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +33,8 @@ export function DashboardLayout({ sx, children, header }) {
   const theme = useTheme();
 
   const [navOpen, setNavOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
 
   const layoutQuery = 'lg';
 
@@ -39,6 +43,7 @@ export function DashboardLayout({ sx, children, header }) {
       /** **************************************
        * Header
        *************************************** */
+
       headerSection={
         <HeaderSection
           layoutQuery={layoutQuery}
@@ -77,6 +82,11 @@ export function DashboardLayout({ sx, children, header }) {
                 <Searchbar />
                 {/* <LanguagePopover data={_langs} /> */}
                 {/* <NotificationsPopover data={_notifications} /> */}
+                <Button variant="contained" onClick={() => setOpenModal(true)}>
+                  Open User Modal
+                </Button>
+                <PendingUsersModal open={openModal} onClose={() => setOpenModal(false)} />
+
                 <AccountPopover
                   data={[
                     {

@@ -19,13 +19,15 @@ import toast, { Toaster } from 'react-hot-toast'
 import ViewQualityInspectionForm from '../../layouts/viewModals/viewQualityInspection'
 // ----------------------------------------------------------------------
 
-export function FinalQualityInpsectionTableRow ({
+export function FinalQualityInpsectionTableRow({
   productNames,
   setUpdate,
   row,
   selected,
   onSelectRow
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null)
   const qualityInspectionData = {
     qualityInspectionId: row._id,
@@ -48,7 +50,7 @@ export function FinalQualityInpsectionTableRow ({
     try {
       const qualityInspectionId = row._id
       const result = await axiosInstance.delete(
-        `/removeFinalQualityInspection?qualityInspectionId=${qualityInspectionId}`
+        `/removeFinalQualityInspection?qualityInspectionId=${qualityInspectionId}&user=${adminData.email}`
       )
       if (result) {
         toast.success(result.data.message)
@@ -106,10 +108,10 @@ export function FinalQualityInpsectionTableRow ({
               row.inspectionResults === 'Accepted'
                 ? 'green'
                 : row.inspectionResults === 'Quarantine'
-                ? 'purple'
-                : row.inspectionResults === 'Rejected'
-                ? 'red'
-                : 'inherit' // Default color if none of the above matches
+                  ? 'purple'
+                  : row.inspectionResults === 'Rejected'
+                    ? 'red'
+                    : 'inherit' // Default color if none of the above matches
           }}
         >
           {row.inspectionResults}
@@ -154,7 +156,7 @@ export function FinalQualityInpsectionTableRow ({
             productNames={productNames}
           />
 
-          <ViewQualityInspectionForm   qualityInspectionData={qualityInspectionData} />
+          <ViewQualityInspectionForm qualityInspectionData={qualityInspectionData} />
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}
             sx={{ color: 'error.main' }}

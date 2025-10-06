@@ -29,6 +29,8 @@ export default function RequestCreationForMaterialsForm ({
   finishedGoods,
   materialNames
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -87,7 +89,7 @@ export default function RequestCreationForMaterialsForm ({
     try {
       const result = await axiosInstance.post(
         '/newRequestCreationForMaterials',
-        formData
+        {...formData, createdBy: adminData.email}
       )
       if (result) {
         toast.success(result.data.message)

@@ -9,11 +9,11 @@ import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import '../../global.css';
-import { 
-  TextField, 
-  Container, 
-  MenuItem, 
-  Grid, 
+import {
+  TextField,
+  Container,
+  MenuItem,
+  Grid,
   Paper,
   FormControl,
   InputLabel,
@@ -62,6 +62,7 @@ const QC_STATUS = {
 };
 
 export default function GateEntryExitForm({ setUpdate, firmNames }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
   const [open, setOpen] = useState(false);
   const [gateType, setGateType] = useState(GATE_TYPES.ENTRY);
   const [qcDocuments, setQcDocuments] = useState([]);
@@ -99,8 +100,8 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
   const handleGateTypeChange = (e) => {
     const type = e.target.value;
     setGateType(type);
-    setFormData(prev => ({ 
-      ...prev, 
+    setFormData(prev => ({
+      ...prev,
       gateType: type,
       returnReason: type === GATE_TYPES.QC_RETURN_ENTRY ? prev.returnReason : '',
       originalDocNumber: type === GATE_TYPES.QC_RETURN_ENTRY ? prev.originalDocNumber : '',
@@ -122,47 +123,47 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
   }, [gateType]);
 
   const fetchOriginalEntries = async () => {
-  try {
-    let endpoint = '/gateEntry';
-    let response;
+    try {
+      let endpoint = '/gateEntry';
+      let response;
 
-    if (gateType === GATE_TYPES.QC_RETURN_ENTRY) {
-      endpoint = '/finishedGoods';
-      response = await axiosInstance.get(endpoint);
+      if (gateType === GATE_TYPES.QC_RETURN_ENTRY) {
+        endpoint = '/finishedGoods';
+        response = await axiosInstance.get(endpoint);
 
-      const transformedData = response.data.data.map(item => ({
-        docNumber: item.batchNumber || 'N/A',
-        vendorName: item.finishedGoodsName || 'N/A',
-        date: item.productionDate || item.createdAt,
-        materials: item.materials.map(mat => ({
-          materialName: mat.materialsList || '',
-          quantity: mat.quantity || '',
-          unit: '', // You can add `unit` if available
-          batchNumber: item.batchNumber || '',
-          lotNumber: item.lotNumber || '',
-          materialCode: mat.materialCode || '',
-          vendorId: mat.vendorId || '',
-          vendorName: mat.vendorName || ''
-        }))
-      }));
+        const transformedData = response.data.data.map(item => ({
+          docNumber: item.batchNumber || 'N/A',
+          vendorName: item.finishedGoodsName || 'N/A',
+          date: item.productionDate || item.createdAt,
+          materials: item.materials.map(mat => ({
+            materialName: mat.materialsList || '',
+            quantity: mat.quantity || '',
+            unit: '', // You can add `unit` if available
+            batchNumber: item.batchNumber || '',
+            lotNumber: item.lotNumber || '',
+            materialCode: mat.materialCode || '',
+            vendorId: mat.vendorId || '',
+            vendorName: mat.vendorName || ''
+          }))
+        }));
 
-      setOriginalEntries(transformedData);
-    } else {
-      response = await axiosInstance.get(endpoint);
-      const entries = response.data.data || [];
-      const filteredEntries = entries.filter(entry => entry.gateType === 'entry');
-      setOriginalEntries(filteredEntries);
+        setOriginalEntries(transformedData);
+      } else {
+        response = await axiosInstance.get(endpoint);
+        const entries = response.data.data || [];
+        const filteredEntries = entries.filter(entry => entry.gateType === 'entry');
+        setOriginalEntries(filteredEntries);
+      }
+    } catch (error) {
+      console.error('Error fetching original entries:', error);
+      toast.error('Failed to fetch original entries');
     }
-  } catch (error) {
-    console.error('Error fetching original entries:', error);
-    toast.error('Failed to fetch original entries');
-  }
-};
+  };
 
 
   const validateField = (name, value) => {
     let error = '';
-    
+
     switch (name) {
       case 'vehicleNumber':
         if (!value.trim()) error = 'Vehicle Number is required';
@@ -210,23 +211,23 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
       default:
         break;
     }
-    
+
     return error;
   };
 
   const validateForm = () => {
     const newErrors = {};
     let isValid = true;
-    
+
     const fieldsToValidate = [
-      'vehicleNumber', 'docNumber', 'vendorName', 'date', 
+      'vehicleNumber', 'docNumber', 'vendorName', 'date',
       gateType.includes('entry') ? 'entryTime' : 'exitTime'
     ];
-    
+
     if (isReturnType) {
       fieldsToValidate.push('returnReason', 'originalDocNumber', 'returnedBy');
     }
-    
+
     fieldsToValidate.forEach(field => {
       const error = validateField(field, formData[field]);
       if (error) {
@@ -234,11 +235,11 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
         isValid = false;
       }
     });
-    
+
     formData.materials.forEach((material, index) => {
       const materialErrors = {};
       let materialHasErrors = false;
-      
+
       ['materialName', isReturnType ? 'returnedQuantity' : 'quantity'].forEach(field => {
         const error = validateField(field, material[field]);
         if (error) {
@@ -246,14 +247,14 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
           materialHasErrors = true;
         }
       });
-      
+
       if (materialHasErrors) {
         newErrors.materials = newErrors.materials || [];
         newErrors.materials[index] = materialErrors;
         isValid = false;
       }
     });
-    
+
     setErrors(newErrors);
     return isValid;
   };
@@ -261,12 +262,12 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
   const handleChange = e => {
     const { name, value, type, checked } = e.target;
     const processedValue = type === 'text' || type === 'textarea' ? value.trim() : value;
-    
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: type === 'checkbox' ? checked : processedValue 
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : processedValue
     }));
-    
+
     if (errors[name]) {
       const error = validateField(name, type === 'checkbox' ? checked : processedValue);
       setErrors(prev => ({
@@ -319,7 +320,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
           endpoint = '/newGateEntry';
       }
 
-      const result = await axiosInstance.post(endpoint, formDataToSend, {
+      const result = await axiosInstance.post(endpoint, { ...formDataToSend, createdBy: adminData.email }, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -340,10 +341,10 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
     const { name, value } = e.target;
     const updatedMaterials = [...formData.materials];
     const processedValue = ['materialName', 'batchNumber', 'lotNumber'].includes(name) ? value.trim() : value;
-    
+
     updatedMaterials[index][name] = processedValue;
     setFormData({ ...formData, materials: updatedMaterials });
-    
+
     if (errors.materials?.[index]?.[name]) {
       const error = validateField(name, processedValue);
       setErrors(prev => {
@@ -379,7 +380,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
   const removeMaterial = index => {
     const updatedMaterials = formData.materials.filter((_, i) => i !== index);
     setFormData({ ...formData, materials: updatedMaterials });
-    
+
     setErrors(prev => {
       const newErrors = { ...prev };
       if (newErrors.materials) {
@@ -401,7 +402,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
       qcDocuments: []
     });
     setErrors({});
-    
+
     if (qcDocRef.current) qcDocRef.current.value = '';
   };
 
@@ -411,7 +412,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
       const validTypes = ['application/pdf', 'image/jpeg'];
       const isValidType = validTypes.includes(file.type);
       const isValidSize = file.size <= 10 * 1024 * 1024;
-      
+
       if (!isValidType) {
         toast.error(`Invalid file type for ${file.name}. Only PDF and JPEG are allowed.`);
         return false;
@@ -786,7 +787,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
                               InputProps={{ style: { borderRadius: 8 } }}
                             />
                           </Grid>
-                          
+
                           {isReturnType && (
                             <>
                               <Grid item xs={12} md={2}>
@@ -1012,7 +1013,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
                   py: 1.5,
                   fontWeight: 'bold',
                   borderRadius: 8,
-                  background: isReturnType 
+                  background: isReturnType
                     ? 'linear-gradient(90deg, #ff6b6b, #ee5a24)'
                     : 'linear-gradient(90deg, #4a90e2, #3b5998)',
                   color: 'white',
@@ -1021,7 +1022,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
                   '&:hover': {
                     transform: 'scale(1.05)',
                     boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.3)',
-                    background: isReturnType 
+                    background: isReturnType
                       ? 'linear-gradient(90deg, #ee5a24, #ff6b6b)'
                       : 'linear-gradient(90deg, #3b5998, #4a90e2)'
                   }

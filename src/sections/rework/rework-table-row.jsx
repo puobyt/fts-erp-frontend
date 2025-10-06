@@ -19,22 +19,24 @@ import ViewRework from '../../layouts/viewModals/viewRework';
 // ----------------------------------------------------------------------
 
 
- 
-export function ReworkTableRow({batches,setUpdate, row, selected, onSelectRow }) {
+
+export function ReworkTableRow({ batches, setUpdate, row, selected, onSelectRow }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null);
   const reworkData = {
-    reworkId:row._id,
-    batchNumber:row.batchNumber,
-    materialName:row.materialName,
-    inspectionDate:row.inspectionDate,
-    inspectorName:row.inspectorName,
-    issueDescription:row.issueDescription,
-    proposedReworkAction:row.proposedReworkAction,
-    reworkStartDate:row.reworkStartDate,
-    reworkCompletionDate:row.reworkCompletionDate,
-    quantityForRework:row.quantityForRework,
-    reworkStatus:row.reworkStatus,
-    comments:row.comments
+    reworkId: row._id,
+    batchNumber: row.batchNumber,
+    materialName: row.materialName,
+    inspectionDate: row.inspectionDate,
+    inspectorName: row.inspectorName,
+    issueDescription: row.issueDescription,
+    proposedReworkAction: row.proposedReworkAction,
+    reworkStartDate: row.reworkStartDate,
+    reworkCompletionDate: row.reworkCompletionDate,
+    quantityForRework: row.quantityForRework,
+    reworkStatus: row.reworkStatus,
+    comments: row.comments
   }
   const handleOpenPopover = useCallback((event) => {
     setOpenPopover(event.currentTarget);
@@ -44,52 +46,52 @@ export function ReworkTableRow({batches,setUpdate, row, selected, onSelectRow })
     setOpenPopover(null);
   }, []);
 
-  const handleDelete = async()=>{
-        try {
-    
-          const reworkId = row._id;
-          const result = await axiosInstance.delete(`/removeRework?reworkId=${reworkId}`);
-          if (result) {
-            toast.success(result.data.message);
-            setUpdate(prev => !prev)
-        
-          }
-        } catch (err) {
-          toast.success(err.response.data.message)
-          console.error(
-            'Error occured in removing quality check in client side',
-            err.message
-          )
-        }
+  const handleDelete = async () => {
+    try {
+
+      const reworkId = row._id;
+      const result = await axiosInstance.delete(`/removeRework?reworkId=${reworkId}&user=${adminData.email}`);
+      if (result) {
+        toast.success(result.data.message);
+        setUpdate(prev => !prev)
+
       }
-    
-      const confirmDelete = ()=>{
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!",
-          backdrop: false
-        }).then((result) => {
-          if (result.isConfirmed) {
-            handleDelete();
-          }
-        });
+    } catch (err) {
+      toast.success(err.response.data.message)
+      console.error(
+        'Error occured in removing quality check in client side',
+        err.message
+      )
+    }
+  }
+
+  const confirmDelete = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      backdrop: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete();
       }
-    
-      const handleMenuCloseAndConfirmDelete = () => {
-        handleClosePopover(); // Close the popover or menu first
-        setTimeout(() => {
-          confirmDelete();
-        }, 0); // Optional delay to ensure the popover is fully closed
-      };
+    });
+  }
+
+  const handleMenuCloseAndConfirmDelete = () => {
+    handleClosePopover(); // Close the popover or menu first
+    setTimeout(() => {
+      confirmDelete();
+    }, 0); // Optional delay to ensure the popover is fully closed
+  };
   return (
     <>
       <TableRow>
-      {/* <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell> */}
         {/* <TableCell component="th" scope="row">
@@ -142,13 +144,13 @@ export function ReworkTableRow({batches,setUpdate, row, selected, onSelectRow })
             },
           }}
         >
-      
-<EditReworkForm setUpdate={setUpdate} reworkData={reworkData} batches={batches}/>
-      
-<ViewRework reworkData={reworkData} />
+
+          <EditReworkForm setUpdate={setUpdate} reworkData={reworkData} batches={batches} />
+
+          <ViewRework reworkData={reworkData} />
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete 
+            Delete
           </MenuItem>
         </MenuList>
       </Popover>

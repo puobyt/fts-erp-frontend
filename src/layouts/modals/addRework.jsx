@@ -26,6 +26,8 @@ const style = {
 }
 
 export default function ReworkForm({ setUpdate, batches }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -134,7 +136,7 @@ export default function ReworkForm({ setUpdate, batches }) {
       return
     }
     try {
-      const result = await axiosInstance.post('/newRework', formData)
+      const result = await axiosInstance.post('/newRework', { ...formData, createdBy: adminData.email })
       if (result) {
         toast.success(result.data.message)
         handleClose()

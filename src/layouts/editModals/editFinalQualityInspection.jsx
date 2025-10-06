@@ -29,6 +29,8 @@ export default function EditQualityInspectionForm ({
   qualityInspectionData,
   productNames
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate();
@@ -78,7 +80,7 @@ export default function EditQualityInspectionForm ({
     }
     try {
       const result = await axiosInstance
-        .put('/editQualityInspection', formData)
+        .put('/editQualityInspection', {...formData, editedBy: adminData.email})
         .then(result => {
           toast.success(result.data.message)
           handleClose()

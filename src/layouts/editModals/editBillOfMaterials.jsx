@@ -30,6 +30,7 @@ export default function EditBillOfMaterialsForm ({
   productNames,
   materialNames
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -104,7 +105,7 @@ export default function EditBillOfMaterialsForm ({
     }
     try {
       const result = await axiosInstance
-        .put('/editBillOfMaterials', formData)
+        .put('/editBillOfMaterials', {...formData, editedBy: adminData.email})
         .then(result => {
           toast.success(result.data.message)
           handleClose()

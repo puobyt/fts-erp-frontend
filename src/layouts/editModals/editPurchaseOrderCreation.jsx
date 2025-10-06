@@ -43,6 +43,8 @@ const style = {
 };
 
 export default function EditPurchaseOrderCreationForm({ setUpdate, orderData, firms }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const handleOpen = () => setOpen(true);
@@ -261,7 +263,9 @@ export default function EditPurchaseOrderCreationForm({ setUpdate, orderData, fi
       const updatedData = { 
         ...formData, 
         termsAndConditions: terms,
-        deliveryAddress: sameAsBilling ? formData.address : deliveryAddress
+        deliveryAddress: sameAsBilling ? formData.address : deliveryAddress,
+        editedBy: adminData.email
+
       };
       
       await axiosInstance

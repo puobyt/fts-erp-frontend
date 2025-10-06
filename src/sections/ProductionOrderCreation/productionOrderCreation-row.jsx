@@ -25,6 +25,8 @@ export function ProductionOrderCreationTableRow ({
   selected,
   onSelectRow
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null)
   const productionOrderData = {
     productionOrderId: row._id,
@@ -50,7 +52,7 @@ export function ProductionOrderCreationTableRow ({
     try {
       const productionOrderId = row._id
       const result = await axiosInstance.delete(
-        `/removeProductionOrderCreation?productionOrderId=${productionOrderId}`
+        `/removeProductionOrderCreation?productionOrderId=${productionOrderId}&user=${adminData.email}`
       )
       if (result) {
         toast.success(result.data.message)

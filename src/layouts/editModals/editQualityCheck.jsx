@@ -22,12 +22,15 @@ const style = {
   p: 4
 }
 
-export default function EditQualityCheckForm ({
+export default function EditQualityCheckForm({
   setUpdate,
   qualityCheckData,
   products,
   batches
 }) {
+
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const [parameterRows, setParameterRows] = useState([])
   const [errors, setErrors] = useState({})
@@ -99,13 +102,13 @@ export default function EditQualityCheckForm ({
       prev.map((param, idx) =>
         idx === index
           ? {
-              ...param,
-              [field]: value,
-              status:
-                field === 'actualResult'
-                  ? calcStatus(value, param.parameter.minRange, param.parameter.maxRange)
-                  : param.status
-            }
+            ...param,
+            [field]: value,
+            status:
+              field === 'actualResult'
+                ? calcStatus(value, param.parameter.minRange, param.parameter.maxRange)
+                : param.status
+          }
           : param
       )
     )
@@ -171,7 +174,7 @@ export default function EditQualityCheckForm ({
     }
     try {
       // Edit main QC form
-      await axiosInstance.put('/editQualityCheck', formData)
+      await axiosInstance.put('/editQualityCheck', { ...formData, editedBy: adminData.email })
       // Edit each parameter result (could be PATCH or PUT, depending on your backend)
       await Promise.all(
         parameterRows.map(param =>

@@ -31,6 +31,8 @@ export default function EditMaterialAssignmentForm ({
   finishedGoods,
   processOrderNumbers
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate()
@@ -96,7 +98,7 @@ export default function EditMaterialAssignmentForm ({
     }
     try {
       const result = await axiosInstance
-        .put('/editMaterialAssignment', formData)
+        .put('/editMaterialAssignment', {...formData, editedBy: adminData.email})
         .then(result => {
           toast.success(result.data.message)
           handleClose()

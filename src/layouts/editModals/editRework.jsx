@@ -25,25 +25,27 @@ const style = {
   p: 4
 }
 
-export default function EditReworkForm ({ setUpdate,reworkData,batches }) {
+export default function EditReworkForm({ setUpdate, reworkData, batches }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const navigate = useNavigate();
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [formData, setFormData] = useState({
     authPassword: '',
-    reworkId:reworkData.reworkId,
-    batchNumber:reworkData.batchNumber,
-    materialName:reworkData.materialName,
-    inspectionDate:reworkData.inspectionDate,
-    inspectorName:reworkData.inspectorName,
-    issueDescription:reworkData.issueDescription,
-    proposedReworkAction:reworkData.proposedReworkAction,
-    reworkStartDate:reworkData.reworkStartDate,
-    reworkCompletionDate:reworkData.reworkCompletionDate,
-    quantityForRework:reworkData.quantityForRework,
-    reworkStatus:reworkData.reworkStatus,
-    comments:reworkData.comments
+    reworkId: reworkData.reworkId,
+    batchNumber: reworkData.batchNumber,
+    materialName: reworkData.materialName,
+    inspectionDate: reworkData.inspectionDate,
+    inspectorName: reworkData.inspectorName,
+    issueDescription: reworkData.issueDescription,
+    proposedReworkAction: reworkData.proposedReworkAction,
+    reworkStartDate: reworkData.reworkStartDate,
+    reworkCompletionDate: reworkData.reworkCompletionDate,
+    quantityForRework: reworkData.quantityForRework,
+    reworkStatus: reworkData.reworkStatus,
+    comments: reworkData.comments
   })
   const [errors, setErrors] = useState({})
 
@@ -122,7 +124,7 @@ export default function EditReworkForm ({ setUpdate,reworkData,batches }) {
       return
     }
     try {
-      const result = await axiosInstance.put('/editRework', formData)
+      const result = await axiosInstance.put('/editRework', { ...formData, editedBy: adminData.email })
       if (result) {
         toast.success(result.data.message)
         handleClose()
@@ -194,7 +196,7 @@ export default function EditReworkForm ({ setUpdate,reworkData,batches }) {
             </Box>
             <Box component='form' onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-              <Grid item xs={6}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     label='Authorization Password'

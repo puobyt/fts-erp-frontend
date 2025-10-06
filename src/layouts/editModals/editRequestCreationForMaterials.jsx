@@ -24,19 +24,21 @@ const style = {
   p: 4
 }
 
-export default function EditRequestCreationForMaterialsForm ({
+export default function EditRequestCreationForMaterialsForm({
   setUpdate,
   requestMaterialsData,
   materialNames,
   finishedGoods
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const navigate = useNavigate()
   const formattedDate = requestMaterialsData.requiredDate
-  ? new Date(requestMaterialsData.requiredDate).toISOString().split('T')[0]
-  : ''
+    ? new Date(requestMaterialsData.requiredDate).toISOString().split('T')[0]
+    : ''
   const [formData, setFormData] = useState({
     authPassword: '',
     finishedGoodsName: requestMaterialsData.finishedGoodsName,
@@ -89,7 +91,8 @@ export default function EditRequestCreationForMaterialsForm ({
     }
     try {
       const result = await axiosInstance
-        .put('/editRequestCreationForMaterials', formData)
+        .put('/editRequestCreationForMaterials', { ...formData, editedBy: adminData.email }
+        )
         .then(result => {
           toast.success(result.data.message)
           handleClose()
@@ -167,7 +170,7 @@ export default function EditRequestCreationForMaterialsForm ({
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-    
+
 
         <Container maxWidth='lg' sx={{ mt: 8 }}>
           <Paper

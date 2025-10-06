@@ -29,6 +29,8 @@ export default function ProductionOrderCreationForm({
   materialNames,
   processOrderNumbers
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate()
@@ -113,7 +115,7 @@ export default function ProductionOrderCreationForm({
     try {
       const result = await axiosInstance.post(
         '/newProductionOrderCreation',
-        formData
+        {...formData, createdBy: adminData.email}
       )
       if (result) {
         toast.success(result.data.message)

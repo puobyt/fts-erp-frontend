@@ -9,7 +9,7 @@ import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
- 
+
 import axios from 'axios'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
@@ -25,11 +25,13 @@ const style = {
   p: 4
 }
 
-export default function EditProductionOrderCreationForm ({
+export default function EditProductionOrderCreationForm({
   setUpdate,
   productionOrderData,
   materialNames
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate();
@@ -106,7 +108,7 @@ export default function EditProductionOrderCreationForm ({
     }
     try {
       await axiosInstance
-        .put('/editProductionOrderCreation', formData)
+        .put('/editProductionOrderCreation', { ...formData, editedBy: adminData.email })
         .then(result => {
           toast.success(result.data.message)
           handleClose()

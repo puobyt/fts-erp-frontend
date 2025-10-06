@@ -20,12 +20,13 @@ import * as XLSX from 'xlsx'
 
 // ----------------------------------------------------------------------
 
-export function ProcessOrderTableRow ({
+export function ProcessOrderTableRow({
   setUpdate,
   row,
   selected,
   onSelectRow
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
   const [openPopover, setOpenPopover] = useState(null)
 
   const processOrderData = {
@@ -55,7 +56,7 @@ export function ProcessOrderTableRow ({
     try {
       // Create a new workbook
       const wb = XLSX.utils.book_new();
-      
+
       // Prepare basic process order data
       const basicData = {
         'Process Order Number': row.processOrderNumber || '',
@@ -104,16 +105,16 @@ export function ProcessOrderTableRow ({
 
       // Generate filename with process order number
       const filename = `ProcessOrder_${row.processOrderNumber || Date.now()}.xlsx`;
-      
+
       // Download the file
       XLSX.writeFile(wb, filename);
-      
+
       // Show success message
       toast.success('Process Order downloaded successfully!');
-      
+
       // Close the popover
       handleClosePopover();
-      
+
     } catch (error) {
       console.error('Error downloading process order:', error);
       toast.error('Error occurred while downloading the file. Please try again.');
@@ -124,7 +125,7 @@ export function ProcessOrderTableRow ({
     try {
       const processOrderId = row._id
       const result = await axiosInstance.delete(
-        `/removeProcessOrder?processOrderId=${processOrderId}`
+        `/removeProcessOrder?processOrderId=${processOrderId}&user=${adminData.email}`
       )
       if (result) {
         toast.success(result.data.message)
@@ -187,13 +188,13 @@ export function ProcessOrderTableRow ({
             <div key={index}>{`${material.quantity}`}</div>
           ))}
         </TableCell>
-        
+
         <TableCell>
           {row.materialInput.map((material, index) => (
             <div key={index}>{material.batch}</div>
           ))}
         </TableCell>
-        
+
         <TableCell>
           {row.materialInput.map((material, index) => (
             <div key={index}>{material.storageLocation}</div>
@@ -211,19 +212,19 @@ export function ProcessOrderTableRow ({
             <div key={index}>{`${material.quantity} `}</div>
           ))}
         </TableCell>
-        
+
         <TableCell>
           {row.materialOutput?.map((material, index) => (
             <div key={index}>{material.batch}</div>
           ))}
         </TableCell>
-        
+
         <TableCell>
           {row.materialOutput?.map((material, index) => (
             <div key={index}>{material.storageLocation}</div>
           ))}
         </TableCell>
-        
+
         <TableCell>
           {row.materialOutput?.map((material, index) => (
             <div key={index}>{material.Yield}</div>
@@ -273,7 +274,7 @@ export function ProcessOrderTableRow ({
           <ViewProcessOrderForm
             processOrderData={processOrderData}
           />
-          
+
           <MenuItem
             onClick={handleMenuCloseAndConfirmDelete}
             sx={{ color: 'error.main' }}

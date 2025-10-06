@@ -23,7 +23,9 @@ const style = {
   p: 4
 }
 
-export default function FinishedGoodsForm ({ setUpdate }) {
+export default function FinishedGoodsForm({ setUpdate }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -62,7 +64,7 @@ export default function FinishedGoodsForm ({ setUpdate }) {
       return
     }
     try {
-      const result = await axiosInstance.post('/newFinishedGoods', formData)
+      const result = await axiosInstance.post('/newFinishedGoods', { ...formData, createdBy: adminData.email })
       if (result) {
         toast.success(result.data.message)
         handleClose()

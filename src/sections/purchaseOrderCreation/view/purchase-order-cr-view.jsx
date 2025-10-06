@@ -20,6 +20,7 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 import axiosInstance from 'src/configs/axiosInstance';
 import PurchaseOrderCreationForm from '../../../layouts/modals/addPurchaseOrderCreation';
 import { varAlpha } from 'src/theme/styles';
+import { hasPermission } from '../../../utils/permissionCheck';
 
 export function PurchaseOrderCreationView() {
   const table = useTable();
@@ -83,7 +84,9 @@ export function PurchaseOrderCreationView() {
         <Typography variant="h4" flexGrow={1}>
           Purchase Order Creation
         </Typography>
-        <PurchaseOrderCreationForm setUpdate={setUpdate} firms={firms} />
+        {hasPermission('Purchase Order Creation') === 'fullAccess' &&
+          <PurchaseOrderCreationForm setUpdate={setUpdate} firms={firms} />
+        }
       </Box>
 
       <Card>

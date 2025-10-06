@@ -33,6 +33,7 @@ export default function EditProductionOrderCreationOutputForm ({
   productionOrderOutputData,
   products
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -139,7 +140,7 @@ export default function EditProductionOrderCreationOutputForm ({
     if (!validateForm()) return
     try {
       await axiosInstance
-        .put('/editProductionOrderCreationOutput', formData)
+        .put('/editProductionOrderCreationOutput', { ...formData, editedBy: adminData.email })
         .then(result => {
           toast.success(result.data.message)
           handleClose()

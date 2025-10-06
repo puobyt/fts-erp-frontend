@@ -23,7 +23,9 @@ const style = {
   p: 4
 }
 
-export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
+export default function EditVendorManagementForm({ setUpdate, vendorData }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -50,7 +52,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
     if (!formData.nameOfTheFirm)
       newErrors.nameOfTheFirm = 'Name of the Firm is required'
     if (!formData.address) newErrors.address = 'Address is required'
-        if (!formData.vendorCode) newErrors.vendorCode = 'Vendor Code is required'
+    if (!formData.vendorCode) newErrors.vendorCode = 'Vendor Code is required'
     if (!formData.contactNumber)
       newErrors.contactNumber = 'Contact Number is required'
     if (!formData.contactPersonName)
@@ -80,7 +82,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
     }
     try {
       await axiosInstance
-        .put('/editVendorManagmenent', formData)
+        .put('/editVendorManagmenent', { ...formData, editedBy: adminData.email })
         .then(result => {
           toast.success(result.data.message)
           handleClose()
@@ -160,7 +162,7 @@ export default function EditVendorManagementForm ({ setUpdate, vendorData }) {
                 color='primary'
                 gutterBottom
               >
-              Edit Vendor Details
+                Edit Vendor Details
               </Typography>
               <Typography variant='body2' color='textSecondary'>
                 Vendor Management
