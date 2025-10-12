@@ -29,6 +29,8 @@ import ColorOfExpiry from '../../../utils/ColorOfExpiry';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import * as XLSX from 'xlsx'
 import toast, { Toaster } from 'react-hot-toast'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 
 
 // ----------------------------------------------------------------------
@@ -41,6 +43,8 @@ export function CurrentStockView() {
   const [purchaseOrderData, setPurchaseOrderData] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [vendors, setVendors] = useState([]);
+  const [selectedTab, setSelectedTab] = useState(0)
+
   const fetchCurrentStock = async () => {
     try {
       setLoading(true);
@@ -62,8 +66,14 @@ export function CurrentStockView() {
     fetchCurrentStock();
   }, [update]);
 
+  const getCurrentEntries = () => {
+    if (selectedTab === 0) return currentStocks.filter((item) => !item?.isReturnedItem)
+    if (selectedTab === 1) return currentStocks.filter((item) => item?.isReturnedItem)
+  }
+
+
   const dataFiltered = applyFilter({
-    inputData: currentStocks,
+    inputData: getCurrentEntries(),
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
@@ -80,6 +90,11 @@ export function CurrentStockView() {
       />
     </Box>
   );
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue)
+    table.onResetPage()
+  }
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -115,6 +130,86 @@ export function CurrentStockView() {
 
     reader.readAsArrayBuffer(file);
   };
+
+  const renderTable = entries => (
+    <Card>
+      <ColorOfExpiry />
+      {loading && renderFallback}
+      <CurrentStockTableToolbar
+        sort={table.onSort}
+        numSelected={table.selected.length}
+        filterName={filterName}
+        onFilterName={(event) => {
+          setFilterName(event.target.value);
+          table.onResetPage();
+        }}
+      />
+
+      <TableContainer sx={{ overflow: 'auto' }}>
+        <Table sx={{ minWidth: 800 }}>
+          <CurrentStockTableHead
+            order={table.order}
+            orderBy={table.orderBy}
+            rowCount={currentStocks.length}
+            numSelected={table.selected.length}
+            onSort={table.onSort}
+            // onSelectAllRows={(checked) =>
+            //   table.onSelectAllRows(
+            //     checked,
+            //     _users.map((user) => user.id)
+            //   )
+            // }
+            headLabel={[
+              { id: 'materiaLName', label: 'Material Name' },
+              { id: 'materialCode', label: 'Material Code' },
+              { id: 'grn', label: 'GRN' },
+              { id: 'quantity', label: 'Quantity' },
+              { id: 'price', label: 'Price' },
+              { id: 'storageLocation', label: 'Storage Location' },
+              { id: 'vendorName', label: 'Vendor Name' },
+              { id: 'dateRecieved', label: 'Date Recieved' },
+              { id: 'expiryDate', label: 'Expiry' },
+            ]}
+          />
+          <TableBody>
+            {dataFiltered
+              .slice(
+                table.page * table.rowsPerPage,
+                table.page * table.rowsPerPage + table.rowsPerPage
+              )
+              .map((row, index) => (
+                <CurrentStockTableRow
+                  vendors={vendors}
+                  purchaseOrderData={purchaseOrderData}
+                  materials={materials}
+                  setUpdate={setUpdate}
+                  key={index}
+                  row={row}
+                  selected={table.selected.includes(row.id)}
+                  onSelectRow={() => table.onSelectRow(row.id)}
+                />
+              ))}
+
+            <TableEmptyRows
+              height={68}
+              emptyRows={emptyRows(table.page, table.rowsPerPage, currentStocks.length)}
+            />
+
+            {notFound && <TableNoData searchQuery={filterName} />}
+          </TableBody>
+        </Table>
+        <TablePagination
+          component="div"
+          page={table.page}
+          count={entries.length}
+          rowsPerPage={table.rowsPerPage}
+          onPageChange={table.onChangePage}
+          rowsPerPageOptions={[5, 10, 25]}
+          onRowsPerPageChange={table.onChangeRowsPerPage}
+        />
+      </TableContainer>
+    </Card>
+  )
 
   return (
     <DashboardContent>
@@ -164,7 +259,12 @@ export function CurrentStockView() {
         </div>
       </Box>
 
-      <Card>
+      <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
+        <Tab label='Current Stock' />
+        <Tab label='Returned Items' />
+      </Tabs>
+
+      {/* <Card>
         <ColorOfExpiry />
         {loading && renderFallback}
         <CurrentStockTableToolbar
@@ -240,7 +340,10 @@ export function CurrentStockView() {
             onRowsPerPageChange={table.onChangeRowsPerPage}
           />
         </TableContainer>
-      </Card>
+      </Card> */}
+
+      {renderTable(getCurrentEntries())}
+
     </DashboardContent>
   );
 }
