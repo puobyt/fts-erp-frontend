@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import {Input} from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import Modal from '@mui/material/Modal';
 import { Iconify } from 'src/components/iconify';
 import axiosInstance from 'src/configs/axiosInstance';
@@ -23,22 +23,22 @@ const style = {
   p: 4,
 };
 
-export default function VendorManagementForm({setUpdate}) {
+export default function VendorManagementForm({ setUpdate }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [formData, setFormData] = useState({
-     nameOfTheFirm: '', 
-     address: '', 
-     vendorCode:'',
-     contactNumber: '', 
-     contactPersonName: '' ,
-     contactPersonDetails:'',
-     material:'',
-     bankDetails:'',
-     pan:'',
-     gst:''
-    });
+    nameOfTheFirm: '',
+    address: '',
+    vendorCode: '',
+    contactNumber: '',
+    contactPersonName: '',
+    contactPersonDetails: '',
+    material: '',
+    bankDetails: '',
+    pan: '',
+    gst: ''
+  });
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
@@ -53,65 +53,65 @@ export default function VendorManagementForm({setUpdate}) {
     if (!formData.bankDetails) newErrors.bankDetails = 'Bank Details are required';
     if (!formData.pan) newErrors.pan = 'PAN is required';
     if (!formData.gst) newErrors.gst = 'GST is required';
-  
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Returns true if there are no errors
   };
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
-  
+
     e.preventDefault();
-   
+
     if (!validateForm()) {
-       return;
-      }
-try{
-    const result = await axiosInstance.post('/newVendorManagmenent',formData);
-    if(result){
+      return;
+    }
+    try {
+      const result = await axiosInstance.post('/newVendorManagmenent', formData);
+      if (result) {
         toast.success(result.data.message);
         handleClose();
         setFormData({
-            nameOfTheFirm: '', 
-            address: '', 
-            vendorCode: '', 
-            contactNumber: '', 
-            contactPersonName: '' ,
-            contactPersonDetails:'',
-            material:'',
-            bankDetails:'',
-            pan:'',
-            gst:''
-           })
-           setUpdate(prev=>!prev);
-    }
-   
+          nameOfTheFirm: '',
+          address: '',
+          vendorCode: '',
+          contactNumber: '',
+          contactPersonName: '',
+          contactPersonDetails: '',
+          material: '',
+          bankDetails: '',
+          pan: '',
+          gst: ''
+        })
+        setUpdate(prev => !prev);
+      }
 
-}catch(err){
-    toast.error(err.response.data.message);
-    console.error('Error occured in adding vendor management client side');
-}
-    
-   
+
+    } catch (err) {
+      toast.error(err.response.data.message);
+      console.error('Error occured in adding vendor management client side');
+    }
+
+
   };
   return (
     <div>
-  <Toaster
-  position="top-center"
-  reverseOrder={false}
-/>
-            <Button
-            onClick={handleOpen}
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-         New Vendor Management
-        </Button>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
+      <Button
+        onClick={handleOpen}
+        variant="contained"
+        color="inherit"
+        startIcon={<Iconify icon="mingcute:add-line" />}
+      >
+        New Vendor Management
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -127,175 +127,175 @@ try{
           </Typography>
         </Box> */}
 
-<Container maxWidth="lg" sx={{ mt: 8 }}>
-      <Paper elevation={4} sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}>
-        <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Typography component="h1" variant="h5" fontWeight="bold" color="primary" gutterBottom>
-           Add New Vendor
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-          Vendor Management
-          </Typography>
-        </Box>
-        <Box component="form" onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
+        <Container maxWidth="lg" sx={{ mt: 8 }}>
+          <Paper elevation={4} sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 3 }}>
+            <Box sx={{ textAlign: 'center', mb: 3 }}>
+              <Typography component="h1" variant="h5" fontWeight="bold" color="primary" gutterBottom>
+                Add New Vendor
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Vendor Management
+              </Typography>
+            </Box>
+            <Box component="form" onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Name Of The Firm"
+                    name="nameOfTheFirm"
+                    value={formData.nameOfTheFirm}
+                    onChange={handleChange}
+                    error={!!errors.nameOfTheFirm}
+                    helperText={errors.nameOfTheFirm}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    error={!!errors.address}
+                    helperText={errors.address}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Contact Number"
+                    name="contactNumber"
+                    value={formData.contactNumber}
+                    onChange={handleChange}
+                    error={!!errors.contactNumber}
+                    helperText={errors.contactNumber}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Vendor Code"
+                    name="vendorCode"
+                    value={formData.vendorCode}
+                    onChange={handleChange}
+                    error={!!errors.vendorCode}
+                    helperText={errors.vendorCode}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Contact Person Name"
+                    name="contactPersonName"
+                    value={formData.contactPersonName}
+                    onChange={handleChange}
+                    error={!!errors.contactPersonName}
+                    helperText={errors.contactPersonName}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Contact Person Details"
+                    name="contactPersonDetails"
+                    value={formData.contactPersonDetails}
+                    onChange={handleChange}
+                    error={!!errors.contactPersonDetails}
+                    helperText={errors.contactPersonDetails}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Material"
+                    name="material"
+                    value={formData.material}
+                    onChange={handleChange}
+                    error={!!errors.material}
+                    helperText={errors.material}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Bank Details"
+                    name="bankDetails"
+                    value={formData.bankDetails}
+                    onChange={handleChange}
+                    error={!!errors.bankDetails}
+                    helperText={errors.bankDetails}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Pan"
+                    name="pan"
+                    value={formData.pan}
+                    onChange={handleChange}
+                    error={!!errors.pan}
+                    helperText={errors.pan}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="GST"
+                    name="gst"
+                    value={formData.gst}
+                    onChange={handleChange}
+                    error={!!errors.gst}
+                    helperText={errors.gst}
+                    variant="outlined"
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
                 fullWidth
-                label="Name Of The Firm"
-                name="nameOfTheFirm"
-                value={formData.nameOfTheFirm}
-                onChange={handleChange}
-                error={!!errors.nameOfTheFirm}
-                helperText={errors.nameOfTheFirm}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                error={!!errors.address}
-                helperText={errors.address}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Contact Number"
-                name="contactNumber"
-                value={formData.contactNumber}
-                onChange={handleChange}
-                error={!!errors.contactNumber}
-                helperText={errors.contactNumber}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Vendor Code"
-                name="vendorCode"
-                value={formData.vendorCode}
-                onChange={handleChange}
-                error={!!errors.vendorCode}
-                helperText={errors.vendorCode}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Contact Person Name"
-                name="contactPersonName"
-                value={formData.contactPersonName}
-                onChange={handleChange}
-                error={!!errors.contactPersonName}
-                helperText={errors.contactPersonName}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Contact Person Details"
-                name="contactPersonDetails"
-                value={formData.contactPersonDetails}
-                onChange={handleChange}
-                error={!!errors.contactPersonDetails}
-                helperText={errors.contactPersonDetails}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Material"
-                name="material"
-                value={formData.material}
-                onChange={handleChange}
-                error={!!errors.material}
-                helperText={errors.material}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Bank Details"
-                name="bankDetails"
-                value={formData.bankDetails}
-                onChange={handleChange}
-                error={!!errors.bankDetails}
-                helperText={errors.bankDetails}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Pan"
-                name="pan"
-                value={formData.pan}
-                onChange={handleChange}
-                error={!!errors.pan}
-                helperText={errors.pan}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="GST"
-                name="gst"
-                value={formData.gst}
-                onChange={handleChange}
-                error={!!errors.gst}
-                helperText={errors.gst}
-                variant="outlined"
-                InputProps={{ style: { borderRadius: 8 } }}
-              />
-            </Grid>
-          </Grid>
-          <Button
-  type="submit"
-  fullWidth
-  variant="contained"
-  sx={{
-    mt: 4,
-    py: 1.5,
-    fontWeight: 'bold',
-    borderRadius: 8,
-    background: 'linear-gradient(90deg, #4a90e2, #3b5998)',
-    color: 'white',
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
-    transition: 'transform 0.2s, box-shadow 0.2s',
-    '&:hover': {
-      transform: 'scale(1.05)',
-      boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.3)',
-      background: 'linear-gradient(90deg, #3b5998, #4a90e2)',
-    },
-  }}
->
- Submit
-</Button>
+                variant="contained"
+                sx={{
+                  mt: 4,
+                  py: 1.5,
+                  fontWeight: 'bold',
+                  borderRadius: 8,
+                  background: 'linear-gradient(90deg, #4a90e2, #3b5998)',
+                  color: 'white',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.3)',
+                    background: 'linear-gradient(90deg, #3b5998, #4a90e2)',
+                  },
+                }}
+              >
+                Submit
+              </Button>
 
-        </Box>
-      </Paper>
-    </Container>
+            </Box>
+          </Paper>
+        </Container>
       </Modal>
     </div>
   );
