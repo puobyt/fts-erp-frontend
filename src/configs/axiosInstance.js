@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: 'https://fts-erp-backend.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   }, 
@@ -10,5 +10,5 @@ const axiosInstance = axios.create({
 export default axiosInstance;
 
 // http://localhost:5000
-// https://fts-server-indol.vercel.app
+//   baseURL: 'https://fts-erp-backend.onrender.com',
 //axiospage
