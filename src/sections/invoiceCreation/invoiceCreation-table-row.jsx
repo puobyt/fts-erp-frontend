@@ -26,6 +26,8 @@ export function InvoiceCreationTableRow ({
   selected,
   onSelectRow
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null)
   const invoiceData = {
     invoiceId: row._id,
@@ -50,7 +52,7 @@ export function InvoiceCreationTableRow ({
     try {
       const invoiceId = row._id
       const result = await axiosInstance.delete(
-        `/removeInvoiceCreation?invoiceId=${invoiceId}`
+        `/removeInvoiceCreation?invoiceId=${invoiceId}&user=${adminData.email}`
       )
       if (result) {
         toast.success(result.data.message)

@@ -17,9 +17,12 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import ViewMainStock from '../../layouts/viewModals/ViewMainStock'
 import { colorChangeOfExpiry, isExpired, isNearExpiry } from '../../utils/expiryHelper'
+import { hasPermission } from '../../utils/permissionCheck'
 // ----------------------------------------------------------------------
 
-export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
+export function MainStockTableRow({ setUpdate, row, selected, onSelectRow }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null)
   const mainStockData = {
     mainStockId: row._id,
@@ -45,7 +48,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
     try {
       const mainStockId = row._id
       const result = await axiosInstance.delete(
-        `/removeMainStock?mainStockId=${mainStockId}`
+        `/removeMainStock?mainStockId=${mainStockId}&user=${adminData.email}`
       )
       if (result) {
         toast.success(result.data.message)
@@ -85,7 +88,7 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
   }
   return (
     <>
-      <TableRow style={{backgroundColor:colorChangeOfExpiry(row.expiryDate)}}>
+      <TableRow style={{ backgroundColor: colorChangeOfExpiry(row.expiryDate) }}>
         {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell> */}
@@ -139,22 +142,26 @@ export function MainStockTableRow ({ setUpdate, row, selected, onSelectRow }) {
             }
           }}
         >
-          <EditMainStockForm
-            setUpdate={setUpdate}
-            mainStockData={mainStockData}
-          />
+          {hasPermission('Main stock') === 'fullAccess' &&
+            <EditMainStockForm
+              setUpdate={setUpdate}
+              mainStockData={mainStockData}
+            />
+          }
 
           <ViewMainStock
             mainStockData={mainStockData}
           />
 
-          <MenuItem
-            onClick={handleMenuCloseAndConfirmDelete}
-            sx={{ color: 'error.main' }}
-          >
-            <Iconify icon='solar:trash-bin-trash-bold' />
-            Delete
-          </MenuItem>
+          {hasPermission('Main stock') === 'fullAccess' &&
+            <MenuItem
+              onClick={handleMenuCloseAndConfirmDelete}
+              sx={{ color: 'error.main' }}
+            >
+              <Iconify icon='solar:trash-bin-trash-bold' />
+              Delete
+            </MenuItem>
+          }
         </MenuList>
       </Popover>
     </>

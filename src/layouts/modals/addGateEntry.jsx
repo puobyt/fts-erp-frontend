@@ -62,6 +62,7 @@ const QC_STATUS = {
 };
 
 export default function GateEntryExitForm({ setUpdate, firmNames }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
   const [open, setOpen] = useState(false);
   const [gateType, setGateType] = useState(GATE_TYPES.ENTRY);
   const [qcDocuments, setQcDocuments] = useState([]);
@@ -319,7 +320,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
           endpoint = '/newGateEntry';
       }
 
-      const result = await axiosInstance.post(endpoint, formDataToSend, {
+      const result = await axiosInstance.post(endpoint, { ...formDataToSend, createdBy: adminData.email }, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

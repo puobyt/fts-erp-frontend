@@ -25,6 +25,8 @@ const style = {
 }
 
 export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate()
@@ -107,7 +109,7 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
       return
     }
     try {
-      const result = await axiosInstance.put('/editProcessOrder', formData)
+      const result = await axiosInstance.put('/editProcessOrder', {...formData, editedBy: adminData.email})
       if (result) {
         toast.success(result.data.message)
         handleClose()

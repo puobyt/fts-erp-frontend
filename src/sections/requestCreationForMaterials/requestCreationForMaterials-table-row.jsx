@@ -21,6 +21,8 @@ import ViewRequestCreationForMaterialsForm from '../../layouts/viewModals/viewRe
 
 
 export function RequestCreationForMaterialsTableRow({ materialNames, finishedGoods, setUpdate, row, selected, onSelectRow }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null);
   const requestMaterialsData = {
     requestMaterialsId: row._id,
@@ -43,7 +45,7 @@ export function RequestCreationForMaterialsTableRow({ materialNames, finishedGoo
     try {
 
       const requestCreationId = row._id;
-      const result = await axiosInstance.delete(`/removeRequestCreationForMaterials?requestCreationId=${requestCreationId}`);
+      const result = await axiosInstance.delete(`/removeRequestCreationForMaterials?requestCreationId=${requestCreationId}&user=${adminData.email}`);
       if (result) {
         toast.success(result.data.message);
         setUpdate(prev => !prev)
@@ -82,28 +84,28 @@ export function RequestCreationForMaterialsTableRow({ materialNames, finishedGoo
     }, 0); // Optional delay to ensure the popover is fully closed
   };
 
-    const getStatusLabel = (status) => {
-      switch (status) {
-        case 'Pending':
-          return (
-            <Typography sx={{ color: '#FFA500', fontWeight: 'bold' }}>
-              Pending
-            </Typography>
-          );
-        case 'Assigned':
-          return (
-            <Typography sx={{ color: '#4CAF50', fontWeight: 'bold' }}>
-              Assigned
-            </Typography>
-          );
-        default:
-          return (
-            <Typography sx={{ color: '#757575', fontWeight: 'bold' }}>
-              Unknown
-            </Typography>
-          );
-      }
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'Pending':
+        return (
+          <Typography sx={{ color: '#FFA500', fontWeight: 'bold' }}>
+            Pending
+          </Typography>
+        );
+      case 'Assigned':
+        return (
+          <Typography sx={{ color: '#4CAF50', fontWeight: 'bold' }}>
+            Assigned
+          </Typography>
+        );
+      default:
+        return (
+          <Typography sx={{ color: '#757575', fontWeight: 'bold' }}>
+            Unknown
+          </Typography>
+        );
     }
+  }
   return (
     <>
       <TableRow>
@@ -150,7 +152,7 @@ export function RequestCreationForMaterialsTableRow({ materialNames, finishedGoo
         </TableCell>
         <TableCell>{new Date(row.requiredDate).toLocaleDateString()}</TableCell>
         <TableCell>
-        {getStatusLabel(row.status)}
+          {getStatusLabel(row.status)}
         </TableCell>
 
         <TableCell align="right">

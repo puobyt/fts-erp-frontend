@@ -36,6 +36,8 @@ export default function CurrentStockForm({
   materials,
   vendors
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -106,7 +108,7 @@ export default function CurrentStockForm({
       return
     }
     try {
-      const result = await axiosInstance.post('/newCurrentStock', formData)
+      const result = await axiosInstance.post('/newCurrentStock', {...formData,createdBy:adminData.email})
       if (result) {
         toast.success(result.data.message)
         handleClose()

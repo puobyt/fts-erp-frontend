@@ -60,37 +60,6 @@ export function OTPView ({ email }) {
     [otp, router]
   )
 
-  const renderForm = (
-    <Box display='flex' flexDirection='column' alignItems='flex-end'>
-      <TextField
-        fullWidth
-        onChange={e => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
-        name='otp'
-        label='Please enter your OTP'
-        helperText={errors.otp}
-        error={!!errors.otp}
-        value={otp}
-        sx={{ mb: 3 }}
-        inputProps={{
-          inputMode: 'numeric',
-          pattern: '[0-9]*',
-          maxLength: 6
-        }}
-      />
-
-      <LoadingButton
-        fullWidth
-        size='large'
-        type='submit'
-        color='inherit'
-        variant='contained'
-        onClick={handleSubmit}
-      >
-        Submit
-      </LoadingButton>
-    </Box>
-  )
-
   return (
     <>
       <Box
@@ -100,10 +69,12 @@ export function OTPView ({ email }) {
         alignItems='center'
         sx={{ mb: 5 }}
       >
-        <Typography variant='h5'>Enter OTP</Typography>
+        <Typography variant='h5' align='center'>
+          Admin will review your request and get back to you.
+        </Typography>
       </Box>
 
-      {renderForm}
+      {/* Toaster component to show any notifications if required */}
       <Toaster position='top-center' reverseOrder={false} />
     </>
   )

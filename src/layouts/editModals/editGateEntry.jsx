@@ -31,6 +31,7 @@ export default function EditGateEntryForm ({
   setUpdate,
   gateEntryData
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -138,7 +139,7 @@ export default function EditGateEntryForm ({
     }
     try {
       const result = await axiosInstance
-        .put('/editGateEntry', formData)
+        .put('/editGateEntry', {...formData, editedBt:adminData.email})
         .then(result => {
           toast.success(result.data.message)
           handleClose()

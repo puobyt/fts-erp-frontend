@@ -26,6 +26,8 @@ export function BillOfMaterialsTableRow ({
   selected,
   onSelectRow
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null)
   const billOfMaterialsData = {
     billOfMaterialsId: row._id,
@@ -45,7 +47,7 @@ export function BillOfMaterialsTableRow ({
     try {
       const billOfMaterialsId = row._id
       const result = await axiosInstance.delete(
-        `/removeBillOfMaterials?billOfMaterialsId=${billOfMaterialsId}`
+        `/removeBillOfMaterials?billOfMaterialsId=${billOfMaterialsId}&user=${adminData.email}`
       )
       if (result) {
         toast.success(result.data.message)

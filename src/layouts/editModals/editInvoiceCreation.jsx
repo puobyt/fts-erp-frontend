@@ -25,6 +25,8 @@ const style = {
 }
 
 export default function EditInvoiceCreationForm ({ setUpdate, invoiceData,itemNames }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -82,7 +84,7 @@ export default function EditInvoiceCreationForm ({ setUpdate, invoiceData,itemNa
     }
     try {
       const result = await axiosInstance
-        .put('/editInvoiceCreation', formData)
+        .put('/editInvoiceCreation', {...formData, editedBy: adminData.email})
         .then(result => {
           toast.success(result.data.message)
           handleClose()

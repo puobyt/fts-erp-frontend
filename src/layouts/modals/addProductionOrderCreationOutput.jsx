@@ -35,6 +35,8 @@ export default function ProductionOrderCreationOutputForm({
   nextBatchNumber,
   products,
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false);
   const [product, setProduct] = useState(null)
   const navigate = useNavigate();
@@ -158,7 +160,7 @@ export default function ProductionOrderCreationOutputForm({
       return;
     }
     try {
-      const result = await axiosInstance.post('/newProductionOrderCreationOutput', formData);
+      const result = await axiosInstance.post('/newProductionOrderCreationOutput', { ...formData, createdBy: adminData.email });
       if (result) {
         toast.success(result.data.message);
         handleClose();

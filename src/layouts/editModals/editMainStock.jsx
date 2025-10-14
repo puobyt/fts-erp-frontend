@@ -27,6 +27,8 @@ const style = {
 }
 
 export default function EditMainStockForm({ setUpdate, mainStockData }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const handleOpen = () => setOpen(true)
@@ -96,7 +98,7 @@ export default function EditMainStockForm({ setUpdate, mainStockData }) {
       return
     }
     try {
-      const result = await axiosInstance.put('/editMainStock', formData)
+      const result = await axiosInstance.put('/editMainStock', {...formData, editedBy: adminData.email})
       if (result) {
         toast.success(result.data.message)
         handleClose()

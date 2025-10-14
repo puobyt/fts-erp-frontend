@@ -17,9 +17,10 @@ import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
 import ViewCurrentStock from '../../layouts/viewModals/ViewCurrentStock'
 import { colorChangeOfExpiry } from '../../utils/expiryHelper'
+import { hasPermission } from '../../utils/permissionCheck'
 // ----------------------------------------------------------------------
 
-export function CurrentStockTableRow ({
+export function CurrentStockTableRow({
   vendors,
   purchaseOrderData,
   materials,
@@ -28,6 +29,8 @@ export function CurrentStockTableRow ({
   selected,
   onSelectRow
 }) {
+    const adminData = JSON.parse(localStorage.getItem('admin'))
+  
   const [openPopover, setOpenPopover] = useState(null)
   const [loading, setLoading] = useState(false)
   const currentStockData = {
@@ -54,7 +57,7 @@ export function CurrentStockTableRow ({
     try {
       const currentStockId = row._id
       const result = await axiosInstance.delete(
-        `/removeCurrentStock?currentStockId=${currentStockId}`
+        `/removeCurrentStock?currentStockId=${currentStockId}&user=${adminData.email}`
       )
       if (result) {
         toast.success(result.data.message)
@@ -94,7 +97,7 @@ export function CurrentStockTableRow ({
   }
   return (
     <>
-      <TableRow style={{backgroundColor:colorChangeOfExpiry(row.expiryDate)}}>
+      <TableRow style={{ backgroundColor: colorChangeOfExpiry(row.expiryDate) }}>
         {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell> */}
@@ -146,26 +149,32 @@ export function CurrentStockTableRow ({
             }
           }}
         >
-          <EditCurrentStockForm
-            purchaseOrderData={purchaseOrderData}
-            materials={materials}
-            setUpdate={setUpdate}
-            currentStockData={currentStockData}
-            vendors={vendors}
-          />
+          {hasPermission('Inward Current stock') === 'fullAccess' &&
+
+            <EditCurrentStockForm
+              purchaseOrderData={purchaseOrderData}
+              materials={materials}
+              setUpdate={setUpdate}
+              currentStockData={currentStockData}
+              vendors={vendors}
+            />
+          }
 
           <ViewCurrentStock
             currentStockData={currentStockData}
-      
+
           />
 
-          <MenuItem
-            onClick={handleMenuCloseAndConfirmDelete}
-            sx={{ color: 'error.main' }}
-          >
-            <Iconify icon='solar:trash-bin-trash-bold' />
-            Delete
-          </MenuItem>
+          {hasPermission('Inward Current stock') === 'fullAccess' &&
+
+            <MenuItem
+              onClick={handleMenuCloseAndConfirmDelete}
+              sx={{ color: 'error.main' }}
+            >
+              <Iconify icon='solar:trash-bin-trash-bold' />
+              Delete
+            </MenuItem>
+          }
           <MenuItem
             sx={{ color: 'primary.main' }}
             onClick={() => generateMaterialsReport(row)}

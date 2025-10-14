@@ -18,6 +18,8 @@ import ViewGateEntry from '../../layouts/viewModals/viewGateEntry';
 
 
 export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectRow }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null);
   const gateEntryData = {
   gateEntryId: row._id,
@@ -300,7 +302,7 @@ const handleDownload = (row) => {
     try {
 
       const gateEntryId = row._id;
-      const result = await axiosInstance.delete(`/removeGateEntry?gateEntryId=${gateEntryId}`);
+      const result = await axiosInstance.delete(`/removeGateEntry?gateEntryId=${gateEntryId}&user=${adminData.email}`);
       if (result) {
         toast.success(result.data.message)
         setUpdate(prev => !prev)

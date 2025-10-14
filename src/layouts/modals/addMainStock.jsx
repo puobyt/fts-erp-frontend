@@ -34,6 +34,7 @@ export default function MainStockForm({
   purchaseOrderData,
   materials
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [vendors, setVendors] = useState([])
@@ -118,7 +119,7 @@ export default function MainStockForm({
       return
     }
     try {
-      const result = await axiosInstance.post('/newMainStock', formData)
+      const result = await axiosInstance.post('/newMainStock', {...formData, createdBy: adminData.email})
       if (result) {
         toast.success(result.data.message)
         handleClose()

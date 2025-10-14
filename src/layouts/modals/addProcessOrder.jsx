@@ -26,6 +26,8 @@ const style = {
 }
 
 export default function ProcessOrderForm({ setUpdate }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const [dropDownItems, setDropDownItems] = useState([])
 
@@ -104,7 +106,7 @@ export default function ProcessOrderForm({ setUpdate }) {
 
     setFormData({ ...formData, materialInput: updatedMaterials })
   }
-  console.log('formData',formData)
+  console.log('formData', formData)
 
   const addMaterial = () => {
     setFormData(prevFormData => ({
@@ -129,7 +131,7 @@ export default function ProcessOrderForm({ setUpdate }) {
       return
     }
     try {
-      const result = await axiosInstance.post('/newProcessOrder', formData)
+      const result = await axiosInstance.post('/newProcessOrder', { ...formData, createdBy: adminData.email })
       if (result) {
         toast.success(result.data.message)
         handleClose()
@@ -336,25 +338,25 @@ export default function ProcessOrderForm({ setUpdate }) {
                   />
                 </Grid>
                 <Grid item xs={1} sx={{ mt: 2 }}>
-                      <TextField
-                        fullWidth
-                        select
-                        label='Unit'
-                        name='unit'
-                        value={formData.unit}
-                        onChange={handleChange}
-                        error={!!errors.unit}
-                        helperText={errors.unit}
-                        variant='outlined'
-                        InputProps={{ style: { borderRadius: 8 } }}
-                      >
-                        {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
-                          <MenuItem key={unit} value={unit}>
-                            {unit}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </Grid>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
 
                 <Grid item xs={12} >
                   <Typography

@@ -26,6 +26,9 @@ import axiosInstance from 'src/configs/axiosInstance';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { varAlpha } from 'src/theme/styles';
 import ColorOfExpiry from '../../../utils/ColorOfExpiry';
+
+import { hasPermission } from '../../../utils/permissionCheck';
+
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import * as XLSX from 'xlsx'
 import toast, { Toaster } from 'react-hot-toast'
@@ -227,12 +230,15 @@ export function CurrentStockView() {
           New user
         </Button> */}
 
-        <CurrentStockForm
-          setUpdate={setUpdate}
-          purchaseOrderData={purchaseOrderData}
-          materials={materials}
-          vendors={vendors}
-        />
+
+        {hasPermission('Inward Current stock') === 'fullAccess' &&
+          <CurrentStockForm
+            setUpdate={setUpdate}
+            purchaseOrderData={purchaseOrderData}
+            materials={materials}
+            vendors={vendors}
+          />
+        }
 
         <div >
           <input

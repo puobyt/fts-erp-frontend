@@ -20,22 +20,24 @@ import toast, { Toaster } from 'react-hot-toast'
 
 
 
-export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
+export function UserTableRow({ setUpdate, row, selected, onSelectRow }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
 
   const vendorData = {
     nameOfTheFirm: row.nameOfTheFirm,
     address: row.address,
     vendorCode: row.vendorCode,
     vendorId: row._id,
-    contactNumber:row.contactNumber,
-    contactPersonName:row.contactPersonName,
-    contactPersonDetails:row.contactPersonDetails,
-    material:row.material,
-    bankDetails:row.bankDetails,
-    pan:row.pan,
-    gst:row.gst
+    contactNumber: row.contactNumber,
+    contactPersonName: row.contactPersonName,
+    contactPersonDetails: row.contactPersonDetails,
+    material: row.material,
+    bankDetails: row.bankDetails,
+    pan: row.pan,
+    gst: row.gst
   };
-  
+
   const [openPopover, setOpenPopover] = useState(null);
 
   const handleOpenPopover = useCallback((event) => {
@@ -47,15 +49,15 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
   }, []);
 
 
-  const handleDelete = async()=>{
+  const handleDelete = async () => {
     try {
 
       const vendorId = row._id;
-      const result = await axiosInstance.delete(`/removeVendorManagement?vendorId=${vendorId}`);
+      const result = await axiosInstance.delete(`/removeVendorManagement?vendorId=${vendorId}&user=${adminData.email}`);
       if (result) {
         toast.success(result.data.message);
         setUpdate(prev => !prev)
-    
+
       }
     } catch (err) {
       toast.success(err.response.data.message)
@@ -66,7 +68,7 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
     }
   }
 
-  const confirmDelete = ()=>{
+  const confirmDelete = () => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -92,9 +94,9 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
 
   return (
     <>
-     <Toaster position='top-center' reverseOrder={false} />
+      <Toaster position='top-center' reverseOrder={false} />
       <TableRow>
-      {/* <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell> */}
         {/* <TableCell component="th" scope="row">
@@ -113,7 +115,7 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
         <TableCell>{row.bankDetails}</TableCell>
         <TableCell>{row.pan}</TableCell>
         <TableCell>{row.gst}</TableCell>
-   
+
 
 
         <TableCell align="right">
@@ -150,12 +152,12 @@ export function UserTableRow({setUpdate, row, selected, onSelectRow }) {
             <Iconify icon="solar:pen-bold" />
            
           </MenuItem> */}
-        
-<EditVendorManagementForm setUpdate={setUpdate} vendorData ={vendorData}/>
-<ViewVendorManagement vendorData ={vendorData}/>
+
+          <EditVendorManagementForm setUpdate={setUpdate} vendorData={vendorData} />
+          <ViewVendorManagement vendorData={vendorData} />
           <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete 
+            Delete
           </MenuItem>
         </MenuList>
       </Popover>

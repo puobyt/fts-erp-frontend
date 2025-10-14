@@ -26,6 +26,8 @@ const style = {
 }
 
 export default function QualityInspectionForm({ setUpdate, productNames }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const navigate = useNavigate();
@@ -75,7 +77,7 @@ export default function QualityInspectionForm({ setUpdate, productNames }) {
       return
     }
     try {
-      const result = await axiosInstance.post('/newQualityInspection', formData)
+      const result = await axiosInstance.post('/newQualityInspection', {...formData, createdBy: adminData.email})
       if (result) {
         toast.success(result.data.message)
         handleClose()

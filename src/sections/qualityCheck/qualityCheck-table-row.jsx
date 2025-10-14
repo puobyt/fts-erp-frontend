@@ -26,6 +26,7 @@ export function QualityCheckTableRow ({
   selected,
   onSelectRow
 }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
   const [openPopover, setOpenPopover] = useState(null)
 
   const qualityCheckData = {
@@ -50,7 +51,7 @@ export function QualityCheckTableRow ({
     try {
       const qualityCheckId = row._id
       const result = await axiosInstance.delete(
-        `/removeQualityCheck?qualityCheckId=${qualityCheckId}`
+        `/removeQualityCheck?qualityCheckId=${qualityCheckId}&user=${adminData.email}`
       )
       if (result) {
         toast.success(result.data.message)

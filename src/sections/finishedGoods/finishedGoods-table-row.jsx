@@ -17,19 +17,22 @@ import { CircularProgress } from '@mui/material';
 import axiosInstance from 'src/configs/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast'
 import ViewFinishedGoodsForm from '../../layouts/viewModals/viewFinishedGoods';
+import { hasPermission } from '../../utils/permissionCheck';
 // ----------------------------------------------------------------------
 
 
- 
-export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) {
+
+export function FinishedGoodsTableRow({ setUpdate, row, selected, onSelectRow }) {
+  const adminData = JSON.parse(localStorage.getItem('admin'))
+
   const [openPopover, setOpenPopover] = useState(null);
   const [loading, setLoading] = useState(false);
   const finishedGoodsData = {
-    finishedGoodsId:row._id,
-    finishedGoodsName:row.finishedGoodsName,
-    batchNumber:row.batchNumber,
-    productionDate:row.productionDate,
-    quantityProduced:row.quantityProduced
+    finishedGoodsId: row._id,
+    finishedGoodsName: row.finishedGoodsName,
+    batchNumber: row.batchNumber,
+    productionDate: row.productionDate,
+    quantityProduced: row.quantityProduced
   }
 
   const handlePDFDownload = async () => {
@@ -49,10 +52,10 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
   }, []);
-  const handleDelete = async()=>{
+  const handleDelete = async () => {
     try {
       const finishedGoodsId = row._id;
-      const result = await axiosInstance.delete(`/removeFinishedGoods?finishedGoodsId=${finishedGoodsId}`);
+      const result = await axiosInstance.delete(`/removeFinishedGoods?finishedGoodsId=${finishedGoodsId}&user=${adminData.email}`);
       if (result) {
         toast.success(result.data.message);
         setUpdate(prev => !prev)
@@ -66,7 +69,7 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
     }
   }
 
-  const confirmDelete = ()=>{
+  const confirmDelete = () => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -79,7 +82,7 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
     }).then((result) => {
       if (result.isConfirmed) {
         handleDelete();
-       
+
       }
     });
   }
@@ -93,7 +96,7 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
   return (
     <>
       <TableRow>
-      {/* <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell> */}
         {/* <TableCell component="th" scope="row">
@@ -136,18 +139,22 @@ export function FinishedGoodsTableRow({ setUpdate,row, selected, onSelectRow }) 
             },
           }}
         >
-       <EditFinishedGoodsForm setUpdate={setUpdate} finishedGoodsData={finishedGoodsData}/>
-       <ViewFinishedGoodsForm finishedGoodsData={finishedGoodsData}/>
-          <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
-            <Iconify icon="solar:trash-bin-trash-bold" />
-            Delete 
-          </MenuItem>
+          {hasPermission('Finished Goods') === 'fullAccess' &&
+            <EditFinishedGoodsForm setUpdate={setUpdate} finishedGoodsData={finishedGoodsData} />
+          }
+          <ViewFinishedGoodsForm finishedGoodsData={finishedGoodsData} />
+          {hasPermission('Finished Goods') === 'fullAccess' &&
+            <MenuItem onClick={handleMenuCloseAndConfirmDelete} sx={{ color: 'error.main' }}>
+              <Iconify icon="solar:trash-bin-trash-bold" />
+              Delete
+            </MenuItem>
+          }
           <MenuItem
             sx={{ color: 'primary.main' }}
             onClick={handlePDFDownload}
-            disabled={loading} 
+            disabled={loading}
           >
-           <Iconify icon="solar:download-bold" />
+            <Iconify icon="solar:download-bold" />
             Download PDF
           </MenuItem>
         </MenuList>

@@ -19,6 +19,7 @@ import { Scrollbar } from 'src/components/scrollbar'
 
 import { NavUpgrade } from '../components/nav-upgrade'
 import { WorkspacesPopover } from '../components/workspaces-popover'
+import { hasPermission } from '../../utils/permissionCheck'
 
 // import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 
@@ -156,6 +157,7 @@ export function NavContent ({ data, slots, workspaces, sx }) {
                           bgcolor: 'var(--layout-nav-item-hover-bg)'
                         }
                       }}
+                      
                     >
                       <Box component='span' sx={{ width: 24, height: 24 }}>
                         {item.icon}
@@ -181,6 +183,7 @@ export function NavContent ({ data, slots, workspaces, sx }) {
                     <Collapse in={isOpen} timeout='auto' unmountOnExit>
                       <List component='div' disablePadding>
                         {item.children.map(child => (
+                          hasPermission(child.title) && 
                           <ListItem key={child.title} disablePadding>
                             <ListItemButton
                               component={RouterLink}
