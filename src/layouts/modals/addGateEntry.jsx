@@ -489,14 +489,15 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
-      <Button
-        onClick={handleOpen}
-        variant='contained'
-        color='inherit'
-        startIcon={<Iconify icon='mingcute:add-line' />}
-      >
-        New Gate Entry/Exit
-      </Button>
+        <Button
+          onClick={handleOpen}
+          variant='contained'
+          color='inherit'
+          startIcon={<Iconify icon='mingcute:add-line' />}
+        >
+          New Gate Entry/Exit
+        </Button>
+
       <Modal
         open={open}
         onClose={handleClose}

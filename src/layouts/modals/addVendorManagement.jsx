@@ -24,9 +24,9 @@ const style = {
 };
 
 export default function VendorManagementForm({ setUpdate }) {
+
   const adminData = JSON.parse(localStorage.getItem('admin'))
   console.log('adminData',adminData)
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -74,7 +74,9 @@ export default function VendorManagementForm({ setUpdate }) {
       return;
     }
     try {
+
       const result = await axiosInstance.post('/newVendorManagmenent', {...formData, createdBy: adminData.email});
+
       if (result) {
         toast.success(result.data.message);
         handleClose();

@@ -26,7 +26,15 @@ import axiosInstance from 'src/configs/axiosInstance';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { varAlpha } from 'src/theme/styles';
 import ColorOfExpiry from '../../../utils/ColorOfExpiry';
+
 import { hasPermission } from '../../../utils/permissionCheck';
+
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import * as XLSX from 'xlsx'
+import toast, { Toaster } from 'react-hot-toast'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +46,8 @@ export function CurrentStockView() {
   const [purchaseOrderData, setPurchaseOrderData] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [vendors, setVendors] = useState([]);
+  const [selectedTab, setSelectedTab] = useState(0)
+
   const fetchCurrentStock = async () => {
     try {
       setLoading(true);
@@ -59,8 +69,14 @@ export function CurrentStockView() {
     fetchCurrentStock();
   }, [update]);
 
+  const getCurrentEntries = () => {
+    if (selectedTab === 0) return currentStocks.filter((item) => !item?.isReturnedItem)
+    if (selectedTab === 1) return currentStocks.filter((item) => item?.isReturnedItem)
+  }
+
+
   const dataFiltered = applyFilter({
-    inputData: currentStocks,
+    inputData: getCurrentEntries(),
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
@@ -77,8 +93,131 @@ export function CurrentStockView() {
       />
     </Box>
   );
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue)
+    table.onResetPage()
+  }
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      toast.error('No file selected!');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetsData = {};
+        workbook.SheetNames.forEach((sheetName) => {
+          const sheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(sheet);
+          sheetsData[sheetName] = jsonData;
+        });
+
+        const response = await axiosInstance.post('/import-stock', { sheetsData });
+        if (response.status === 200) {
+          setUpdate(prev => !prev);
+          toast.success('Data imported successfully!');
+        }
+      } catch (err) {
+        console.error('Error uploading data:', err);
+        toast.error('Failed to import data!');
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
+  const renderTable = entries => (
+    <Card>
+      <ColorOfExpiry />
+      {loading && renderFallback}
+      <CurrentStockTableToolbar
+        sort={table.onSort}
+        numSelected={table.selected.length}
+        filterName={filterName}
+        onFilterName={(event) => {
+          setFilterName(event.target.value);
+          table.onResetPage();
+        }}
+      />
+
+      <TableContainer sx={{ overflow: 'auto' }}>
+        <Table sx={{ minWidth: 800 }}>
+          <CurrentStockTableHead
+            order={table.order}
+            orderBy={table.orderBy}
+            rowCount={currentStocks.length}
+            numSelected={table.selected.length}
+            onSort={table.onSort}
+            // onSelectAllRows={(checked) =>
+            //   table.onSelectAllRows(
+            //     checked,
+            //     _users.map((user) => user.id)
+            //   )
+            // }
+            headLabel={[
+              { id: 'materiaLName', label: 'Material Name' },
+              { id: 'materialCode', label: 'Material Code' },
+              { id: 'grn', label: 'GRN' },
+              { id: 'quantity', label: 'Quantity' },
+              { id: 'price', label: 'Price' },
+              { id: 'storageLocation', label: 'Storage Location' },
+              { id: 'vendorName', label: 'Vendor Name' },
+              { id: 'dateRecieved', label: 'Date Recieved' },
+              { id: 'expiryDate', label: 'Expiry' },
+            ]}
+          />
+          <TableBody>
+            {dataFiltered
+              .slice(
+                table.page * table.rowsPerPage,
+                table.page * table.rowsPerPage + table.rowsPerPage
+              )
+              .map((row, index) => (
+                <CurrentStockTableRow
+                  vendors={vendors}
+                  purchaseOrderData={purchaseOrderData}
+                  materials={materials}
+                  setUpdate={setUpdate}
+                  key={index}
+                  row={row}
+                  selected={table.selected.includes(row.id)}
+                  onSelectRow={() => table.onSelectRow(row.id)}
+                />
+              ))}
+
+            <TableEmptyRows
+              height={68}
+              emptyRows={emptyRows(table.page, table.rowsPerPage, currentStocks.length)}
+            />
+
+            {notFound && <TableNoData searchQuery={filterName} />}
+          </TableBody>
+        </Table>
+        <TablePagination
+          component="div"
+          page={table.page}
+          count={entries.length}
+          rowsPerPage={table.rowsPerPage}
+          onPageChange={table.onChangePage}
+          rowsPerPageOptions={[5, 10, 25]}
+          onRowsPerPageChange={table.onChangeRowsPerPage}
+        />
+      </TableContainer>
+    </Card>
+  )
+
   return (
     <DashboardContent>
+      <Toaster />
+
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
           Current Stock Management
@@ -91,6 +230,7 @@ export function CurrentStockView() {
           New user
         </Button> */}
 
+
         {hasPermission('Inward Current stock') === 'fullAccess' &&
           <CurrentStockForm
             setUpdate={setUpdate}
@@ -99,9 +239,38 @@ export function CurrentStockView() {
             vendors={vendors}
           />
         }
+
+        <div >
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            style={{ display: 'none' }}
+            id="excel-file-input"
+            onChange={handleFileUpload} // Trigger file upload and submission
+          />
+          <label htmlFor="excel-file-input">
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              startIcon={<CloudUploadIcon />}
+              style={{ marginLeft: 10, marginRight: 10 }}
+            >
+              Import Excel
+            </Button>
+          </label>
+          <a href={'/files/stocks_dummy.xlsx'} download>
+            <button>Download Excel Format</button>
+          </a>
+        </div>
       </Box>
 
-      <Card>
+      <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
+        <Tab label='Current Stock' />
+        <Tab label='Returned Items' />
+      </Tabs>
+
+      {/* <Card>
         <ColorOfExpiry />
         {loading && renderFallback}
         <CurrentStockTableToolbar
@@ -177,7 +346,10 @@ export function CurrentStockView() {
             onRowsPerPageChange={table.onChangeRowsPerPage}
           />
         </TableContainer>
-      </Card>
+      </Card> */}
+
+      {renderTable(getCurrentEntries())}
+
     </DashboardContent>
   );
 }

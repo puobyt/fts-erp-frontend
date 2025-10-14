@@ -38,6 +38,7 @@ export default function ProductionOrderCreationOutputForm({
   const adminData = JSON.parse(localStorage.getItem('admin'))
 
   const [open, setOpen] = useState(false);
+  const [product, setProduct] = useState(null)
   const navigate = useNavigate();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -53,6 +54,8 @@ export default function ProductionOrderCreationOutputForm({
     outputQualityRating: '',
     outputHandlingInstructions: '',
     packingMaterials: [{ type: '', quantity: '', unit: '' }],
+    returnItems: [{ item: '', quantity: '', unit: '' }],
+
   });
   const [errors, setErrors] = useState({});
 
@@ -103,7 +106,13 @@ export default function ProductionOrderCreationOutputForm({
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === 'productName') {
+      const selectedProduct = products.filter((item) => item.productName === value)
+      console.log('selectedProduct', selectedProduct)
+      setProduct(selectedProduct[0])
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
+
   };
   const handlePackingMaterialChange = (e, index) => {
     const { name, value } = e.target;
@@ -111,16 +120,38 @@ export default function ProductionOrderCreationOutputForm({
     updatedMaterials[index][name] = value;
     setFormData({ ...formData, packingMaterials: updatedMaterials });
   };
+
+  const handleReturnItemsChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedReturnItems = [...formData.returnItems];
+    updatedReturnItems[index][name] = value;
+    setFormData({ ...formData, returnItems: updatedReturnItems });
+    console.log("------form",{ ...formData, returnItems: updatedReturnItems })
+  }
+
   const addPackingMaterial = () => {
     setFormData((prev) => ({
       ...prev,
       packingMaterials: [...prev.packingMaterials, { type: '', quantity: '', unit: '' }],
     }));
   };
+
+  const addReturnItems = () => {
+    setFormData((prev) => ({
+      ...prev,
+      returnItems: [...prev.returnItems, { item: '', quantity: '', unit: '' }],
+    }));
+  };
+
   const removePackingMaterial = (index) => {
     const updatedMaterials = formData.packingMaterials.filter((_, i) => i !== index);
     setFormData({ ...formData, packingMaterials: updatedMaterials });
   };
+
+  const removeReturnItem = (index) => {
+    const updatedReturnItems = formData.returnItems.filter((_, i) => i !== index);
+    setFormData({ ...formData, returnItems: updatedReturnItems });
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -145,6 +176,7 @@ export default function ProductionOrderCreationOutputForm({
           outputQualityRating: '',
           outputHandlingInstructions: '',
           packingMaterials: [{ type: '', quantity: '', unit: '' }],
+          returnItems: [{ item: '', quantity: '', unit: '' }],
         });
         setUpdate((prev) => !prev);
       }
@@ -153,6 +185,8 @@ export default function ProductionOrderCreationOutputForm({
       console.error('Error occured in adding Current stock in client side', err.message);
     }
   };
+
+  console.log("---product", product?.materials[0])
 
   return (
     <div>
@@ -218,8 +252,8 @@ export default function ProductionOrderCreationOutputForm({
                       InputProps={{ style: { borderRadius: 8 } }}
                     >
                       {products.map((product, index) => (
-                        <MenuItem key={index} value={product}>
-                          {product}
+                        <MenuItem key={index} value={product.productName}>
+                          {product.productName}
                         </MenuItem>
                       ))}
                       <MenuItem
@@ -434,6 +468,94 @@ export default function ProductionOrderCreationOutputForm({
                   </Grid>
                 </Grid>
 
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" fontWeight="bold" sx={{ mt: 2, mb: 1 }}>
+                    Return Items
+                  </Typography>
+                </Grid>
+
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {formData.returnItems.map((material, index) => (
+                    <div key={index} style={{ display: 'flex', marginBottom: '16px', alignItems: 'center' }}>
+                      {/* Type */}
+                      <div style={{ flex: 1, marginRight: '8px' }}>
+                        <TextField
+                          fullWidth
+                          select
+                          label="Item"
+                          name="item"
+                          value={material.type}
+                          onChange={(e) => handleReturnItemsChange(e, index)}
+                          error={!!errors[`returnItems[${index}].item`]}
+                          helperText={errors[`returnItems[${index}].item`]}
+                          variant="outlined"
+                        >
+                        {product && product?.materials[0].map((material, index) => (
+                          <MenuItem key={index} value={material?.materialsList}>
+                            {material?.materialsList}
+                          </MenuItem>
+                        ))}
+                        </TextField>
+                      </div>
+
+                      {/* Quantity */}
+                      <div style={{ flex: 1, marginRight: '8px' }}>
+                        <TextField
+                          fullWidth
+                          label="Quantity"
+                          name="quantity"
+                          type="number"
+                          value={material.quantity}
+                          onChange={(e) => handleReturnItemsChange(e, index)}
+                          error={!!errors[`returnItems[${index}].quantity`]}
+                          helperText={errors[`returnItems[${index}].quantity`]}
+                          variant="outlined"
+                        />
+                      </div>
+
+                      {/* Unit */}
+                      <div style={{ flex: 1, marginRight: '8px' }}>
+                        <TextField
+                          fullWidth
+                          select
+                          label="Unit"
+                          name="unit"
+                          value={material.unit}
+                          onChange={(e) => handleReturnItemsChange(e, index)}
+                          error={!!errors[`returnItems[${index}].unit`]}
+                          helperText={errors[`returnItems[${index}].unit`]}
+                          variant="outlined"
+                        >
+                          {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map((unit) => (
+                            <MenuItem key={unit} value={unit}>
+                              {unit}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </div>
+
+                      {/* Delete Button */}
+                      <div style={{ marginLeft: '8px' }}>
+                        <IconButton onClick={() => removeReturnItem(index)} color="error">
+                          <Iconify icon="mdi:delete-outline" />
+                        </IconButton>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Add Material Button */}
+                  <div style={{ marginTop: '16px' }}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<Iconify icon="mdi:plus" />}
+                      onClick={addReturnItems}
+                    >
+                      Add Return Item
+                    </Button>
+                  </div>
+                </div>
+
+
                 <Button
                   type="submit"
                   fullWidth
@@ -461,6 +583,6 @@ export default function ProductionOrderCreationOutputForm({
           </Container>
         </Box>
       </Modal>
-    </div>
+    </div >
   );
 }
