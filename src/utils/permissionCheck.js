@@ -58,7 +58,8 @@ const flatPermissions = {
         'Tracebility': 'fullAccess',
         'Vendor Management': 'fullAccess',
         'Gate Entry': 'fullAccess',
-        'Out Of Stock': 'fullAccess'
+        'Out Of Stock': 'fullAccess',
+        'Logs': 'fullAccess'
 
     },
 
@@ -83,6 +84,7 @@ const flatPermissions = {
         'Rework': 'fullAccess',
         'Full Production flow': 'fullAccess',
         'Request creation for material': 'fullAccess',
+        'Logs': 'fullAccess'
     }
 };
 

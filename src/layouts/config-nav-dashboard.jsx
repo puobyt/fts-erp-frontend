@@ -165,6 +165,11 @@ export const navData = [
         path: '/tracebility/tracebility',
         icon: icons(ContentPasteSearchIcon),
       },
+      {
+        title: 'Logs',
+        path: '/tracebility/logs',
+        icon: icons(ContentPasteSearchIcon),
+      },
     ],
     icon: icons(ContentPasteSearchTwoToneIcon),
   },
