@@ -174,6 +174,12 @@ export const navData = [
     icon: icons(ContentPasteSearchTwoToneIcon),
   },
 
+  {
+    title: 'Certification Management',
+    path: '/certifications',
+    icon: icons(VerifiedTwoToneIcon),
+  },
+
 
 
   // {

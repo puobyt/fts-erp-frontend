@@ -45,7 +45,7 @@ export function getComparator(
 // ----------------------------------------------------------------------
 
 
-export function applyFilter({ inputData, comparator, filterName }) {
+export function applyFilter({ inputData, comparator, filterName, section, dateFrom, dateTo }) {
   const stabilizedThis = inputData.map((el, index) => [el, index] );
 
   stabilizedThis.sort((a, b) => {
@@ -56,12 +56,43 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+  // Text search across common log fields
   if (filterName) {
-    inputData = inputData.filter((user) =>
-      user.materialName.toLowerCase().includes(filterName.toLowerCase()) ||
-      user.materialCode.toLowerCase().includes(filterName.toLowerCase()) ||
-      user.vendorName.toLowerCase().includes(filterName.toLowerCase())
-    );
+    const q = filterName.toLowerCase();
+    inputData = inputData.filter((log) => {
+      const model = String(log.model || '').toLowerCase();
+      const action = String(log.action || '').toLowerCase();
+      const user = String(log.user || '').toLowerCase();
+      const recordId = String(log.recordId || '').toLowerCase();
+      const recordData = log.recordData ? JSON.stringify(log.recordData).toLowerCase() : '';
+      const data = log.data ? JSON.stringify(log.data).toLowerCase() : '';
+      return (
+        model.includes(q) ||
+        action.includes(q) ||
+        user.includes(q) ||
+        recordId.includes(q) ||
+        recordData.includes(q) ||
+        data.includes(q)
+      );
+    });
+  }
+
+  // Section filter (model)
+  if (section && section !== 'ALL') {
+    inputData = inputData.filter((log) => String(log.model || '').toLowerCase() === String(section).toLowerCase());
+  }
+
+  // Date range filter on timestamp
+  if (dateFrom || dateTo) {
+    const fromTime = dateFrom ? new Date(dateFrom).setHours(0, 0, 0, 0) : null;
+    const toTime = dateTo ? new Date(dateTo).setHours(23, 59, 59, 999) : null;
+    inputData = inputData.filter((log) => {
+      const ts = log.timestamp ? new Date(log.timestamp).getTime() : null;
+      if (!ts) return false;
+      if (fromTime && ts < fromTime) return false;
+      if (toTime && ts > toTime) return false;
+      return true;
+    });
   }
   
 

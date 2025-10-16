@@ -38,6 +38,9 @@ export function LogsView() {
   const [update, setUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
   const [logs, setLogs] = useState([]);
+  const [section, setSection] = useState('ALL');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
 
 
   const fetchCurrentStock = async () => {
@@ -67,6 +70,9 @@ export function LogsView() {
     inputData: getCurrentEntries(),
     comparator: getComparator(table.order, table.orderBy),
     filterName,
+    section,
+    dateFrom,
+    dateTo,
   });
 
   const notFound = !dataFiltered.length && !!filterName;
@@ -121,6 +127,32 @@ export function LogsView() {
         filterName={filterName}
         onFilterName={(event) => {
           setFilterName(event.target.value);
+          table.onResetPage();
+        }}
+        section={section}
+        onChangeSection={(event) => {
+          setSection(event.target.value);
+          table.onResetPage();
+        }}
+        sectionOptions={[
+          'ALL',
+          ...Array.from(new Set(logs.map((l) => l.model).filter(Boolean))).sort(),
+        ]}
+        dateFrom={dateFrom}
+        dateTo={dateTo}
+        onChangeDateFrom={(event) => {
+          setDateFrom(event.target.value);
+          table.onResetPage();
+        }}
+        onChangeDateTo={(event) => {
+          setDateTo(event.target.value);
+          table.onResetPage();
+        }}
+        onClear={() => {
+          setFilterName('');
+          setSection('ALL');
+          setDateFrom('');
+          setDateTo('');
           table.onResetPage();
         }}
       />

@@ -23,7 +23,7 @@ import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
 import { NotificationsPopover } from '../components/notifications-popover';
 import PendingUsersModal from '../../sections/signUp/pending-users-modal';
-import { Button } from 'flowbite-react';
+import Button from '@mui/material/Button';
 
 // ----------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ export function DashboardLayout({ sx, children, header }) {
                 <Searchbar />
                 {/* <LanguagePopover data={_langs} /> */}
                 {/* <NotificationsPopover data={_notifications} /> */}
-                <Button variant="contained" onClick={() => setOpenModal(true)}>
+                <Button variant="contained" color="primary" size="small" onClick={() => setOpenModal(true)}>
                   Open User Modal
                 </Button>
                 <PendingUsersModal open={openModal} onClose={() => setOpenModal(false)} />
