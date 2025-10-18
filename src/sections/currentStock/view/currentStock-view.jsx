@@ -29,12 +29,11 @@ import ColorOfExpiry from '../../../utils/ColorOfExpiry';
 
 import { hasPermission } from '../../../utils/permissionCheck';
 
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import * as XLSX from 'xlsx'
-import toast, { Toaster } from 'react-hot-toast'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import * as XLSX from 'xlsx';
+import toast, { Toaster } from 'react-hot-toast';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +45,7 @@ export function CurrentStockView() {
   const [purchaseOrderData, setPurchaseOrderData] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [vendors, setVendors] = useState([]);
-  const [selectedTab, setSelectedTab] = useState(0)
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const fetchCurrentStock = async () => {
     try {
@@ -70,10 +69,9 @@ export function CurrentStockView() {
   }, [update]);
 
   const getCurrentEntries = () => {
-    if (selectedTab === 0) return currentStocks.filter((item) => !item?.isReturnedItem)
-    if (selectedTab === 1) return currentStocks.filter((item) => item?.isReturnedItem)
-  }
-
+    if (selectedTab === 0) return currentStocks.filter((item) => !item?.isReturnedItem);
+    if (selectedTab === 1) return currentStocks.filter((item) => item?.isReturnedItem);
+  };
 
   const dataFiltered = applyFilter({
     inputData: getCurrentEntries(),
@@ -95,9 +93,9 @@ export function CurrentStockView() {
   );
 
   const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue)
-    table.onResetPage()
-  }
+    setSelectedTab(newValue);
+    table.onResetPage();
+  };
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -110,7 +108,6 @@ export function CurrentStockView() {
     const reader = new FileReader();
     reader.onload = async (event) => {
       try {
-
         const data = new Uint8Array(event.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetsData = {};
@@ -122,7 +119,7 @@ export function CurrentStockView() {
 
         const response = await axiosInstance.post('/import-stock', { sheetsData });
         if (response.status === 200) {
-          setUpdate(prev => !prev);
+          setUpdate((prev) => !prev);
           toast.success('Data imported successfully!');
         }
       } catch (err) {
@@ -134,7 +131,7 @@ export function CurrentStockView() {
     reader.readAsArrayBuffer(file);
   };
 
-  const renderTable = entries => (
+  const renderTable = (entries) => (
     <Card>
       <ColorOfExpiry />
       {loading && renderFallback}
@@ -212,7 +209,7 @@ export function CurrentStockView() {
         />
       </TableContainer>
     </Card>
-  )
+  );
 
   return (
     <DashboardContent>
@@ -230,17 +227,16 @@ export function CurrentStockView() {
           New user
         </Button> */}
 
-
-        {hasPermission('Inward Current stock') === 'fullAccess' &&
+        {hasPermission('Inward Current stock') === 'fullAccess' && (
           <CurrentStockForm
             setUpdate={setUpdate}
             purchaseOrderData={purchaseOrderData}
             materials={materials}
             vendors={vendors}
           />
-        }
+        )}
 
-        <div >
+        <div>
           <input
             type="file"
             accept=".xlsx, .xls"
@@ -260,14 +256,16 @@ export function CurrentStockView() {
             </Button>
           </label>
           <a href={'/files/stocks_dummy.xlsx'} download>
-            <button>Download Excel Format</button>
+            <Button variant="contained" color="primary" component="span">
+              Download Excel Format
+            </Button>
           </a>
         </div>
       </Box>
 
       <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
-        <Tab label='Current Stock' />
-        <Tab label='Returned Items' />
+        <Tab label="Current Stock" />
+        <Tab label="Returned Items" />
       </Tabs>
 
       {/* <Card>
@@ -349,7 +347,6 @@ export function CurrentStockView() {
       </Card> */}
 
       {renderTable(getCurrentEntries())}
-
     </DashboardContent>
   );
 }

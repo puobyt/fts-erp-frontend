@@ -17,7 +17,7 @@ import ViewGateEntry from '../../layouts/viewModals/viewGateEntry';
 
 
 
-export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectRow }) {
+export function GateEntryTableRow({firmNames,setUpdate, row, selected, onSelectRow, selectedTab }) {
   const adminData = JSON.parse(localStorage.getItem('admin'))
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -352,40 +352,58 @@ const handleDownload = (row) => {
           
           </Box>
         </TableCell> */}
-           <TableCell>{row.vendorName}</TableCell>
-           <TableCell>  {row.vehicleNumber}</TableCell>
-              <TableCell
-                style={{
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }}
-              >
-                {row.materials?.map((material, index) => (
-                  <div
-                    key={index}
-                    style={{ marginRight: '10px' }}
-                  >
-                    <strong>{material.materialName}</strong>{' '}
-                  </div>
-                  
-                ))}
-              </TableCell>
-      
-              <TableCell>
-                {row.materials.map((material, index) => (
-                  <div key={index}>{`${material.quantity} ${material.unit||"KG"}`}</div>
-                ))}
-              </TableCell>
-           <TableCell>  {row.docNumber}</TableCell>
-           <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
-        <TableCell>  {formattedTime}</TableCell>
-     
-     
-   
-
-   
-
-
+        {selectedTab === 2 ? (
+          // Exit data display
+          <>
+            <TableCell>{row.goodsName || 'N/A'}</TableCell>
+            <TableCell>{row.quantity || 'N/A'}</TableCell>
+            <TableCell>{row.unit || 'N/A'}</TableCell>
+            <TableCell>{row.returnReason || 'N/A'}</TableCell>
+            <TableCell>{row.vehicleNumber || 'N/A'}</TableCell>
+            <TableCell>{row.exitTime || 'N/A'}</TableCell>
+            <TableCell
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: '200px'
+              }}
+              title={row.shippingAddress}
+            >
+              {row.shippingAddress || 'N/A'}
+            </TableCell>
+            <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
+            <TableCell>{row.docNumber || 'N/A'}</TableCell>
+          </>
+        ) : (
+          // Regular entry data display
+          <>
+            <TableCell>{row.vendorName}</TableCell>
+            <TableCell>{row.vehicleNumber}</TableCell>
+            <TableCell
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {row.materials?.map((material, index) => (
+                <div
+                  key={index}
+                  style={{ marginRight: '10px' }}
+                >
+                  <strong>{material.materialName}</strong>{' '}
+                </div>
+              ))}
+            </TableCell>
+            <TableCell>
+              {row.materials.map((material, index) => (
+                <div key={index}>{`${material.quantity} ${material.unit||"KG"}`}</div>
+              ))}
+            </TableCell>
+            <TableCell>{row.docNumber}</TableCell>
+            <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
+            <TableCell>{formattedTime}</TableCell>
+          </>
+        )}
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />

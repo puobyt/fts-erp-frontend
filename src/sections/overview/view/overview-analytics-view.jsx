@@ -5,6 +5,7 @@ import { _tasks, _timeline } from 'src/_mock'
 import { DashboardContent } from 'src/layouts/dashboard'
 
 import { AnalyticsWidgetSummary } from '../analytics-widget-summary'
+import { DashboardStats } from '../analytics-dashboard-stats'
 import FlippableCard from '../../../components/cards/flipCard'
 
 
@@ -120,6 +121,14 @@ export function OverviewAnalyticsView () {
           }
         />
       </Grid>
+      {/* Dashboard Stats Section */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h5" sx={{ mb: 3 }}>
+          Dashboard Overview
+        </Typography>
+        <DashboardStats />
+      </Box>
+
       <Grid container spacing={3} sx={{ marginTop: '20px' }}>
         <Grid
           item 

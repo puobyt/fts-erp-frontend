@@ -40,7 +40,7 @@ import { DeleteForever } from '@mui/icons-material';
 const GATE_TYPES = {
   ENTRY: 'entry',
   QC_RETURN_ENTRY: 'qc_return_entry',
-  RETURN_EXIT: 'return_exit'
+  RETURN_EXIT: 'Exit'
 };
 
 const RETURN_REASONS = [
@@ -52,6 +52,11 @@ const RETURN_REASONS = [
   'Wrong Quantity Delivered',
   'Expired Product',
   'Other'
+];
+
+const EXIT_REASONS = [
+  'Finished Goods',
+  'QC rejected'
 ];
 
 const QC_STATUS = {
@@ -94,7 +99,13 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
     replacementDueDate: '',
     batchNumber: '',
     lotNumber: '',
-    serialNumbers: []
+    serialNumbers: [],
+    // Exit-specific fields
+    goodsName: '',
+    quantity: '',
+    unit: '',
+    reason: '',
+    shippingAddress: ''
   };
 
   const handleGateTypeChange = (e) => {
@@ -113,6 +124,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
   const [errors, setErrors] = useState({});
 
   const isReturnType = gateType === GATE_TYPES.QC_RETURN_ENTRY || gateType === GATE_TYPES.RETURN_EXIT;
+  const isExitType = gateType === GATE_TYPES.RETURN_EXIT;
 
   const handleOpen = () => setOpen(true);
 
@@ -202,11 +214,24 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
         else if (isNaN(value) || Number(value) <= 0) error = 'Quantity must be a positive number';
         break;
       case 'returnedQuantity':
-        if (isReturnType && !value) error = 'Returned quantity is required';
-        else if (isReturnType && (isNaN(value) || Number(value) <= 0)) error = 'Returned quantity must be a positive number';
-        else if (isReturnType && Number(value) <= Number(formData.materials.find(m => m.materialName === name)?.originalQuantity || 0)) {
+        if (isReturnType && !isExitType && !value) error = 'Returned quantity is required';
+        else if (isReturnType && !isExitType && (isNaN(value) || Number(value) <= 0)) error = 'Returned quantity must be a positive number';
+        else if (isReturnType && !isExitType && Number(value) <= Number(formData.materials.find(m => m.materialName === name)?.originalQuantity || 0)) {
           error = 'Returned quantity cannot exceed original quantity';
         }
+        break;
+      case 'goodsName':
+        if (isExitType && !value.trim()) error = 'Goods name is required';
+        else if (isExitType && value.trim().length < 2) error = 'Goods name too short';
+        break;
+      case 'reason':
+        if (isExitType && !value) error = 'Reason is required';
+        break;
+      case 'shippingAddress':
+        if (isExitType && !value.trim()) error = 'Shipping address is required';
+        break;
+      case 'unit':
+        if (isExitType && !value) error = 'Unit is required';
         break;
       default:
         break;
@@ -219,41 +244,61 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
     const newErrors = {};
     let isValid = true;
 
-    const fieldsToValidate = [
-      'vehicleNumber', 'docNumber', 'vendorName', 'date',
-      gateType.includes('entry') ? 'entryTime' : 'exitTime'
-    ];
-
-    if (isReturnType) {
-      fieldsToValidate.push('returnReason', 'originalDocNumber', 'returnedBy');
-    }
-
-    fieldsToValidate.forEach(field => {
-      const error = validateField(field, formData[field]);
-      if (error) {
-        newErrors[field] = error;
-        isValid = false;
-      }
-    });
-
-    formData.materials.forEach((material, index) => {
-      const materialErrors = {};
-      let materialHasErrors = false;
-
-      ['materialName', isReturnType ? 'returnedQuantity' : 'quantity'].forEach(field => {
-        const error = validateField(field, material[field]);
+    if (isExitType) {
+      // Exit form validation - validate all required fields
+      const exitFields = ['goodsName', 'quantity', 'unit', 'reason', 'vehicleNumber', 'exitTime', 'shippingAddress', 'date'];
+      
+      exitFields.forEach(field => {
+        const error = validateField(field, formData[field]);
         if (error) {
-          materialErrors[field] = error;
-          materialHasErrors = true;
+          newErrors[field] = error;
+          isValid = false;
         }
       });
 
-      if (materialHasErrors) {
-        newErrors.materials = newErrors.materials || [];
-        newErrors.materials[index] = materialErrors;
+      // Additional validation for exit form
+      if (formData.docNumber && formData.docNumber.trim().length < 3) {
+        newErrors.docNumber = 'Document Number too short';
         isValid = false;
       }
-    });
+    } else {
+      // Regular form validation
+      const fieldsToValidate = [
+        'vehicleNumber', 'docNumber', 'vendorName', 'date',
+        gateType.includes('entry') ? 'entryTime' : 'exitTime'
+      ];
+
+      if (isReturnType) {
+        fieldsToValidate.push('returnReason', 'originalDocNumber', 'returnedBy');
+      }
+
+      fieldsToValidate.forEach(field => {
+        const error = validateField(field, formData[field]);
+        if (error) {
+          newErrors[field] = error;
+          isValid = false;
+        }
+      });
+
+      formData.materials.forEach((material, index) => {
+        const materialErrors = {};
+        let materialHasErrors = false;
+
+        ['materialName', isReturnType ? 'returnedQuantity' : 'quantity'].forEach(field => {
+          const error = validateField(field, material[field]);
+          if (error) {
+            materialErrors[field] = error;
+            materialHasErrors = true;
+          }
+        });
+
+        if (materialHasErrors) {
+          newErrors.materials = newErrors.materials || [];
+          newErrors.materials[index] = materialErrors;
+          isValid = false;
+        }
+      });
+    }
 
     setErrors(newErrors);
     return isValid;
@@ -320,7 +365,9 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
           endpoint = '/newGateEntry';
       }
 
-      const result = await axiosInstance.post(endpoint, { ...formDataToSend, createdBy: adminData.email }, {
+      console.log('formDataToSend', otherFields)
+
+      const result = await axiosInstance.post(endpoint, { ...otherFields, createdBy: adminData.email }, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -545,7 +592,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
                       <MenuItem value={GATE_TYPES.RETURN_EXIT}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <AssignmentReturnIcon color="error" style={{ transform: 'rotate(180deg)' }} />
-                          <span>Return Exit (Back to Vendor)</span>
+                          <span>Exit</span>
                         </Box>
                       </MenuItem>
                     </Select>
@@ -564,7 +611,162 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
                   </Box>
                 </Grid>
 
-                {isReturnType && (
+                {isExitType ? (
+                  <>
+                    {/* Exit-specific form fields */}
+                    <Grid item xs={12}>
+                      <Alert severity="info" sx={{ mb: 2 }}>
+                        <Typography variant="body2">
+                          <strong>Exit Processing:</strong> Manual entry for goods exit from the facility.
+                        </Typography>
+                      </Alert>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Goods Name"
+                        name="goodsName"
+                        value={formData.goodsName}
+                        onChange={handleChange}
+                        error={!!errors.goodsName}
+                        helperText={errors.goodsName}
+                        variant="outlined"
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Quantity"
+                        name="quantity"
+                        value={formData.quantity}
+                        onChange={handleChange}
+                        error={!!errors.quantity}
+                        helperText={errors.quantity}
+                        variant="outlined"
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        select
+                        label="Unit"
+                        name="unit"
+                        value={formData.unit}
+                        onChange={handleChange}
+                        error={!!errors.unit}
+                        helperText={errors.unit}
+                        variant="outlined"
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {UNIT_OPTIONS.map((unit) => (
+                          <MenuItem key={unit} value={unit}>{unit}</MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        select
+                        label="Reason"
+                        name="reason"
+                        value={formData.reason}
+                        onChange={handleChange}
+                        error={!!errors.reason}
+                        helperText={errors.reason}
+                        variant="outlined"
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {EXIT_REASONS.map((reason) => (
+                          <MenuItem key={reason} value={reason}>
+                            {reason}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Vehicle Number"
+                        name="vehicleNumber"
+                        value={formData.vehicleNumber}
+                        onChange={handleChange}
+                        error={!!errors.vehicleNumber}
+                        helperText={errors.vehicleNumber}
+                        variant="outlined"
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        type="time"
+                        label="Exit Time"
+                        name="exitTime"
+                        value={formData.exitTime}
+                        onChange={handleChange}
+                        error={!!errors.exitTime}
+                        helperText={errors.exitTime}
+                        variant="outlined"
+                        InputProps={{ style: { borderRadius: 8 } }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Shipping Address"
+                        name="shippingAddress"
+                        value={formData.shippingAddress}
+                        onChange={handleChange}
+                        error={!!errors.shippingAddress}
+                        helperText={errors.shippingAddress}
+                        variant="outlined"
+                        multiline
+                        rows={3}
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Date"
+                        name="date"
+                        type="date"
+                        value={formData.date}
+                        onChange={handleChange}
+                        error={!!errors.date}
+                        helperText={errors.date}
+                        variant="outlined"
+                        InputProps={{ style: { borderRadius: 8 } }}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Doc Number (Optional)"
+                        name="docNumber"
+                        value={formData.docNumber}
+                        onChange={handleChange}
+                        variant="outlined"
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      />
+                    </Grid>
+                  </>
+                ) : (
+                  <>
+                    {isReturnType && (
                   <>
                     <Grid item xs={12}>
                       <Alert severity="info" sx={{ mb: 2 }}>
@@ -1002,6 +1204,8 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
                       InputLabelProps={{ shrink: true }}
                     />
                   </Grid>
+                )}
+                  </>
                 )}
               </Grid>
 

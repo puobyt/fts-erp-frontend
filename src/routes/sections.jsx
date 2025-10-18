@@ -47,6 +47,8 @@ export const ProductionOrderCreationOutput = lazy(() =>
 )
 export const Rework = lazy(() => import('src/pages/rework'))
 export const Tracebility = lazy(() => import('src/pages/tracebility'))
+export const Logs = lazy(() => import('src/pages/logs'))
+export const Certifications = lazy(() => import('src/pages/certifications'))
 export const SignInPage = lazy(() => import('src/pages/signIn'))
 export const SignUpPage = lazy(() => import('src/pages/signUp'))
 export const ProductsPage = lazy(() => import('src/pages/products'))
@@ -122,7 +124,10 @@ export function Router () {
         { path: 'finished-goods-invoicing/invoice-creations', element: <InvoiceCreations /> },
         { path: 'vendor-stock-management/out-of-stock', element: <OutOfStock /> },
         { path: 'production-workflow/process-order', element: <ProcessOrder /> },
-        { path: 'tracebility/tracebility', element: <Tracebility /> }
+        { path: 'tracebility/tracebility', element: <Tracebility /> },
+        { path: 'tracebility/logs', element: <Logs /> },
+        { path: 'certifications', element: <Certifications /> }
+
       ]
     },
     {

@@ -7,81 +7,81 @@ import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { Iconify } from 'src/components/iconify';
-import { Scrollbar } from 'src/components/scrollbar';
-import { TableNoData } from '../table-no-data';
-import { TableEmptyRows } from '../table-empty-rows';
-import { GateEntryTableHead } from '../gateEntry-table-head';
-import { GateEntryTableRow } from '../gateEntry-table-row';
-import { GateEntryTableToolbar } from '../gateEntry-table-toolbar';
+import { _users } from 'src/_mock';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import GateEntryForm from '../../../layouts/modals/addGateEntry';
+import CurrentStockForm from '../../../layouts/modals/addCurrentStock';
 import axiosInstance from 'src/configs/axiosInstance';
+import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { varAlpha } from 'src/theme/styles';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import * as XLSX from 'xlsx';
-import toast, { Toaster } from 'react-hot-toast';
+import ColorOfExpiry from '../../../utils/ColorOfExpiry';
 
-export function GateEntryView() {
+import { hasPermission } from '../../../utils/permissionCheck';
+
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import * as XLSX from 'xlsx'
+import toast, { Toaster } from 'react-hot-toast'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import { LogsTableToolbar } from '../logs-table-toolbar';
+import { LogsTableHead } from '../logs-table-head';
+import { LogsTableRow } from '../logs-table-row';
+import { TableNoData } from '../../user/table-no-data';
+import { TableEmptyRows } from '../../user/table-empty-rows';
+
+
+// ----------------------------------------------------------------------
+
+export function LogsView() {
   const table = useTable();
   const [update, setUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [logs, setLogs] = useState([]);
+  const [section, setSection] = useState('ALL');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
 
-  const [entryGateEntries, setEntryGateEntries] = useState([]);
-  const [qcReturnEntries, setQcReturnEntries] = useState([]);
-  const [exitGateEntries, setExitGateEntries] = useState([]);
-  const [firmNames, setFirmNames] = useState([]);
-  const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
-    table.onResetPage();
-  };
-
-  const fetchGateEntry = async () => {
+  const fetchCurrentStock = async () => {
     try {
       setLoading(true);
-      const result = await axiosInstance.get('/gateEntry');
-
+      const result = await axiosInstance.get('/audit-logs');
+      console.log('logs', result.data.data.data);
       if (result.data.data) {
-        const allEntries = result.data.data;
-        setFirmNames(result.data.firmNames || []);
-
-        setEntryGateEntries(allEntries.filter((entry) => entry.gateType === 'entry'));
-        setQcReturnEntries(allEntries.filter((entry) => entry.gateType === 'qc_return_entry'));
-        setExitGateEntries(allEntries.filter((entry) => entry.gateType === 'return_exit'));
+        setLogs(result.data.data.data);
+        setLoading(false);
       }
     } catch (err) {
-      console.error('Error occured in fetching gate entries:', err.message);
-    } finally {
-      setLoading(false);
+      console.error('Error occured in fetching vendors inc client side', err.message);
     }
   };
-
   const [filterName, setFilterName] = useState('');
-
   useEffect(() => {
-    fetchGateEntry();
+    fetchCurrentStock();
   }, [update]);
 
   const getCurrentEntries = () => {
-    if (selectedTab === 0) return entryGateEntries;
-    if (selectedTab === 1) return qcReturnEntries;
-    return exitGateEntries;
-  };
+    return logs
+  }
+
 
   const dataFiltered = applyFilter({
     inputData: getCurrentEntries(),
     comparator: getComparator(table.order, table.orderBy),
     filterName,
+    section,
+    dateFrom,
+    dateTo,
   });
 
   const notFound = !dataFiltered.length && !!filterName;
+ 
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue)
+    table.onResetPage()
+  }
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -94,6 +94,7 @@ export function GateEntryView() {
     const reader = new FileReader();
     reader.onload = async (event) => {
       try {
+
         const data = new Uint8Array(event.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetsData = {};
@@ -103,9 +104,9 @@ export function GateEntryView() {
           sheetsData[sheetName] = jsonData;
         });
 
-        const response = await axiosInstance.post('/import-newGateEntry', { sheetsData });
+        const response = await axiosInstance.post('/import-stock', { sheetsData });
         if (response.status === 200) {
-          setUpdate((prev) => !prev);
+          setUpdate(prev => !prev);
           toast.success('Data imported successfully!');
         }
       } catch (err) {
@@ -117,22 +118,10 @@ export function GateEntryView() {
     reader.readAsArrayBuffer(file);
   };
 
-  const renderFallback = (
-    <Box display="flex" alignItems="center" justifyContent="center" flex="1 1 auto">
-      <LinearProgress
-        sx={{
-          width: 1150,
-          bgcolor: (theme) => varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
-          [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' },
-        }}
-      />
-    </Box>
-  );
-
-  const renderTable = (entries) => (
+  const renderTable = entries => (
     <Card>
-      {loading && renderFallback}
-      <GateEntryTableToolbar
+      
+      <LogsTableToolbar
         sort={table.onSort}
         numSelected={table.selected.length}
         filterName={filterName}
@@ -140,40 +129,55 @@ export function GateEntryView() {
           setFilterName(event.target.value);
           table.onResetPage();
         }}
+        section={section}
+        onChangeSection={(event) => {
+          setSection(event.target.value);
+          table.onResetPage();
+        }}
+        sectionOptions={[
+          'ALL',
+          ...Array.from(new Set(logs.map((l) => l.model).filter(Boolean))).sort(),
+        ]}
+        dateFrom={dateFrom}
+        dateTo={dateTo}
+        onChangeDateFrom={(event) => {
+          setDateFrom(event.target.value);
+          table.onResetPage();
+        }}
+        onChangeDateTo={(event) => {
+          setDateTo(event.target.value);
+          table.onResetPage();
+        }}
+        onClear={() => {
+          setFilterName('');
+          setSection('ALL');
+          setDateFrom('');
+          setDateTo('');
+          table.onResetPage();
+        }}
       />
+
       <TableContainer sx={{ overflow: 'auto' }}>
         <Table sx={{ minWidth: 800 }}>
-          <GateEntryTableHead
+          <LogsTableHead
             order={table.order}
             orderBy={table.orderBy}
-            rowCount={entries.length}
+            rowCount={logs.length}
             numSelected={table.selected.length}
             onSort={table.onSort}
-            headLabel={
-              selectedTab === 2
-                ? [
-                    // Exit table headers
-                    { id: 'goodsName', label: 'Goods Name' },
-                    { id: 'quantity', label: 'Quantity' },
-                    { id: 'unit', label: 'Unit' },
-                    { id: 'reason', label: 'Reason' },
-                    { id: 'vehicleNumber', label: 'Vehicle Number' },
-                    { id: 'exitTime', label: 'Exit Time' },
-                    { id: 'shippingAddress', label: 'Shipping Address' },
-                    { id: 'date', label: 'Date' },
-                    { id: 'docNumber', label: 'Doc Number' },
-                  ]
-                : [
-                    // Regular table headers for Entry and QC Return Entry
-                    { id: 'vendorName', label: 'Vendor Name' },
-                    { id: 'vehicleNumber', label: 'Vehicle Number' },
-                    { id: 'materialName', label: 'Material Name' },
-                    { id: 'quantity', label: 'Quantity' },
-                    { id: 'docNumber', label: 'Doc Number' },
-                    { id: 'date', label: 'Date' },
-                    { id: 'entryTime', label: 'Entry Time' },
-                  ]
-            }
+            // onSelectAllRows={(checked) =>
+            //   table.onSelectAllRows(
+            //     checked,
+            //     _users.map((user) => user.id)
+            //   )
+            // }
+            headLabel={[
+              { id: 'section', label: 'Section' },
+              { id: 'action', label: 'Action' },
+              { id: 'user', label: 'user' },
+              { id: 'date', label: 'Date' },
+              { id: 'materialName', label: 'Material Name' },
+            ]}
           />
           <TableBody>
             {dataFiltered
@@ -182,20 +186,18 @@ export function GateEntryView() {
                 table.page * table.rowsPerPage + table.rowsPerPage
               )
               .map((row, index) => (
-                <GateEntryTableRow
-                  firmNames={firmNames}
+                <LogsTableRow
                   setUpdate={setUpdate}
                   key={index}
                   row={row}
                   selected={table.selected.includes(row.id)}
                   onSelectRow={() => table.onSelectRow(row.id)}
-                  selectedTab={selectedTab}
                 />
               ))}
 
             <TableEmptyRows
               height={68}
-              emptyRows={emptyRows(table.page, table.rowsPerPage, entries.length)}
+              emptyRows={emptyRows(table.page, table.rowsPerPage, logs.length)}
             />
 
             {notFound && <TableNoData searchQuery={filterName} />}
@@ -212,59 +214,31 @@ export function GateEntryView() {
         />
       </TableContainer>
     </Card>
-  );
+  )
 
   return (
     <DashboardContent>
       <Toaster />
+
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-          Gate Entry
+          Audit Logs
         </Typography>
-        <GateEntryForm setUpdate={setUpdate} firmNames={firmNames} />
-        <div>
-          <input
-            type="file"
-            accept=".xlsx, .xls"
-            style={{ display: 'none' }}
-            id="excel-file-input"
-            onChange={handleFileUpload} // Trigger file upload and submission
-          />
-          <label htmlFor="excel-file-input">
-            <Button
-              variant="contained"
-              color="primary"
-              component="span"
-              startIcon={<CloudUploadIcon />}
-              style={{ marginLeft: 10, marginRight: 10 }}
-            >
-              Import Excel
-            </Button>
-          </label>
-          <a href={'/files/gate_entries_dummy.xlsx'} download>
-            <Button variant="contained" color="primary" component="span">
-              Download Excel Format
-            </Button>
-          </a>
-        </div>
       </Box>
 
-      <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
-        <Tab label="Entry" />
-        <Tab label="QC Return Entry" />
-        <Tab label="Exit" />
-      </Tabs>
-
       {renderTable(getCurrentEntries())}
+
     </DashboardContent>
   );
 }
+
+// ----------------------------------------------------------------------
 
 export function useTable() {
   const [page, setPage] = useState(0);
   const [orderBy, setOrderBy] = useState('name');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState([]); // Ensure this is an array
   const [order, setOrder] = useState('asc');
 
   const onSort = useCallback(
