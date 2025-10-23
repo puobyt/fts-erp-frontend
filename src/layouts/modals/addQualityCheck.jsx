@@ -435,67 +435,7 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
                       </Grid>
                     </>
                   )}
-                  {/* Table/grid for QC parameters */}
-                  <Grid item xs={12}>
-                    <Typography variant='h6' sx={{ mt: 2 }}>
-                      Quality Parameters
-                    </Typography>
-                    <TableContainer component={Paper} sx={{ mt: 2 }}>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Parameter Name</TableCell>
-                            <TableCell>Method of Analysis</TableCell>
-                            <TableCell>Min</TableCell>
-                            <TableCell>Max</TableCell>
-                            <TableCell>Unit</TableCell>
-                            <TableCell>Actual Result</TableCell>
-                            <TableCell>Status</TableCell>
-                            <TableCell>Remarks</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {parameterRows.map((param, idx) => (
-                            <TableRow key={param._id || idx}>
-                              <TableCell>{param.parameterName}</TableCell>
-                              <TableCell>{param.methodOfAnalysis}</TableCell>
-                              <TableCell>{param.minRange}</TableCell>
-                              <TableCell>{param.maxRange}</TableCell>
-                              <TableCell>{param.unit}</TableCell>
-                              <TableCell>
-                                <TextField
-                                  type='number'
-                                  size='small'
-                                  value={param.actualResult}
-                                  onChange={e =>
-                                    handleParameterChange(idx, 'actualResult', e.target.value)
-                                  }
-                                  error={!!errors[`param_${idx}_actualResult`]}
-                                  helperText={errors[`param_${idx}_actualResult`] || ''}
-                                  inputProps={{ style: { width: 70 } }}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <Typography color={param.status === 'PASS' ? 'green' : 'red'}>
-                                  {param.status}
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  size='small'
-                                  value={param.remarks}
-                                  onChange={e =>
-                                    handleParameterChange(idx, 'remarks', e.target.value)
-                                  }
-                                  inputProps={{ style: { width: 120 } }}
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Grid>
+                 
                 </Grid>
                 <Button
                   type='submit'

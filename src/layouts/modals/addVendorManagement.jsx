@@ -48,14 +48,8 @@ export default function VendorManagementForm({ setUpdate }) {
     const newErrors = {};
     if (!formData.nameOfTheFirm) newErrors.nameOfTheFirm = 'Name of the Firm is required';
     if (!formData.address) newErrors.address = 'Address is required';
-    if (!formData.vendorCode) newErrors.vendorCode = 'Vendor Code is required';
     if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required';
-    if (!formData.contactPersonName) newErrors.contactPersonName = 'Contact Person Name is required';
-    if (!formData.contactPersonDetails) newErrors.contactPersonDetails = 'Contact Person Details are required';
-    if (!formData.material) newErrors.material = 'Material is required';
-    if (!formData.bankDetails) newErrors.bankDetails = 'Bank Details are required';
-    if (!formData.pan) newErrors.pan = 'PAN is required';
-    if (!formData.gst) newErrors.gst = 'GST is required';
+    
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Returns true if there are no errors
