@@ -9,7 +9,7 @@ import { useTheme } from '@mui/material/styles'
 import ListItemButton from '@mui/material/ListItemButton'
 import Drawer, { drawerClasses } from '@mui/material/Drawer'
 
-import { usePathname } from 'src/routes/hooks'
+import { usePathname, useRouter } from 'src/routes/hooks'
 import { RouterLink } from 'src/routes/components'
 
 import { varAlpha } from 'src/theme/styles'
@@ -20,6 +20,7 @@ import { Scrollbar } from 'src/components/scrollbar'
 import { NavUpgrade } from '../components/nav-upgrade'
 import { WorkspacesPopover } from '../components/workspaces-popover'
 import { hasPermission } from '../../utils/permissionCheck'
+import { useAdminData } from '../../hooks/use-admin-data'
 
 // import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 
@@ -27,6 +28,14 @@ import { hasPermission } from '../../utils/permissionCheck'
 
 export function NavDesktop ({ sx, data, slots, workspaces, layoutQuery }) {
   const theme = useTheme()
+  const { adminData } = useAdminData()
+  const router = useRouter()
+
+  useEffect(() => {
+    if(!adminData){
+      router.replace('/sign-in')
+    }
+  },[adminData, router])
 
   return (
     <Box
@@ -94,6 +103,7 @@ export function NavMobile ({ sx, data, open, slots, onClose, workspaces }) {
 export function NavContent ({ data, slots, workspaces, sx }) {
   const pathname = usePathname()
   const [openMenus, setOpenMenus] = useState({})
+  const { adminData } = useAdminData()
 
   // Toggle dropdown visibility
   const handleToggle = title => {
@@ -103,6 +113,38 @@ export function NavContent ({ data, slots, workspaces, sx }) {
       [title]: !prev[title] // Toggle the specific dropdown
     }))
   }
+  // Don't render navigation if no admin data
+  if (!adminData) {
+    return (
+      <>
+        <Logo />
+        {slots?.topArea}
+        <Scrollbar fillContent>
+          <Box
+            component='nav'
+            display='flex'
+            flex='1 1 auto'
+            flexDirection='column'
+            sx={{
+              ...sx,
+              maxHeight: '100vh',
+              overflowY: 'auto',
+              '&::-webkit-scrollbar': { display: 'none' },
+              scrollbarWidth: 'none'
+            }}
+          >
+            <Box component='ul' gap={0.5} display='flex' flexDirection='column'>
+              <Box sx={{ p: 2, textAlign: 'center', color: 'text.secondary' }}>
+                Loading navigation...
+              </Box>
+            </Box>
+          </Box>
+        </Scrollbar>
+        {slots?.bottomArea}
+      </>
+    )
+  }
+
   return (
     <>
       <Logo />

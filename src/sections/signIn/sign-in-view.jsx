@@ -56,6 +56,8 @@ export function SignInView () {
               localStorage.setItem('adminToken', res.data.adminToken)
 
               localStorage.setItem('admin', JSON.stringify(res.data.adminData));
+              // Dispatch custom event to notify other components
+              window.dispatchEvent(new CustomEvent('adminDataChanged'))
               router.replace('/')
             }
           })
