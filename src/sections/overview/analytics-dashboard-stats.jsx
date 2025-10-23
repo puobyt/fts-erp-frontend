@@ -119,44 +119,37 @@ export function DashboardStats() {
     finishedGoods: null
   });
 
-  useEffect(() => {
-    const fetchMainStock = async () => {
-      try {
-        const data = await dashboardService.getMainStockCount();
-        setMainStockCount(data.count);
-      } catch (err) {
-        setErrors(prev => ({ ...prev, mainStock: 'Failed to fetch main stock count' }));
-      } finally {
-        setLoading(prev => ({ ...prev, mainStock: false }));
-      }
-    };
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-    const fetchOutOfStock = async () => {
-      try {
-        const data = await dashboardService.getOutOfStockCount();
-        setOutOfStockCount(data.count);
-      } catch (err) {
-        setErrors(prev => ({ ...prev, outOfStock: 'Failed to fetch out of stock count' }));
-      } finally {
-        setLoading(prev => ({ ...prev, outOfStock: false }));
-      }
-    };
+useEffect(() => {
+  const fetchCounts = async () => {
+    try {
+      await delay(500); // Delay before starting
+      
+      const [mainStockData, outOfStockData, finishedGoodsData] = await Promise.all([
+        dashboardService.getMainStockCount(),
+        dashboardService.getOutOfStockCount(),
+        dashboardService.getFinishedGoodsCount()
+      ]);
 
-    const fetchFinishedGoods = async () => {
-      try {
-        const data = await dashboardService.getFinishedGoodsCount();
-        setFinishedGoodsCount(data.count);
-      } catch (err) {
-        setErrors(prev => ({ ...prev, finishedGoods: 'Failed to fetch finished goods count' }));
-      } finally {
-        setLoading(prev => ({ ...prev, finishedGoods: false }));
-      }
-    };
+      setMainStockCount(mainStockData.count);
+      setOutOfStockCount(outOfStockData.count);
+      setFinishedGoodsCount(finishedGoodsData.count);
+    } catch (err) {
+      setErrors(prev => ({ 
+        ...prev, 
+        mainStock: err.message || 'Failed to fetch main stock count',
+        outOfStock: err.message || 'Failed to fetch out of stock count',
+        finishedGoods: err.message || 'Failed to fetch finished goods count'
+      }));
+    } finally {
+      setLoading(prev => ({ ...prev, mainStock: false, outOfStock: false, finishedGoods: false }));
+    }
+  };
 
-    fetchMainStock();
-    fetchOutOfStock();
-    fetchFinishedGoods();
-  }, []);
+  fetchCounts();
+}, []);
+
 
   return (
     <Grid container spacing={3}>
