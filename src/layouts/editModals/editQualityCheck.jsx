@@ -203,6 +203,7 @@ export default function EditQualityCheckForm({
         Edit
       </MenuItem>
       <Modal
+        onKeyDown={(e) => e.stopPropagation()}  // Add this
         open={open}
         onClose={handleClose}
         aria-labelledby='modal-modal-title'

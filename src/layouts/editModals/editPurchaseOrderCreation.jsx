@@ -335,6 +335,8 @@ export default function EditPurchaseOrderCreationForm({ setUpdate, orderData, fi
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        onKeyDown={(e) => e.stopPropagation()}  // Add this
+
       >
         <Container maxWidth="lg" sx={{ mt: 8 }}>
           <Paper elevation={4} sx={{ p: 5, backgroundColor: '#f9f9f9', borderRadius: 2 }}>

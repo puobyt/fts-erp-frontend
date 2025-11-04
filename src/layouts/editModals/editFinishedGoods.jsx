@@ -110,6 +110,8 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
         onClose={handleClose}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
+        onKeyDown={(e) => e.stopPropagation()}  // Add this
+
       >
         {/* <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
