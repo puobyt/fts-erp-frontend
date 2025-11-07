@@ -36,9 +36,12 @@ export function SignUpView () {
   const validate = () => {
     const newErrors = {}
     if (!userName) newErrors.userName = 'Username is required'
-    if (!email) newErrors.email = 'Email is required'
-    else if (!/^[^\s@]+@[^\s@]+\.com$/.test(email))
-      newErrors.email = 'Email is inavlid'
+    if (!email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    
     if (!password) newErrors.password = 'Password is required'
     else if (password.length < 6)
       newErrors.password = ' Password requires minimum 6 characters'
