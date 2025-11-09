@@ -30,9 +30,11 @@ export function SignInView () {
   }, [])
   const validate = () => {
     const newErrors = {}
-    if (!email) newErrors.email = 'Email is required'
-    else if (!/^[^\s@]+@[^\s@]+\.com$/.test(email))
-      newErrors.email = 'Email is inavlid'
+    if (!email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = 'Email is invalid';
+    }
     if (!password) newErrors.password = 'Password is required'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
