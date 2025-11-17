@@ -306,7 +306,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
 
   const handleChange = e => {
     const { name, value, type, checked } = e.target;
-    const processedValue = type === 'text' || type === 'textarea' ? value.trim() : value;
+    const processedValue = value;
 
     setFormData(prev => ({
       ...prev,
@@ -367,7 +367,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
 
       console.log('formDataToSend', otherFields)
 
-      const result = await axiosInstance.post(endpoint, { ...otherFields, createdBy: adminData.email }, {
+      const result = await axiosInstance.post(endpoint, { ...otherFields, materials: JSON.stringify(materials), createdBy: adminData.email }, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -387,7 +387,7 @@ export default function GateEntryExitForm({ setUpdate, firmNames }) {
   const handleMaterialChange = (e, index) => {
     const { name, value } = e.target;
     const updatedMaterials = [...formData.materials];
-    const processedValue = ['materialName', 'batchNumber', 'lotNumber'].includes(name) ? value.trim() : value;
+    const processedValue = value;
 
     updatedMaterials[index][name] = processedValue;
     setFormData({ ...formData, materials: updatedMaterials });
