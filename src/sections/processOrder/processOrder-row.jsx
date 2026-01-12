@@ -38,8 +38,9 @@ export function ProcessOrderTableRow({
     finishDate: row.finishDate,
     productName: row.productName,
     productCode: row.productCode,
-    batch: row.batch,
+    batchNumber: row.batchNumber,
     orderQuantity: row.orderQuantity,
+    unit: row?.unit,
     materialInput: row.materialInput
   }
 
@@ -185,7 +186,7 @@ export function ProcessOrderTableRow({
 
         <TableCell>
           {row.materialInput.map((material, index) => (
-            <div key={index}>{`${material.quantity}`}</div>
+            <div key={index}>{`${material.quantity} ${material?.unit || '--'}`}</div>
           ))}
         </TableCell>
 
@@ -209,7 +210,7 @@ export function ProcessOrderTableRow({
 
         <TableCell>
           {row.materialOutput?.map((material, index) => (
-            <div key={index}>{`${material.quantity} `}</div>
+            <div key={index}>{`${material.quantity}`}</div>
           ))}
         </TableCell>
 

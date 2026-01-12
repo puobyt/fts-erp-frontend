@@ -31,6 +31,9 @@ export default function ViewFinishedGoodsForm ({finishedGoodsData}) {
   const formattedDate = finishedGoodsData.productionDate
   ? new Date(finishedGoodsData.productionDate).toISOString().split('T')[0]
   : ''
+  const formattedExpiryDate = finishedGoodsData.expiryDate
+  ? new Date(finishedGoodsData.expiryDate).toISOString().split('T')[0]
+  : ''
 
   return (
     <div>
@@ -98,6 +101,21 @@ export default function ViewFinishedGoodsForm ({finishedGoodsData}) {
                     name='productionDate'
                     type='date'
                     value={formattedDate}
+                  
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Expiry Date'
+                    name='expiryDate'
+                    type='date'
+                    value={formattedExpiryDate}
                   
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true }}

@@ -3,49 +3,57 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { Input } from '@nextui-org/react'
 import Modal from '@mui/material/Modal'
 import { Iconify } from 'src/components/iconify'
 import axiosInstance from 'src/configs/axiosInstance'
 import toast, { Toaster } from 'react-hot-toast'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../../global.css'
 import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4
-}
 
 export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
   const adminData = JSON.parse(localStorage.getItem('admin'))
 
   const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
+  const [dropDownItems, setDropDownItems] = useState([])
+
+  const handleOpen = async () => {
+    setOpen(true)
+    if (dropDownItems.length <= 0) {
+      const items = await axiosInstance.get('/mainStock')
+      if (items?.data?.data && items?.data?.data.length > 0) {
+        const updatedItems = items?.data?.data.map((item) => ({
+          label: item.materialName,
+          materialCode: item.materialCode,
+          batchNumber: item.batchNumber,
+          storageLocation: item.storageLocation
+        }))
+        setDropDownItems(updatedItems)
+      }
+    }
+  }
+
   const navigate = useNavigate()
   const handleClose = () => setOpen(false)
-  const formattedStartDate = processOrderData.startDate.split('-').reverse().join('-');
-  const formattedEndDate = processOrderData.finishDate.split('-').reverse().join('-');
+  
+  // formatted dates
+  const formattedStartDate = processOrderData.startDate ? processOrderData.startDate.split('-').reverse().join('-') : '';
+  const formattedEndDate = processOrderData.finishDate ? processOrderData.finishDate.split('-').reverse().join('-') : '';
+
   const [formData, setFormData] = useState({
-    authPassword:'',
+    authPassword: '',
     processOrderId: processOrderData.processOrderId,
     processOrderNumber: processOrderData.processOrderNumber,
-    plant:processOrderData.plant,
-    equipment:processOrderData.equipment,
-    startDate:formattedStartDate,
-    finishDate:formattedEndDate,
-    productName:processOrderData.productName,
-    productCode:processOrderData.productCode,
-    batchNumber:processOrderData.batch,
-    orderQuantity:processOrderData.orderQuantity,
-    materialInput:processOrderData.materialInput
+    plant: processOrderData.plant,
+    equipment: processOrderData.equipment,
+    startDate: formattedStartDate,
+    finishDate: formattedEndDate,
+    productName: processOrderData.productName,
+    productCode: processOrderData.productCode,
+    batchNumber: processOrderData.batchNumber,
+    orderQuantity: processOrderData.orderQuantity,
+    unit: processOrderData.unit || '',
+    materialInput: processOrderData.materialInput || []
   })
   const [errors, setErrors] = useState({})
 
@@ -55,11 +63,10 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
       newErrors.authPassword = 'Authorization Password is required'
     if (!formData.processOrderNumber)
       newErrors.processOrderNumber = 'Process Order is required'
-
     if (!formData.productName)
       newErrors.productName = 'Product Name is required'
-    if (!formData.description)
-      newErrors.description = 'Product Description is required'
+    // if (!formData.description)
+    //   newErrors.description = 'Product Description is required'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0 // Returns true if there are no errors
@@ -69,19 +76,18 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
+
   const handleMaterialChange = (e, index) => {
     const { name, value } = e.target
+    const selectedItem = dropDownItems.find(item => item.materialCode === value)
 
     const updatedMaterials = [...formData.materialInput]
     updatedMaterials[index][name] = value
 
-    // if (name === 'materialCode') {
-    //   const selectedMaterial = materialNames.find(
-    //     material => material.materialName === value
-    //   )
-    //   updatedMaterials[index].materialCode =
-    //     selectedMaterial?.materialCode || ''
-    // }
+    if (selectedItem) {
+      updatedMaterials[index]['batch'] = selectedItem?.batchNumber || ''
+      updatedMaterials[index]['storageLocation'] = selectedItem?.storageLocation || ''
+    }
 
     setFormData({ ...formData, materialInput: updatedMaterials })
   }
@@ -91,7 +97,7 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
       ...prevFormData,
       materialInput: [
         ...prevFormData.materialInput,
-        { materialCode: '', quantity: '', batchNumber: '', storageLocation: '' }
+        { materialCode: '', quantity: '', unit: '', batch: '', storageLocation: '' }
       ]
     }))
   }
@@ -102,6 +108,7 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
     )
     setFormData({ ...formData, materialInput: updatedMaterials })
   }
+
   const handleSubmit = async e => {
     e.preventDefault()
 
@@ -113,23 +120,12 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
       if (result) {
         toast.success(result.data.message)
         handleClose()
-        setFormData({
-          processOrderNumber: '',
-          plant: '',
-          equipment: '',
-          startDate: '',
-          finishDate: '',
-          productName: '',
-          productCode: '',
-          batchNumber: '',
-          orderQuantity: '',
-        })
         setUpdate(prev => !prev)
       }
     } catch (err) {
-      toast.success(err.response.data.message)
+      toast.error(err.response?.data?.message || err.message)
       console.error(
-        'Error occured in adding Current stock in client side',
+        'Error occured in editing process order',
         err.message
       )
     }
@@ -148,18 +144,8 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
         onClose={handleClose}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
-        onKeyDown={(e) => e.stopPropagation()}  // Add this
-
+        onKeyDown={(e) => e.stopPropagation()}
       >
-        {/* <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box> */}
-
         <Container maxWidth='lg' sx={{ mt: 8 }}>
           <Paper
             elevation={4}
@@ -173,7 +159,7 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                 color='primary'
                 gutterBottom
               >
-                Edit New Process Order
+                Edit Process Order
               </Typography>
               <Typography variant='body2' color='textSecondary'>
                 Process order Management
@@ -189,7 +175,7 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
               }}
             >
               <Grid container spacing={2} >
-              <Grid item xs={6} sx={{ mt: 2 }}>
+                <Grid item xs={6} sx={{ mt: 2 }}>
                   <TextField
                     fullWidth
                     label='Authorization Password'
@@ -308,7 +294,7 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                     variant='outlined'
                   />
                 </Grid>
-                <Grid item xs={6} sx={{ mt: 2 }}>
+                <Grid item xs={5} sx={{ mt: 2 }}>
                   <TextField
                     fullWidth
                     label='Order Quantity'
@@ -320,11 +306,31 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                     variant='outlined'
                   />
                 </Grid>
+                <Grid item xs={1} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                
                 <Grid item xs={12}>
                   <Typography
                     variant='subtitle2'
                     fontWeight='bold'
-                    // Adds margin-bottom for spacing
                   >
                     Material Input
                   </Typography>
@@ -334,18 +340,25 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                   <React.Fragment key={index}>
                     <Grid item xs={3}>
                       <TextField
+                        select
                         fullWidth
-                        label='Material Code'
-                        name='materialCode'
-                        value={material.materialCode}
+                        label="Material Name"
+                        name="materialCode"
+                        value={material.materialCode || ''}
                         onChange={e => handleMaterialChange(e, index)}
                         error={!!errors.materialInput}
                         helperText={errors.materialInput}
-                        variant='outlined'
+                        variant="outlined"
                         InputProps={{ style: { borderRadius: 8 } }}
-                      />
+                      >
+                        {dropDownItems.map((item, idx) => (
+                          <MenuItem key={idx} value={item.materialCode}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                       <TextField
                         fullWidth
                         label='Quantity'
@@ -358,8 +371,28 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                         InputProps={{ style: { borderRadius: 8 } }}
                       />
                     </Grid>
-
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        value={material.unit || ''}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.materialInput}
+                        helperText={errors.materialInput}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                          <MenuItem key={unit} value={unit}>
+                            {unit}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    
+                    <Grid item xs={2}>
                       <TextField
                         fullWidth
                         label='Batch'
@@ -394,8 +427,8 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                       xs={12}
                       sx={{
                         display: 'flex',
-                        justifyContent: 'flex-end', // Align to the right
-                        alignItems: 'center' // Vertically center the content if needed
+                        justifyContent: 'flex-end', 
+                        alignItems: 'center' 
                       }}
                     >
                       <Button
@@ -423,36 +456,6 @@ export default function EditProcessOrderForm ({ setUpdate, processOrderData }) {
                     Add Material
                   </Button>
                 </Grid>
-
-                {/* <Grid item xs={12}>
-                  <Box
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-                  >
-                    <label htmlFor='description' style={{ fontWeight: 'bold' }}>
-                      Description
-                    </label>
-                    <textarea
-                      id='description'
-                      name='description'
-                      value={formData.description}
-                      onChange={handleChange}
-                      rows='6'
-                      style={{
-                        width: '100%',
-                        border: '1px solid #ccc',
-                        borderRadius: '8px',
-                        padding: '8px',
-                        fontSize: '16px',
-                        fontFamily: 'inherit'
-                      }}
-                    />
-                    {errors.description && (
-                      <Typography variant='body2' color='error'>
-                        {errors.description}
-                      </Typography>
-                    )}
-                  </Box>
-                </Grid> */}
               </Grid>
               <Button
                 type='submit'

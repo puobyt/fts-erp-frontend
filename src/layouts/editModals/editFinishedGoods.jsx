@@ -32,12 +32,17 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
   const formattedDate = finishedGoodsData.productionDate
     ? new Date(finishedGoodsData.productionDate).toISOString().split('T')[0]
     : ''
+  const formattedExpiryDate = finishedGoodsData.expiryDate
+    ? new Date(finishedGoodsData.expiryDate).toISOString().split('T')[0]
+    : ''
+
   const [formData, setFormData] = useState({
     authPassword: '',
     finishedGoodsId: finishedGoodsData.finishedGoodsId,
     finishedGoodsName: finishedGoodsData.finishedGoodsName,
     batchNumber: finishedGoodsData.batchNumber,
     productionDate: formattedDate,
+    expiryDate: formattedExpiryDate,
     quantityProduced: finishedGoodsData.quantityProduced,
     unit: finishedGoodsData.unit
   })
@@ -53,6 +58,8 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
       newErrors.batchNumber = 'Batch Number is required'
     if (!formData.productionDate)
       newErrors.productionDate = 'Production Date is required'
+    if (!formData.expiryDate)
+      newErrors.expiryDate = 'Expiry Date is required'
     if (!formData.quantityProduced)
       newErrors.quantityProduced = 'Quantity Produced is required'
 
@@ -82,6 +89,7 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
             finishedGoodsName: '',
             batchNumber: '',
             productionDate: '',
+            expiryDate: '',
             quantityProduced: ''
           })
           setUpdate(prev => !prev)
@@ -194,6 +202,23 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
                     onChange={handleChange}
                     error={!!errors.productionDate}
                     helperText={errors.productionDate}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Expiry Date'
+                    name='expiryDate'
+                    type='date'
+                    value={formData.expiryDate}
+                    onChange={handleChange}
+                    error={!!errors.expiryDate}
+                    helperText={errors.expiryDate}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{

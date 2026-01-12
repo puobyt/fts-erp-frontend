@@ -134,6 +134,9 @@ useEffect(()=>{
                   { id: 'inspectorName', label: 'Inspector Name' },
                   { id: 'qualityStatus', label: 'Quality Status' },
                   { id: 'comments', label: 'Comments' },
+                  { id: 'mfgDate', label: 'Manufacturing Date' },
+                  { id: 'expDate', label: 'Expiry Date' },
+
                 ]}
               />
               <TableBody>

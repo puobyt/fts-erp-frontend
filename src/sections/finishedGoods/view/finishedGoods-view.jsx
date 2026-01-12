@@ -132,6 +132,7 @@ export function FinishedGoodsView() {
                 { id: 'finishedGoodsName', label: 'Finished Goods Name' },
                 { id: 'batchNumber', label: 'Batch Number' },
                 { id: 'productiondate', label: 'Production Date' },
+                { id: 'expirydate', label: 'Expiry Date' },
                 { id: 'quantityProduced', label: 'Quantity Produced' }
               ]}
             />

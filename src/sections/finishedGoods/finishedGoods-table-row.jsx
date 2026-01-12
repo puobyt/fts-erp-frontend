@@ -32,8 +32,9 @@ export function FinishedGoodsTableRow({ setUpdate, row, selected, onSelectRow })
     finishedGoodsName: row.finishedGoodsName,
     batchNumber: row.batchNumber,
     productionDate: row.productionDate,
+    expiryDate: row.expiryDate,
     quantityProduced: row.quantityProduced,
-    unit: row?.unit || '--' 
+    unit: row?.unit || '--'
   }
 
   const handlePDFDownload = async () => {
@@ -109,6 +110,7 @@ export function FinishedGoodsTableRow({ setUpdate, row, selected, onSelectRow })
         <TableCell>  {row.finishedGoodsName}</TableCell>
         <TableCell>{row.batchNumber}</TableCell>
         <TableCell>{new Date(row.productionDate).toLocaleDateString()}</TableCell>
+        <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>
         <TableCell>{`${row.quantityProduced} ${row?.unit||'--'}`}</TableCell>
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>

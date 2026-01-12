@@ -37,7 +37,9 @@ export function QualityCheckTableRow ({
     inspectionDate: row.inspectionDate,
     inspectorName: row.inspectorName,
     qualityStatus: row.qualityStatus,
-    comments: row.comments
+    comments: row.comments,
+    mfgDate: row.mfgDate,
+    expiryDate: row.expiryDate
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)
@@ -123,6 +125,8 @@ export function QualityCheckTableRow ({
           {row.qualityStatus}
         </TableCell>
         <TableCell>{row.comments}</TableCell>
+        <TableCell>{row?.mfgDate ? new Date(row?.mfgDate).toLocaleDateString() : '---'}</TableCell>
+        <TableCell>{row?.expiryDate ? new Date(row?.expiryDate).toLocaleDateString() : '---'}</TableCell>
 
         <TableCell align='right'>
           <IconButton onClick={handleOpenPopover}>
