@@ -53,6 +53,7 @@ export default function CurrentStockForm({
     storageLocation: '',
     vendorName: '',
     dateRecieved: '',
+    mfgDate: '',
     expiryDate: ''
   })
   const [errors, setErrors] = useState({})
@@ -122,6 +123,7 @@ export default function CurrentStockForm({
           storageLocation: '',
           vendorName: '',
           dateRecieved: '',
+          mfgDate: '',
           expiryDate: ''
         })
         setUpdate(prev => !prev)
@@ -369,6 +371,23 @@ export default function CurrentStockForm({
                     onChange={handleChange}
                     error={!!errors.dateRecieved}
                     helperText={errors.dateRecieved}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Manufacturing Date'
+                    name='mfgDate'
+                    type='date'
+                    value={formData.mfgDate}
+                    onChange={handleChange}
+                    error={!!errors.mfgDate}
+                    helperText={errors.mfgDate}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{

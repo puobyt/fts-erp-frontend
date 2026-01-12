@@ -38,7 +38,8 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
     finishedGoodsName: finishedGoodsData.finishedGoodsName,
     batchNumber: finishedGoodsData.batchNumber,
     productionDate: formattedDate,
-    quantityProduced: finishedGoodsData.quantityProduced
+    quantityProduced: finishedGoodsData.quantityProduced,
+    unit: finishedGoodsData.unit
   })
   const [errors, setErrors] = useState({})
 
@@ -213,6 +214,26 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
+                <Grid item xs={3}>
+                                  <TextField
+                                    fullWidth
+                                    select
+                                    label='Unit'
+                                    name='unit'
+                                    value={formData.unit}
+                                    onChange={handleChange}
+                                    error={!!errors.unit}
+                                    helperText={errors.unit}
+                                    variant='outlined'
+                                    InputProps={{ style: { borderRadius: 8 } }}
+                                  >
+                                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map((unit) => (
+                                      <MenuItem key={unit} value={unit}>
+                                        {unit}
+                                      </MenuItem>
+                                    ))}
+                                  </TextField>
+                                </Grid>
               </Grid>
               <Button
                 type='submit'

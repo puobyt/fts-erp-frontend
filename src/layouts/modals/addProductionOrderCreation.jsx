@@ -41,6 +41,7 @@ export default function ProductionOrderCreationForm({
     productDescription: '',
     productName: '',
     productQuantity: '',
+    unit: '',
     batch: '',
     materials: [{ materialsList: '', requiredQuantity: '', unit: '', materialCode: '' }],
     instructions: '',
@@ -101,7 +102,8 @@ export default function ProductionOrderCreationForm({
         ...formData,
         processOrder: selectedNumber,
         productName: isSelectedNumber.productName,
-        plant: isSelectedNumber.plant
+        plant: isSelectedNumber.plant,
+        unit: isSelectedNumber.unit
       })
     }
   }
@@ -126,9 +128,10 @@ export default function ProductionOrderCreationForm({
           productDescription: '',
           productName: '',
           productQuantity: '',
+          unit: '',
           batch: '',
           materials: [
-            { materialsList: '', requiredQuantity: '', materialCode: '' }
+            { materialsList: '', requiredQuantity: '', materialCode: '', unit: '' }
           ],
           instructions: '',
           startDate: '',
@@ -339,6 +342,48 @@ export default function ProductionOrderCreationForm({
 
                   />
                 </Grid>
+                {/* unit dropdown */}
+                {/* <Grid item xs={2}>
+                  <TextField
+                    fullWidth
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid> */}
+                <Grid item xs={2}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        value={formData.unit}
+                        onChange={handleChange}
+                        error={!!errors.unit}
+                        helperText={errors.unit}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                          <MenuItem key={unit} value={unit}>
+                            {unit}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+
+                
                 {/* <Grid item xs={6}>
                   <TextField
                     fullWidth
@@ -429,7 +474,7 @@ export default function ProductionOrderCreationForm({
                         select
                         label='Unit'
                         name='unit'
-                        value={formData.unit}
+                        value={material.unit}
                         onChange={e => handleMaterialChange(e, index)}
                         error={!!errors.unit}
                         helperText={errors.unit}

@@ -24,6 +24,7 @@ const style = {
 }
 
 export default function ViewFinishedGoodsForm ({finishedGoodsData}) {
+  console.log(finishedGoodsData)
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -59,7 +60,7 @@ export default function ViewFinishedGoodsForm ({finishedGoodsData}) {
                 color='primary'
                 gutterBottom
               >
-                Edit Finished Goods Details
+                Finished Goods Details
               </Typography>
               <Typography variant='body2' color='textSecondary'>
                 Finished Goods Management
@@ -110,7 +111,7 @@ export default function ViewFinishedGoodsForm ({finishedGoodsData}) {
                     fullWidth
                     label='Quantity Produced'
                     name='quantityProduced'
-                    value={finishedGoodsData.quantityProduced}
+                    value={finishedGoodsData.quantityProduced + ' ' + finishedGoodsData?.unit || '--'}
                  
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true }}

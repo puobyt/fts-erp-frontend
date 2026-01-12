@@ -35,6 +35,7 @@ export function ProductionOrderCreationOutputTableRow ({
     productionOrderoutputId: row._id,
     productName: row.productName,
     producedQuantity: row.producedQuantity,
+    unit: row?.unit,
     productionCompletionDate: row.productionCompletionDate,
     // qualityCheckStatus: row.qualityCheckStatus,
     storageLocationforOutput: row.storageLocationforOutput,
@@ -107,7 +108,7 @@ export function ProductionOrderCreationOutputTableRow ({
           </Box>
         </TableCell> */}
         <TableCell> {row.productName}</TableCell>
-        <TableCell> {`${row.producedQuantity} KG`}</TableCell>
+        <TableCell> {`${row.producedQuantity} ${row?.unit || '--'}`}</TableCell>
         <TableCell>
           {new Date(row.productionCompletionDate).toLocaleDateString()}
         </TableCell>

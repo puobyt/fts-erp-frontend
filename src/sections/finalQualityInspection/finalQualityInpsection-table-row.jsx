@@ -36,7 +36,8 @@ export function FinalQualityInpsectionTableRow({
     inspectionResults: row.inspectionResults,
     date: row.date,
     batchNumber: row.batchNumber,
-    quantity: row.quantity
+    quantity: row.quantity,
+    unit: row.unit
   }
   const handleOpenPopover = useCallback(event => {
     setOpenPopover(event.currentTarget)

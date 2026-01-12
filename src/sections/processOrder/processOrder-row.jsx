@@ -175,7 +175,7 @@ export function ProcessOrderTableRow({
         <TableCell sx={{ minWidth: 150 }}>{row.productName}</TableCell>
         <TableCell> {row.productCode}</TableCell>
         <TableCell>{row.batch}</TableCell>
-        <TableCell>{row.orderQuantity}</TableCell>
+        <TableCell>{row.orderQuantity}{row.unit}</TableCell>
 
         <TableCell>
           {row.materialInput.map((material, index) => (

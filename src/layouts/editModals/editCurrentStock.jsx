@@ -51,6 +51,9 @@ export default function EditCurrentStockForm({
   const formattedExpDate = currentStockData.expiryDate
     ? new Date(currentStockData.expiryDate).toISOString().split('T')[0]
     : ''
+  const formattedMfgDate = currentStockData?.mfgDate !== '---'
+    ? new Date(currentStockData?.mfgDate).toISOString().split('T')[0]
+    : '---'
 
   // const formattedExpiryDate = isValid(parsedDate) ? parsedDate.toISOString().split('T')[0] : null;
   const [formData, setFormData] = useState({
@@ -65,6 +68,7 @@ export default function EditCurrentStockForm({
     storageLocation: currentStockData.storageLocation,
     vendorName: currentStockData.vendorName,
     dateRecieved: formattedDate,
+    mfgDate: formattedMfgDate,
     expiryDate: formattedExpDate
   })
   const [errors, setErrors] = useState({})
@@ -109,6 +113,11 @@ export default function EditCurrentStockForm({
 
   const handleChange = e => {
     const { name, value } = e.target
+    if (name === 'mfgDate') {
+      setFormData(prev => ({ ...prev, [name]: value !== '---' ? new Date(value).toISOString().split('T')[0] : '---' }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
@@ -383,6 +392,23 @@ export default function EditCurrentStockForm({
                     onChange={handleChange}
                     error={!!errors.dateRecieved}
                     helperText={errors.dateRecieved}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Manufacturing Date'
+                    name='mfgDate'
+                    type='date'
+                    value={formData.mfgDate}
+                    onChange={handleChange}
+                    error={!!errors.mfgDate}
+                    helperText={errors.mfgDate}
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{

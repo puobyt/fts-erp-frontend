@@ -120,7 +120,7 @@ export function ProductionOrderCreationTableRow ({
         <TableCell style={{ minWidth: '180px' }}>{row.productName}</TableCell>
         <TableCell
           style={{ minWidth: '180px' }}
-        >{` ${row.productQuantity} KG`}</TableCell>
+        >{` ${row.productQuantity} ${row?.unit || '--'}`}</TableCell>
         <TableCell>{row.batch}</TableCell>
         <TableCell
           style={{

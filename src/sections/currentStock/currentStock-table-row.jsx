@@ -44,6 +44,7 @@ export function CurrentStockTableRow({
     storageLocation: row.storageLocation,
     vendorName: row.vendorName,
     dateRecieved: row.dateRecieved,
+    mfgDate: row?.mfgDate || '---',
     expiryDate: row.expiryDate
   }
   const handleOpenPopover = useCallback(event => {
@@ -117,6 +118,7 @@ export function CurrentStockTableRow({
         <TableCell>{row.storageLocation}</TableCell>
         <TableCell>{row.vendorName}</TableCell>
         <TableCell>{new Date(row.dateRecieved).toLocaleDateString()}</TableCell>
+        <TableCell>{row?.mfgDate ? new Date(row.mfgDate).toLocaleDateString() : '---'}</TableCell>
         <TableCell>{new Date(row.expiryDate).toLocaleDateString()}</TableCell>
 
         <TableCell align='right'>

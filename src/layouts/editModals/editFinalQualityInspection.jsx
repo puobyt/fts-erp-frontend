@@ -29,6 +29,7 @@ export default function EditQualityInspectionForm ({
   qualityInspectionData,
   productNames
 }) {
+
   const adminData = JSON.parse(localStorage.getItem('admin'))
 
   const [open, setOpen] = useState(false)
@@ -43,7 +44,8 @@ export default function EditQualityInspectionForm ({
     inspectionResults: qualityInspectionData.inspectionResults,
     date: qualityInspectionData.date,
     batchNumber: qualityInspectionData.batchNumber,
-    quantity: qualityInspectionData.quantity
+    quantity: qualityInspectionData.quantity,
+    unit: qualityInspectionData?.unit
   })
   const [errors, setErrors] = useState({})
 
@@ -110,6 +112,15 @@ export default function EditQualityInspectionForm ({
       )
     }
   }
+
+  const displayProductNames = productNames
+    ? productNames.map(item => (typeof item === 'object' && item !== null ? item.productName : item))
+    : [];
+
+  if (formData.productName && !displayProductNames.includes(formData.productName)) {
+    displayProductNames.push(formData.productName);
+  }
+
   return (
     <div>
       <Toaster position='top-center' reverseOrder={false} />
@@ -182,7 +193,7 @@ export default function EditQualityInspectionForm ({
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 } }}
                   >
-                    {productNames.map((productName, index) => (
+                    {displayProductNames.map((productName, index) => (
                       <MenuItem key={index} value={productName}>
                         {productName}
                       </MenuItem>
@@ -296,6 +307,26 @@ export default function EditQualityInspectionForm ({
                               
                                   />
                                 </Grid>
+                                <Grid item xs={3}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map((unit) => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
                 
               </Grid>
               <Button

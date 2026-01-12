@@ -55,6 +55,7 @@ export function FinishedGoodsView() {
     fetchFinishedGoods()
   }, [update])
 
+  console.log(finishedGoods)
   const dataFiltered = applyFilter({
     inputData: finishedGoods,
     comparator: getComparator(table.order, table.orderBy),

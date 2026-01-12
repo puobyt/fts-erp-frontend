@@ -46,7 +46,7 @@ const result = await axiosInstance.get('/qualityInpsection');
 if(result.data.data){
 
   setQualityInspections(result.data.data);
-  setProductNames(result.data.productNames);
+  setProductNames(result.data.productNames || []);
   setLoading(false)
 }
 }catch(err){

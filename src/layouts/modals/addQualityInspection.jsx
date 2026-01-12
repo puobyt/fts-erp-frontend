@@ -256,7 +256,7 @@ export default function QualityInspectionForm({ setUpdate, productNames }) {
                   />
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={3}>
                   <TextField
                     fullWidth
                     label='Quantity'
@@ -274,6 +274,26 @@ export default function QualityInspectionForm({ setUpdate, productNames }) {
                   />
                 </Grid>
 
+                <Grid item xs={3}>
+                  <TextField
+                    fullWidth
+                    select
+                    label='Unit'
+                    name='unit'
+                    value={formData.unit}
+                    onChange={handleChange}
+                    error={!!errors.unit}
+                    helperText={errors.unit}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                  >
+                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map((unit) => (
+                      <MenuItem key={unit} value={unit}>
+                        {unit}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
               </Grid>
               <Button
                 type='submit'
