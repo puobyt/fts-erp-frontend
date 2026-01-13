@@ -48,7 +48,9 @@ export default function ViewCurrentStock ({
   const formattedExpDate = currentStockData.expiryDate
     ? new Date(currentStockData.expiryDate).toISOString().split('T')[0]
     : ''
-
+  const formattedMfgDate = currentStockData?.mfgDate !== '---'
+    ? new Date(currentStockData?.mfgDate).toISOString().split('T')[0]
+    : '---'
 
   return (
     <div>
@@ -180,6 +182,21 @@ export default function ViewCurrentStock ({
                     type='text'
                     value={formattedDate}
                
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Manufacturing Date'
+                    name='mfgDate'
+                    type='text'
+                    value={formattedMfgDate}
+              
                     variant='outlined'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true }}
                     InputLabelProps={{

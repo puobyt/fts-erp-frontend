@@ -89,12 +89,11 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
       newErrors.rejectionReason = 'Rejection Reason is required'
     if (formData.qualityStatus === 'Rejected' && !formData.quantityRejected)
       newErrors.quantityRejected = 'Quantity Rejected is required'
-    parameterRows.forEach((param, idx) => {
-      if (param.actualResult === '' || isNaN(param.actualResult)) {
-        newErrors[`param_${idx}_actualResult`] = 'Required'
-      }
-    })
-
+    // parameterRows.forEach((param, idx) => {
+    //   if (param.actualResult === '' || isNaN(param.actualResult)) {
+    //     newErrors[`param_${idx}_actualResult`] = 'Required'
+    //   }
+    // })
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -195,18 +194,18 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
     try {
       const result = await axiosInstance.post('/newQualityCheck', payload)
       const qcId = result.data.qcId
-      await Promise.all(
-        parameterRows.map(param =>
-          axiosInstance.post('/newQualityCheckParameterResult', {
-            qualityCheck: qcId,
-            parameter: param._id,
-            actualResult: param.actualResult,
-            status: param.status,
-            remarks: param.remarks
-          })
-        )
-      )
-      toast.success('Quality Check and Parameters saved successfully!')
+      // await Promise.all(
+      //   parameterRows.map(param =>
+      //     axiosInstance.post('/newQualityCheckParameterResult', {
+      //       qualityCheck: qcId,
+      //       parameter: param._id,
+      //       actualResult: param.actualResult,
+      //       status: param.status,
+      //       remarks: param.remarks
+      //     })
+      //   )
+      // )
+      toast.success('Quality Check saved successfully!')
       handleClose()
       setFormData({
         grn: '',
@@ -222,7 +221,7 @@ export default function QualityCheckForm({ setUpdate, batches, products }) {
       setParameterRows([])
       setUpdate(prev => !prev)
     } catch (err) {
-      toast.error('Error saving Quality Check')
+      toast.error(err.response.data.message)
       console.error('Error:', err.message)
     }
   }

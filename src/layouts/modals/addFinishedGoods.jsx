@@ -33,6 +33,7 @@ export default function FinishedGoodsForm({ setUpdate }) {
     finishedGoodsName: '',
     batchNumber: '',
     productionDate: '',
+    expiryDate: '',
     quantityProduced: ''
   })
   const [errors, setErrors] = useState({})
@@ -45,6 +46,8 @@ export default function FinishedGoodsForm({ setUpdate }) {
       newErrors.batchNumber = 'Batch Number is required'
     if (!formData.productionDate)
       newErrors.productionDate = 'Production Date is required'
+    if (!formData.expiryDate)
+      newErrors.expiryDate = 'Expiry Date is required'
     if (!formData.quantityProduced)
       newErrors.quantityProduced = 'Quantity Produced is required'
 
@@ -72,6 +75,7 @@ export default function FinishedGoodsForm({ setUpdate }) {
           finishedGoodsName: '',
           batchNumber: '',
           productionDate: '',
+          expiryDate: '',
           quantityProduced: ''
         })
         setUpdate(prev => !prev)
@@ -171,6 +175,23 @@ export default function FinishedGoodsForm({ setUpdate }) {
                     InputProps={{ style: { borderRadius: 8 } }}
                     InputLabelProps={{
                       shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Expiry Date'
+                    name='expiryDate'
+                    type='date'
+                    value={formData.expiryDate}
+                    onChange={handleChange}
+                    error={!!errors.expiryDate}
+                    helperText={errors.expiryDate}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true
                     }}
                   />
                 </Grid>

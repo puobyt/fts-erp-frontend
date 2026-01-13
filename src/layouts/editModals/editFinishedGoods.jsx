@@ -32,13 +32,19 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
   const formattedDate = finishedGoodsData.productionDate
     ? new Date(finishedGoodsData.productionDate).toISOString().split('T')[0]
     : ''
+  const formattedExpiryDate = finishedGoodsData.expiryDate
+    ? new Date(finishedGoodsData.expiryDate).toISOString().split('T')[0]
+    : ''
+
   const [formData, setFormData] = useState({
     authPassword: '',
     finishedGoodsId: finishedGoodsData.finishedGoodsId,
     finishedGoodsName: finishedGoodsData.finishedGoodsName,
     batchNumber: finishedGoodsData.batchNumber,
     productionDate: formattedDate,
-    quantityProduced: finishedGoodsData.quantityProduced
+    expiryDate: formattedExpiryDate,
+    quantityProduced: finishedGoodsData.quantityProduced,
+    unit: finishedGoodsData.unit
   })
   const [errors, setErrors] = useState({})
 
@@ -52,6 +58,8 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
       newErrors.batchNumber = 'Batch Number is required'
     if (!formData.productionDate)
       newErrors.productionDate = 'Production Date is required'
+    if (!formData.expiryDate)
+      newErrors.expiryDate = 'Expiry Date is required'
     if (!formData.quantityProduced)
       newErrors.quantityProduced = 'Quantity Produced is required'
 
@@ -81,6 +89,7 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
             finishedGoodsName: '',
             batchNumber: '',
             productionDate: '',
+            expiryDate: '',
             quantityProduced: ''
           })
           setUpdate(prev => !prev)
@@ -203,6 +212,23 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    label='Expiry Date'
+                    name='expiryDate'
+                    type='date'
+                    value={formData.expiryDate}
+                    onChange={handleChange}
+                    error={!!errors.expiryDate}
+                    helperText={errors.expiryDate}
+                    variant='outlined'
+                    InputProps={{ style: { borderRadius: 8 } }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
                     label='Quantity Produced'
                     name='quantityProduced'
                     value={formData.quantityProduced}
@@ -213,6 +239,26 @@ export default function EditFinishedGoodsForm({ setUpdate, finishedGoodsData }) 
                     InputProps={{ style: { borderRadius: 8 } }}
                   />
                 </Grid>
+                <Grid item xs={3}>
+                                  <TextField
+                                    fullWidth
+                                    select
+                                    label='Unit'
+                                    name='unit'
+                                    value={formData.unit}
+                                    onChange={handleChange}
+                                    error={!!errors.unit}
+                                    helperText={errors.unit}
+                                    variant='outlined'
+                                    InputProps={{ style: { borderRadius: 8 } }}
+                                  >
+                                    {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map((unit) => (
+                                      <MenuItem key={unit} value={unit}>
+                                        {unit}
+                                      </MenuItem>
+                                    ))}
+                                  </TextField>
+                                </Grid>
               </Grid>
               <Button
                 type='submit'

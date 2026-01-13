@@ -141,11 +141,9 @@ export function UserView() {
             >
               Import Excel
             </Button>
-            <a href={'/files/vendor_dummy.xlsx'} download>
-              <Button variant="contained" color="primary" component="span">
-                Download Excel Format
-              </Button>
-            </a>
+            <Button component="a" href="/files/vendors_dummy.xlsx" download variant="contained">
+              Download Excel Format
+            </Button>
           </label>
         </div>
       </Box>

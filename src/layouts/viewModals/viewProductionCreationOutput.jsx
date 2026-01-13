@@ -24,6 +24,7 @@ const style = {
 export default function ViewProductionOrderCreationOutputForm ({
   productionOrderOutputData,
 }) {
+  console.log("---productionOrderOutputData", productionOrderOutputData)
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -83,7 +84,7 @@ export default function ViewProductionOrderCreationOutputForm ({
                     fullWidth
                     label='Produced Quantity'
                     name='producedQuantity'
-                    value={productionOrderOutputData.producedQuantity}
+                    value={productionOrderOutputData.producedQuantity  + ` ${productionOrderOutputData?.unit || '--'}`}
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true  }}
                   />

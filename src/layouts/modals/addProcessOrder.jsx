@@ -11,7 +11,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../../global.css'
-import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper, Autocomplete } from '@mui/material'
 
 const style = {
   position: 'absolute',
@@ -60,7 +60,7 @@ export default function ProcessOrderForm({ setUpdate }) {
     batchNumber: '',
     orderQuantity: '',
     materialInput: [
-      { materialCode: '', quantity: '', batch: '', storageLocation: '' }
+      { materialCode: '', quantity: '', unit: '', batch: '', storageLocation: '' }
     ]
   })
   const [errors, setErrors] = useState({})
@@ -113,7 +113,7 @@ export default function ProcessOrderForm({ setUpdate }) {
       ...prevFormData,
       materialInput: [
         ...prevFormData.materialInput,
-        { materialCode: '', quantity: '', batchNumber: '', storageLocation: '' }
+        { materialCode: '', quantity: '', unit: '', batchNumber: '', storageLocation: '' }
       ]
     }))
   }
@@ -149,6 +149,7 @@ export default function ProcessOrderForm({ setUpdate }) {
             {
               materialCode: '',
               quantity: '',
+              unit: '',
               batch: '',
               storageLocation: ''
             }
@@ -371,24 +372,37 @@ export default function ProcessOrderForm({ setUpdate }) {
                 {formData.materialInput.map((material, index) => (
                   <React.Fragment key={index}>
                     <Grid item xs={3} >
-                      <TextField
-                        select
+                      <Autocomplete
                         fullWidth
-                        label="Material Name"
-                        name="materialCode"
-                        value={material.materialCode || ''}
-                        onChange={e => handleMaterialChange(e, index)}
-                        error={!!errors.materialInput}
-                        helperText={errors.materialInput}
-                        variant="outlined"
-                        InputProps={{ style: { borderRadius: 8 } }}
-                      >
-                        {dropDownItems.map((item, idx) => (
-                          <MenuItem key={idx} value={item.materialCode}>
-                            {item.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
+                        options={dropDownItems}
+                        getOptionLabel={(option) => option.label || ''}
+                        value={dropDownItems.find(item => item.materialCode === material.materialCode) || null}
+                        onChange={(event, newValue) => {
+                          const updatedMaterials = [...formData.materialInput];
+                          updatedMaterials[index]['materialCode'] = newValue ? newValue.materialCode : '';
+                          if (newValue) {
+                            updatedMaterials[index]['batch'] = newValue.batchNumber || '';
+                            updatedMaterials[index]['storageLocation'] = newValue.storageLocation || '';
+                          } else {
+                            updatedMaterials[index]['batch'] = '';
+                            updatedMaterials[index]['storageLocation'] = '';
+                          }
+                          setFormData({ ...formData, materialInput: updatedMaterials });
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Material Name"
+                            error={!!errors.materialInput}
+                            helperText={errors.materialInput}
+                            variant="outlined"
+                            InputProps={{
+                              ...params.InputProps,
+                              style: { borderRadius: 8 }
+                            }}
+                          />
+                        )}
+                      />
 
                     </Grid>
                     <Grid item xs={2} >
@@ -404,7 +418,27 @@ export default function ProcessOrderForm({ setUpdate }) {
                         InputProps={{ style: { borderRadius: 8 } }}
                       />
                     </Grid>
-                    <Grid item xs={3} >
+                    <Grid item xs={2}>
+                      <TextField
+                        fullWidth
+                        select
+                        label='Unit'
+                        name='unit'
+                        value={material.unit || ''}
+                        onChange={e => handleMaterialChange(e, index)}
+                        error={!!errors.materialInput}
+                        helperText={errors.materialInput}
+                        variant='outlined'
+                        InputProps={{ style: { borderRadius: 8 } }}
+                      >
+                        {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map(unit => (
+                          <MenuItem key={unit} value={unit}>
+                            {unit}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={2} >
                       <TextField
                         fullWidth
                         label='Batch'

@@ -11,7 +11,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../../global.css'
-import { TextField, Container, MenuItem, Grid, Paper } from '@mui/material'
+import { TextField, Container, MenuItem, Grid, Paper, Autocomplete } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -215,63 +215,87 @@ export default function RequestCreationForMaterialsForm ({
               <Grid container spacing={2} sx={{ mt: 0.1 }}>
                 {formData.materials.map((material, index) => (
                   <React.Fragment key={index}>
-                    <Grid item xs={3}>
-                      <TextField
+                  <Grid item xs={3}>
+                      <Autocomplete
                         fullWidth
-                        select
-                        label='Materials List'
-                        name='materialsList'
-                        value={material.materialsList}
-                        onChange={e => handleMaterialChange(e, index)}
-                        error={!!errors.materials}
-                        helperText={errors.materials}
-                        variant='outlined'
-                        InputProps={{ style: { borderRadius: 8 } }}
-                      >
-                        <MenuItem
-                          disabled
-                          sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
-                        >
-                          Materials
-                        </MenuItem>
-                        {materialNames.map((materialName, index) => (
-                          <MenuItem
-                            key={`product-${index}`}
-                            value={materialName.materialName}
+                        options={[
+                          ...materialNames.map(item => ({
+                            ...item,
+                            category: 'Materials'
+                          })),
+                          {
+                            materialName: 'Add New Material +',
+                            category: 'Materials',
+                            isAction: true,
+                            path: '/vendor-stock-management/current-stock'
+                          },
+                          ...finishedGoods.map(item => ({
+                            ...item,
+                            category: 'Finished Goods'
+                          })),
+                          {
+                            materialName: 'Add New Finished Goods +',
+                            category: 'Finished Goods',
+                            isAction: true,
+                            path: '/finished-goods-invoicing/finished-goods'
+                          }
+                        ]}
+                        groupBy={option => option.category}
+                        getOptionLabel={option => option.materialName}
+                        isOptionEqualToValue={(option, value) =>
+                          option.materialName === value.materialName
+                        }
+                        value={
+                          [
+                            ...materialNames,
+                            ...finishedGoods
+                          ].find(
+                            opt => opt.materialName === material.materialsList
+                          ) || null
+                        }
+                        onChange={(event, newValue) => {
+                          if (newValue?.isAction) {
+                            navigate(newValue.path)
+                            return
+                          }
+                          const updatedMaterials = [...formData.materials]
+                          updatedMaterials[index]['materialsList'] = newValue
+                            ? newValue.materialName
+                            : ''
+                          updatedMaterials[index]['materialCode'] = newValue
+                            ? newValue.materialCode
+                            : ''
+                          setFormData({
+                            ...formData,
+                            materials: updatedMaterials
+                          })
+                        }}
+                        renderOption={(props, option) => (
+                          <li
+                            {...props}
+                            style={
+                              option.isAction
+                                ? { fontStyle: 'italic', fontWeight: 'bold' }
+                                : {}
+                            }
                           >
-                            {materialName.materialName}
-                          </MenuItem>
-                        ))}
-                        <MenuItem
-                          onClick={() =>
-                            navigate('/vendor-stock-management/current-stock')
-                          }
-                          sx={{ fontStyle: 'italic' }}
-                        >
-                          Add New Material +
-                        </MenuItem>
-
-                        <MenuItem
-                          disabled
-                          sx={{ fontWeight: 'bold', fontStyle: 'italic' }}
-                        >
-                          Finished Goods
-                        </MenuItem>
-                        {finishedGoods.map((item, index) => (
-                          <MenuItem key={`finished-${index}`} value={item.materialName}>
-                            {item.materialName}
-                          </MenuItem>
-                        ))}
-
-                        <MenuItem
-                          onClick={() =>
-                            navigate('/finished-goods-invoicing/finished-goods')
-                          }
-                          sx={{ fontStyle: 'italic' }}
-                        >
-                          Add New Finished Goods +
-                        </MenuItem>
-                      </TextField>
+                            {option.materialName}
+                          </li>
+                        )}
+                        renderInput={params => (
+                          <TextField
+                            {...params}
+                            label='Materials List'
+                            error={!!errors.materials}
+                            helperText={errors.materials}
+                            variant='outlined'
+                            InputProps={{
+                              ...params.InputProps,
+                              style: { borderRadius: 8 }
+                            }}
+                          />
+                        )}
+                      />
                     </Grid>
                     <Grid item xs={3}>
                       <TextField

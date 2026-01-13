@@ -48,7 +48,6 @@ export default function ReworkForm({ setUpdate, batches }) {
   const [quarentineItems, setQuarentineItems] = useState([])
   const [selectedItem, setSelectedItem] = useState({})
 
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -169,7 +168,7 @@ export default function ReworkForm({ setUpdate, batches }) {
     setSelectedItem(value)
     setFormData((prev) => ({
       ...prev,
-      batchNumber: value.batchNumber,
+      batchNumber: value?.batchNumber ? value?.batchNumber : value?.grn, //for material batch number => grn, for product batch number 
       materialName: value?.productName ? value?.productName : value?.materialName,
       inspectorName: value?.inspectorName || '',
       issueDescription: value?.comments || '',
@@ -253,7 +252,7 @@ export default function ReworkForm({ setUpdate, batches }) {
               </Grid>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  {selectedItem ? (
+                  {Object.keys(selectedItem).length > 0 ? (
                     <TextField
                       fullWidth
                       label='Batch Number'
@@ -294,7 +293,7 @@ export default function ReworkForm({ setUpdate, batches }) {
                   )}
                 </Grid>
                 <Grid item xs={6}>
-                  {selectedItem ? (
+                  {Object.keys(selectedItem).length > 0 ? (
                     <TextField
                       fullWidth
                       label='Material Name'

@@ -24,11 +24,15 @@ const style = {
 }
 
 export default function ViewFinishedGoodsForm ({finishedGoodsData}) {
+  console.log(finishedGoodsData)
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const formattedDate = finishedGoodsData.productionDate
   ? new Date(finishedGoodsData.productionDate).toISOString().split('T')[0]
+  : ''
+  const formattedExpiryDate = finishedGoodsData.expiryDate
+  ? new Date(finishedGoodsData.expiryDate).toISOString().split('T')[0]
   : ''
 
   return (
@@ -59,7 +63,7 @@ export default function ViewFinishedGoodsForm ({finishedGoodsData}) {
                 color='primary'
                 gutterBottom
               >
-                Edit Finished Goods Details
+                Finished Goods Details
               </Typography>
               <Typography variant='body2' color='textSecondary'>
                 Finished Goods Management
@@ -108,9 +112,24 @@ export default function ViewFinishedGoodsForm ({finishedGoodsData}) {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
+                    label='Expiry Date'
+                    name='expiryDate'
+                    type='date'
+                    value={formattedExpiryDate}
+                  
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 },readOnly:true }}
+                    InputLabelProps={{
+                      shrink: true // Keeps the label above the field to avoid overlap
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
                     label='Quantity Produced'
                     name='quantityProduced'
-                    value={finishedGoodsData.quantityProduced}
+                    value={finishedGoodsData.quantityProduced + ' ' + finishedGoodsData?.unit || '--'}
                  
                     variant='filled'
                     InputProps={{ style: { borderRadius: 8 },readOnly:true }}

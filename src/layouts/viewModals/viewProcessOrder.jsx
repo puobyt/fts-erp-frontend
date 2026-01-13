@@ -211,7 +211,7 @@ export default function ViewProcessOrderForm ({ processOrderData }) {
                     fullWidth
                     label='Order Quantity'
                     name='orderQuantity'
-                    value={processOrderData.orderQuantity}
+                    value={processOrderData.orderQuantity + ' ' + processOrderData?.unit || '---'}
                     InputProps={{
                       style: { borderRadius: 8 },
                       readOnly: true
@@ -250,7 +250,7 @@ export default function ViewProcessOrderForm ({ processOrderData }) {
                         fullWidth
                         label='Quantity'
                         name='quantity'
-                        value={material.quantity}
+                        value={material.quantity + ' ' + material?.unit || '---'}
                         variant='filled'
                         InputProps={{
                           style: { borderRadius: 8 },

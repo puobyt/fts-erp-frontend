@@ -168,6 +168,7 @@ export function CurrentStockView() {
               { id: 'storageLocation', label: 'Storage Location' },
               { id: 'vendorName', label: 'Vendor Name' },
               { id: 'dateRecieved', label: 'Date Recieved' },
+              { id: 'mfgDate', label: 'Manufacturing Date' },
               { id: 'expiryDate', label: 'Expiry' },
             ]}
           />

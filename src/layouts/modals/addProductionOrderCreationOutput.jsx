@@ -45,6 +45,7 @@ export default function ProductionOrderCreationOutputForm({
   const [formData, setFormData] = useState({
     productName: '',
     producedQuantity: '',
+    unit: '',
     productionCompletionDate: '',
     // qualityCheckStatus: '',
     storageLocationforOutput: '',
@@ -72,6 +73,9 @@ export default function ProductionOrderCreationOutputForm({
       }
       if (!material.unit) {
         newErrors[`packingMaterials[${index}].unit`] = 'Unit is required';
+      }
+      if (!formData.unit) {
+        newErrors.unit = 'Unit is required';
       }
     });
     if (!formData.producedQuantity) {
@@ -167,6 +171,7 @@ export default function ProductionOrderCreationOutputForm({
         setFormData({
           productName: '',
           producedQuantity: '',
+          unit: '',
           productionCompletionDate: '',
           //   qualityCheckStatus: '',
           storageLocationforOutput: '',
@@ -264,7 +269,7 @@ export default function ProductionOrderCreationOutputForm({
                       </MenuItem>
                     </TextField>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={3}>
                     <TextField
                       fullWidth
                       label="Produced Quantity"
@@ -277,6 +282,25 @@ export default function ProductionOrderCreationOutputForm({
                       InputProps={{ style: { borderRadius: 8 } }}
                     />
                   </Grid>
+                  <Grid item xs={3}>
+                        <TextField
+                          fullWidth
+                          select
+                          label="Unit"
+                          name="unit"
+                          value={formData.unit}
+                          onChange={handleChange}
+                          error={!!errors.unit}
+                          helperText={errors.unit}
+                          variant="outlined"
+                        >
+                          {['KG', 'Gram', 'Litre', 'ML', 'Pieces'].map((unit) => (
+                            <MenuItem key={unit} value={unit}>
+                              {unit}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Grid>
                   <Grid item xs={6}>
                     <TextField
                       fullWidth

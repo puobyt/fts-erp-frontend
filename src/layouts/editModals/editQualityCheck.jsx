@@ -54,13 +54,13 @@ export default function EditQualityCheckForm({
   // Fetch parameter results for this QC on modal open
   const handleOpen = async () => {
     setOpen(true)
-    try {
-      const res = await axiosInstance.get(`/qc-parameters/results?qualityCheck=${qualityCheckData.qualityCheckId}`)
-      setParameterRows(res.data || [])
-    } catch (err) {
-      setParameterRows([])
-      toast.error("Unable to fetch QC parameters")
-    }
+    // try {
+    //   const res = await axiosInstance.get(`/qc-parameters/results?qualityCheck=${qualityCheckData.qualityCheckId}`)
+    //   setParameterRows(res.data || [])
+    // } catch (err) {
+    //   setParameterRows([])
+    //   toast.error("Unable to fetch QC parameters")
+    // }
   }
   const handleClose = () => setOpen(false)
 
@@ -176,21 +176,21 @@ export default function EditQualityCheckForm({
       // Edit main QC form
       await axiosInstance.put('/editQualityCheck', { ...formData, editedBy: adminData.email })
       // Edit each parameter result (could be PATCH or PUT, depending on your backend)
-      await Promise.all(
-        parameterRows.map(param =>
-          axiosInstance.put('/editQualityCheckParameterResult', {
-            id: param._id,
-            actualResult: param.actualResult,
-            status: param.status,
-            remarks: param.remarks
-          })
-        )
-      )
-      toast.success('Quality Check and Parameters updated successfully!')
+      // await Promise.all(
+      //   parameterRows.map(param =>
+      //     axiosInstance.put('/editQualityCheckParameterResult', {
+      //       id: param._id,
+      //       actualResult: param.actualResult,
+      //       status: param.status,
+      //       remarks: param.remarks
+      //     })
+      //   )
+      // )
+      toast.success('Quality Check updated successfully!')
       handleClose()
       setUpdate(prev => !prev)
     } catch (err) {
-      toast.error('Error updating Quality Check')
+      toast.error(err.response.data.message)
       console.error('Error:', err.message)
     }
   }
@@ -382,7 +382,7 @@ export default function EditQualityCheckForm({
                     />
                   </Grid>
                   {/* Table/grid for QC parameters */}
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <Typography variant='h6' sx={{ mt: 2 }}>
                       Quality Parameters
                     </Typography>
@@ -441,7 +441,7 @@ export default function EditQualityCheckForm({
                         </TableBody>
                       </Table>
                     </TableContainer>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
                 <Button
                   type='submit'

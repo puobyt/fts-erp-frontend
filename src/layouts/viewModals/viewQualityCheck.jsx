@@ -30,13 +30,13 @@ export default function ViewQualityCheck({ qualityCheckData }) {
   const handleOpen = async () => {
     setOpen(true)
     // Fetch parameter results for this QC
-    try {
-      const res = await axiosInstance.get(`/qc-parameters/results?qualityCheck=${qualityCheckData._id}`)
-      setQcParameters(res.data || [])
-    } catch (err) {
-      setQcParameters([])
-      toast.error("Unable to fetch QC parameters")
-    }
+    // try {
+    //   const res = await axiosInstance.get(`/qc-parameters/results?qualityCheck=${qualityCheckData._id}`)
+    //   setQcParameters(res.data || [])
+    // } catch (err) {
+    //   setQcParameters([])
+    //   toast.error("Unable to fetch QC parameters")
+    // }
   }
   const handleClose = () => setOpen(false)
   const formattedDate = qualityCheckData.inspectionDate
@@ -151,11 +151,31 @@ export default function ViewQualityCheck({ qualityCheckData }) {
                     InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
                   />
                 </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Manufacturing Date'
+                    name='mfgDate'
+                    value={qualityCheckData.mfgDate ? new Date(qualityCheckData?.mfgDate).toLocaleDateString() : '---'}
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label='Expiry Date'
+                    name='expDate'
+                    value={qualityCheckData.expiryDate ? new Date(qualityCheckData?.expiryDate).toLocaleDateString() : '---'}
+                    variant='filled'
+                    InputProps={{ style: { borderRadius: 8 }, readOnly: true }}
+                  />
+                </Grid>
               </Grid>
             </Box>
 
             {/* QC Parameters Table */}
-            <Box sx={{ mt: 4 }}>
+            {/* <Box sx={{ mt: 4 }}>
               <Typography variant='h6' sx={{ mb: 2 }}>
                 Quality Parameters
               </Typography>
@@ -200,7 +220,7 @@ export default function ViewQualityCheck({ qualityCheckData }) {
                   </TableBody>
                 </Table>
               </TableContainer>
-            </Box>
+            </Box> */}
           </Paper>
         </Container>
       </Modal>
