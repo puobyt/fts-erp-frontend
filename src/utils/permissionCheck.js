@@ -92,18 +92,25 @@ const flatPermissions = {
 
 
 
-const hasPermission = (title) => {
-    console.log('title',title)
-    // Read adminData from localStorage dynamically each time the function is called
-    const adminData = JSON.parse(localStorage.getItem('admin'))
-    console.log('adminData',adminData)
-    
-    // Return false if no admin data or no role
-    if (!adminData || !adminData.role) {
+const hasPermission = (title, userRole = null) => {
+    // Determine the role to use: either the passed userRole or fetch from localStorage
+    let role = userRole;
+
+    if (!role) {
+        try {
+            const adminData = JSON.parse(localStorage.getItem('admin'));
+            role = adminData?.role;
+        } catch (error) {
+            console.error('Error parsing admin data from localStorage', error);
+        }
+    }
+
+    // Return false if no role is found
+    if (!role) {
         return false;
     }
-    
-    const rolePermission = flatPermissions[adminData.role];
+
+    const rolePermission = flatPermissions[role];
     if (rolePermission) {
         // Convert the title to lowercase to make the check case-insensitive
         const lowerCaseTitle = title.toLowerCase();
