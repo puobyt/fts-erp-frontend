@@ -1,6 +1,4 @@
-// import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
-import React, { useState } from 'react'
-import { useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { List, Collapse } from '@mui/material'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import Box from '@mui/material/Box'
@@ -105,6 +103,24 @@ export function NavContent ({ data, slots, workspaces, sx }) {
   const [openMenus, setOpenMenus] = useState({})
   const { adminData } = useAdminData()
 
+  const navItems = useMemo(() => {
+    const role = adminData?.role;
+    if (!role) return [];
+
+    return data.reduce((acc, item) => {
+      if (item.children) {
+        const visibleChildren = item.children.filter(child => hasPermission(child.title, role));
+        
+        if (visibleChildren.length > 0) {
+          acc.push({ ...item, children: visibleChildren });
+        }
+      } else {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+  }, [data, adminData]);
+
   // Toggle dropdown visibility
   const handleToggle = title => {
     // console.log('title sray ,', title)
@@ -166,7 +182,7 @@ export function NavContent ({ data, slots, workspaces, sx }) {
           }}
         >
           <Box component='ul' gap={0.5} display='flex' flexDirection='column'>
-            {data.map(item => {
+            {navItems.map(item => {
               const isActived = item.path === pathname // Check active state
               const isOpen = openMenus[item.title] || false // Get dropdown toggle state
 
@@ -225,7 +241,7 @@ export function NavContent ({ data, slots, workspaces, sx }) {
                     <Collapse in={isOpen} timeout='auto' unmountOnExit>
                       <List component='div' disablePadding>
                         {item.children.map(child => (
-                          hasPermission(child.title) && 
+                        //  No permission check needed here as it is filtered in navItems
                           <ListItem key={child.title} disablePadding>
                             <ListItemButton
                               component={RouterLink}
